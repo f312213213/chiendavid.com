@@ -1,7 +1,7 @@
 import './globals.css'
 import type {ReactNode} from "react";
-import Head from "next/head";
 import type {Metadata} from "next";
+import Sidebar from "@/components/Sidebar";
 
 
 export const metadata: Metadata = {
@@ -52,13 +52,10 @@ const RootLayout = ({
 }) => {
   return (
     <html lang="en" className="text-black bg-white dark:text-white dark:bg-[#111010] min-h-screen w-full overflow-x-hidden">
-      <Head>
-        <meta
-          property="og:url"
-          content="https://chiendavid.com"
-        />
-      </Head>
-      <body>{children}</body>
+      <body>
+        <Sidebar />
+        {children}
+      </body>
     </html>
   )
 }
