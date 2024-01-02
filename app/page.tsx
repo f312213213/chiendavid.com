@@ -48,17 +48,19 @@ export default function Home() {
 
       {/* About */}
       <div>
-        <h2 className="font-bold text-xl my-4">About</h2>
+        <h2 className="font-bold text-xl my-3">About</h2>
         <p className="w-full text-sm text-muted-foreground">
-          I&apos;m a software engineer based in Taipei, Taiwan. I&apos;m
-          currently a senior at National Taipei University, majoring in Computer
-          Science.
+          I&apos;m a software engineer based in Taipei, Taiwan. With three years
+          of experience in software development, I&apos;ve actively contributed
+          to diverse projects spanning industries such as delivery platform,
+          live streaming application, martech system and so on. If there are any
+          opportunities to build interesting projects, feel free to contact me.
         </p>
       </div>
 
       {/* Work Experience */}
       <div>
-        <h2 className="font-bold text-xl my-4">Work Experience</h2>
+        <h2 className="font-bold text-xl my-3">Work Experience</h2>
         <div className="flex flex-col w-full">
           {experience.map((e, index) => (
             <div
@@ -91,7 +93,7 @@ export default function Home() {
 
       {/* Projects */}
       <div className="flex flex-col gap-2">
-        <h2 className="font-bold text-xl my-4">Projects</h2>
+        <h2 className="font-bold text-xl my-3">Projects</h2>
         <div className="flex flex-col gap-2">
           {projects.map((p, index) => (
             <a
@@ -140,7 +142,7 @@ export default function Home() {
 
       {/* Education */}
       <div>
-        <h2 className="font-bold text-xl my-4">Education</h2>
+        <h2 className="font-bold text-xl my-3">Education</h2>
         <div className="flex flex-col gap-2">
           <div className="flex justify-between items-center">
             <div>
