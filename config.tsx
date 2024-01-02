@@ -4,7 +4,6 @@ import {
   InstagramLogoIcon,
   LinkedInLogoIcon,
 } from "@radix-ui/react-icons";
-import { PhoneIcon } from "lucide-react";
 
 export const socialMediaLinks = [
   {
