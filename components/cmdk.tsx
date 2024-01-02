@@ -57,7 +57,7 @@ export default function Command() {
           </CommandGroup>
 
           <CommandSeparator />
-          <CommandGroup heading="Links">
+          <CommandGroup heading="Social Media">
             {socialMediaLinks.map(({ icon, link, name }, index) => {
               const onSelect = () => {
                 window.open(link, "_blank");
