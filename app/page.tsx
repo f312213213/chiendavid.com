@@ -10,12 +10,12 @@ import { emailLink, experience, projects, socialMediaLinks } from "@/config";
 
 export default function Home() {
   return (
-    <main className="antialiased max-w-2xl flex flex-col py-10 mx-4 md:mx-auto gap-4">
+    <main className="antialiased max-w-2xl flex flex-col py-4 md:pb-8 mx-4 md:mx-auto gap-4">
       {/* Basic Info */}
       <div className="flex justify-between w-full">
         <div className="flex flex-col gap-2">
           <h1 className="font-bold text-2xl flex items-center">David Chien</h1>
-          <div className="flex flex-col justify-center gap-1">
+          <div className="flex flex-col justify-center gap-px">
             <p>Juggling my time between bench pressing and coding.</p>
             <p>Passionate about web development.</p>
           </div>
@@ -132,26 +132,6 @@ export default function Home() {
               </div>
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Education */}
-      <div>
-        <h2 className="font-bold text-xl">Education</h2>
-        <div className="flex flex-col">
-          <div className="flex justify-between items-center py-2">
-            <div>
-              <a
-                href="https://new.ntpu.edu.tw/?lang=en"
-                className="hover:underline font-semibold text-lg"
-              >
-                National Taipei University
-              </a>
-            </div>
-
-            <p>2019 - 2024</p>
-          </div>
-          <p className="text-sm text-muted-foreground">Computer Science</p>
         </div>
       </div>
     </main>
