@@ -13,6 +13,9 @@
     "react/prop-types": "off",
     "prefer-destructuring": "off",
     "react/no-unstable-nested-components": "off",
-    "camelcase": "off"
+    "camelcase": "off",
+    "arrow-body-style": "off",
+    "react/no-unknown-property": "off",
+    "jsx-a11y/heading-has-content": "off"
   }
 }
