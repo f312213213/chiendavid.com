@@ -24,13 +24,8 @@ export const socialMediaLinks = [
   },
   {
     icon: <EnvelopeClosedIcon className="w-full h-full" />,
-    link: "mailto:davidchien419@gmail.com",
+    link: "mailto:me@chiendavid.com",
     name: "Email",
-  },
-  {
-    icon: <PhoneIcon className="w-full h-full" />,
-    link: "tel:+886966579833",
-    name: "Phone",
   },
 ];
 
