@@ -17,7 +17,7 @@ export default function Home() {
       <div className="flex justify-between w-full gap-2">
         <div className="flex flex-col gap-2">
           <h1 className="font-bold text-2xl flex items-center">David Chien</h1>
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center gap-1">
             <p>Juggling my time between bench pressing and coding.</p>
             <p>Passionate about web development.</p>
           </div>
@@ -38,7 +38,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="aspect-square">
+        <div className="flex items-center">
           <Avatar className="w-[130px] h-[130px]">
             <AvatarImage src="./avatar.png" />
             <AvatarFallback className="">David Chien</AvatarFallback>

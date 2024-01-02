@@ -30,7 +30,7 @@ export default function Command() {
 
   return (
     <>
-      <p className="fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t border-t-muted p-1 text-center text-sm text-muted-foreground print:hidden">
+      <p className="hidden md:fixed bottom-0 left-0 right-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-t border-t-muted p-1 text-center text-sm text-muted-foreground print:hidden">
         Press{" "}
         <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
           <span className="text-xs">⌘</span>J
