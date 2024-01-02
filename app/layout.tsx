@@ -20,8 +20,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html
       lang="en"
-      style={{ colorScheme: "light" }}
-      className={cn(inter.className, "light")}
+      style={{ colorScheme: "dark" }}
+      className={cn(inter.className, "dark")}
     >
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>

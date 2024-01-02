@@ -12,7 +12,7 @@ import { experience, projects, socialMediaLinks } from "@/config";
 
 export default function Home() {
   return (
-    <main className="antialiased max-w-2xl flex flex-col mt-8 mx-4 md:mx-auto gap-4 pb-10">
+    <main className="antialiased max-w-2xl flex flex-col py-10 mx-4 md:mx-auto gap-4">
       {/* Basic Info */}
       <div className="flex justify-between w-full gap-2">
         <div className="flex flex-col gap-2">
