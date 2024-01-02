@@ -3,6 +3,7 @@ import Analytic from "@/components/Analytic";
 import Command from "@/components/cmdk";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
@@ -29,7 +30,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
           <Command />
           <Analytics />
           <Analytic />
-          {children}
+          <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -1,9 +1,12 @@
 import {
   EnvelopeClosedIcon,
+  FileTextIcon,
   GitHubLogoIcon,
   InstagramLogoIcon,
   LinkedInLogoIcon,
 } from "@radix-ui/react-icons";
+
+export const emailLink = "mailto:me@chiendavid.com";
 
 export const socialMediaLinks = [
   {
@@ -23,8 +26,13 @@ export const socialMediaLinks = [
   },
   {
     icon: <EnvelopeClosedIcon className="w-full h-full" />,
-    link: "mailto:me@chiendavid.com",
+    link: emailLink,
     name: "Email",
+  },
+  {
+    icon: <FileTextIcon className="w-full h-full" />,
+    link: "../cv",
+    name: "Formal CV",
   },
 ];
 
