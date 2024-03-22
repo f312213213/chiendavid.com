@@ -12,14 +12,14 @@ import { useTheme } from "next-themes";
 import * as React from "react";
 
 export function ModeToggle() {
-  const { setTheme, theme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
 
   return (
     <Button
       onClick={() => {
-        if (theme === "light") {
+        if (resolvedTheme === "light") {
           setTheme("dark");
-        } else if (theme === "dark") {
+        } else if (resolvedTheme === "dark") {
           setTheme("light");
         }
       }}
