@@ -57,7 +57,13 @@ export default function Home() {
         <div className="w-full text-sm text-muted-foreground py-2 flex flex-col gap-2">
           <p>
             I&apos;m a software engineer based in{" "}
-            <span className="font-bold">Taipei, Taiwan</span>.
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="font-bold">Taipei, Taiwan</span>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">🇹🇼</TooltipContent>
+            </Tooltip>
+            .
           </p>
           <p>
             With <span className="font-bold">three years of experience</span> in
