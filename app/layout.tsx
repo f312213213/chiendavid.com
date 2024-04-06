@@ -1,11 +1,11 @@
 import "./globals.css";
 import Analytic from "@/components/Analytic";
+import TailwindIndicator from "@/components/TailwindIndicator";
 import Command from "@/components/cmdk";
 import { ModeToggle } from "@/components/mode-toggle";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Analytics } from "@vercel/analytics/react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ReactNode } from "react";
@@ -28,8 +28,8 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ModeToggle />
           <Command />
-          <Analytics />
           <Analytic />
+          <TailwindIndicator />
           <TooltipProvider delayDuration={100}>{children}</TooltipProvider>
         </ThemeProvider>
       </body>

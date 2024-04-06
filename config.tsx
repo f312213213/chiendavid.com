@@ -29,11 +29,6 @@ export const socialMediaLinks = [
     link: emailLink,
     name: "Email",
   },
-  {
-    icon: <FileTextIcon className="w-full h-full" />,
-    link: "../cv",
-    name: "Formal CV",
-  },
 ];
 
 export const experience = [
@@ -48,7 +43,7 @@ export const experience = [
   },
   {
     title: "Software Engineer",
-    company: "Lang Live",
+    company: "LangLive",
     field: "Frontend",
     date: "2022 / 6 - 2023 / 6",
     description:
