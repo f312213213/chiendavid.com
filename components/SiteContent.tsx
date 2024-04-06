@@ -9,6 +9,7 @@ const SiteContent = () => {
         sectionName="about"
         className="text-muted-foreground flex flex-col gap-2"
       >
+        {/* eslint-disable-next-line react/no-unescaped-entities */}
         <p>I'm a student and frontend developer living in Taipei.</p>
         <p>
           During my free time I like going gym, doing Bench Press. You can also

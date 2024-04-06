@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 interface Props {
   title: string;
   company: string;
@@ -13,6 +11,7 @@ const ExperienceBlock = ({
   title,
   companyLink,
   company,
+  // eslint-disable-next-line no-unused-vars
   field,
   description,
   date,

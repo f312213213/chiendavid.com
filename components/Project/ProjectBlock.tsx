@@ -8,6 +8,7 @@ interface Props {
   link: string;
 }
 
+// eslint-disable-next-line no-unused-vars
 const ProjectBlock = ({ title, badge, link, description }: Props) => {
   return (
     <div className="flex flex-col w-full gap-2 group/link rounded-md py-4 relative lg:hover:!opacity-100 lg:group-hover/list:opacity-50 transition-all">
