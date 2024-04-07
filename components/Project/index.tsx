@@ -4,7 +4,7 @@ import { projects } from "@/config";
 
 const Project = () => {
   return (
-    <SectionWrapper sectionName="projects" className="border-b-2">
+    <SectionWrapper sectionName="Project">
       <ul className="space-y-4 flex flex-col group/list">
         {projects.map((project) => (
           <ProjectBlock {...project} />

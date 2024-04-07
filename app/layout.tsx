@@ -1,5 +1,6 @@
 import "./globals.css";
 import Analytic from "@/components/Analytic";
+import MouseSpotlight from "@/components/MouseSpotlight";
 import TailwindIndicator from "@/components/TailwindIndicator";
 import Command from "@/components/cmdk";
 import { ModeToggle } from "@/components/mode-toggle";
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     >
       <body>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <MouseSpotlight />
           <ModeToggle />
           <Command />
           <Analytic />

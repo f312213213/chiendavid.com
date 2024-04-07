@@ -1,3 +1,4 @@
+import SiteMenu from "@/components/SiteMenu";
 import {
   Tooltip,
   TooltipContent,
@@ -48,11 +49,7 @@ const StickyHeader = () => {
           </p>
         </div>
 
-        {/* <ol className=" flex-col gap-2 flex-1 mt-12 hidden lg:flex"> */}
-        {/*  <li>About</li> */}
-        {/*  <li>Experiences</li> */}
-        {/*  <li>Projects</li> */}
-        {/* </ol> */}
+        <SiteMenu />
       </div>
 
       <ol className="ml-1 mt-8 flex items-center">

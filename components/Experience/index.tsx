@@ -6,8 +6,8 @@ import Link from "next/link";
 
 const Experience = () => {
   return (
-    <SectionWrapper sectionName="experiences">
-      <ul className="space-y-4 flex flex-col group/list">
+    <SectionWrapper sectionName="Experience">
+      <ul className="space-y-8 flex flex-col group/list">
         {experience.map((exp) => (
           <ExperienceBlock {...exp} />
         ))}
