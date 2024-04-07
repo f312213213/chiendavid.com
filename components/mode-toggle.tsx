@@ -25,7 +25,7 @@ export function ModeToggle() {
       }}
       variant="outline"
       size="icon"
-      className="fixed m-4 bottom-0 md:bottom-[30px] right-0 print:hidden"
+      className="fixed m-4 bottom-0 md:bottom-[30px] right-0 print:hidden z-30"
     >
       <SunIcon className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
       <MoonIcon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
