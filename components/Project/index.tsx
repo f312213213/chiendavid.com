@@ -7,7 +7,7 @@ const Project = () => {
     <SectionWrapper sectionName="Project">
       <ul className="space-y-4 flex flex-col group/list">
         {projects.map((project) => (
-          <ProjectBlock {...project} />
+          <ProjectBlock {...project} key={project.title} />
         ))}
       </ul>
     </SectionWrapper>
