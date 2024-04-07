@@ -9,7 +9,7 @@ const Experience = () => {
     <SectionWrapper sectionName="Experience">
       <ul className="space-y-8 flex flex-col group/list">
         {experience.map((exp) => (
-          <ExperienceBlock {...exp} />
+          <ExperienceBlock {...exp} key={exp.company} />
         ))}
       </ul>
       <Link

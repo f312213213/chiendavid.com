@@ -6,8 +6,10 @@ interface MenuItemProps {
 
 const MenuItem = ({ name }: MenuItemProps) => {
   return (
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events,jsx-a11y/no-noninteractive-element-interactions
     <li
       onClick={() => {
+        // @ts-ignore
         document.getElementById(name.toLowerCase()).scrollIntoView({
           behavior: "smooth",
           block: "start",
