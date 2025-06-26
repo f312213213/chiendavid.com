@@ -1,103 +1,113 @@
-import Image from "next/image";
+import ExperienceSection from './components/ExperienceSection';
+import ProjectSection from './components/ProjectSection';
+import EducationSection from './components/EducationSection';
+
+const experiences = [
+  {
+    title: "Software Engineer",
+    company: "Appier",
+    period: "July 2024 – Present",
+    achievements: [
+      "Modernized monorepo infrastructure by leading migration from Yarn/Lerna to pnpm/NX, reducing CI/CD pipeline execution time by 83%.",
+      "Designed and deployed a comprehensive logging service, enabling real-time performance monitoring and accelerating issue resolution by 15%.",
+      "Collaborated with cross-functional teams to implement scalable solutions and drive continuous improvement.",
+      "Acted as a key decision-maker in selecting and implementing new build tools."
+    ]
+  },
+  {
+    title: "Software Engineer Intern",
+    company: "Appier",
+    period: "July 2023 – July 2024",
+    achievements: [
+      "Developed an intuitive campaign management dashboard, streamlining manager workflows.",
+      "Optimized mission-critical page performance, reducing load time from unresponsive to 1 second.",
+      "Spearheaded migration from Webpack to Rspack, achieving a 10x improvement in build times.",
+      "Led major UI library upgrade, coordinating systematic migration across multiple applications and teams."
+    ]
+  },
+  {
+    title: "Software Engineer",
+    company: "LangLive",
+    period: "June 2022 – June 2023",
+    achievements: [
+      "Refactored gift animation system with WebGL, reducing CPU usage by 30%.",
+      "Re-architected data fetching, cutting API calls by 50% and improving page load speed.",
+      "Implemented end-to-end testing with Playwright across three products."
+    ]
+  },
+  {
+    title: "Software Engineer (Part time)",
+    company: "Dimorder",
+    period: "Feb 2022 – Feb 2023",
+    achievements: []
+  }
+];
+
+const projects = [
+  {
+    name: "cvsite.cc",
+    link: "https://cvsite.cc",
+    description: "Developed a web app that transforms traditional CVs into visually appealing websites."
+  },
+  {
+    name: "Alpha Point Tracker",
+    link: "https://alpha-tracker.zeabur.app/",
+    description: "Developed a webapp that utilizes bscscan api to help users track their progress in the Binance alpha points event."
+  }
+];
+
+const education = [
+  {
+    institution: "National Taipei University",
+    degree: "Bachelor of Science: Computer Science",
+    period: "2019 - 2024",
+    location: "Sanxia campus"
+  }
+];
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <main className="min-h-screen" style={{ background: 'var(--background)' }}>
+      <div className="max-w-screen-sm mx-auto px-6 py-12">
+        
+        {/* Intro */}
+        <section className="mb-16">
+          <h1 className="text-2xl font-semibold mb-6" style={{ color: 'var(--foreground)' }}>
+            David Chien
+          </h1>
+          <p className="text-base mb-8 leading-relaxed" style={{ color: 'var(--muted)' }}>
+            Software Engineer focused on frontend optimization, infrastructure modernization, 
+            and performance tuning for large-scale React applications. Currently based between 
+            Taipei, Taiwan 🇹🇼 and Seattle, USA 🇺🇸.
+          </p>
+          <div className="flex flex-wrap gap-4 text-sm">
+            <a href="https://chiendavid.com/cv" className="hover:underline" style={{ color: 'var(--muted)' }}>
+                CV
+            </a>
+            <a href="mailto:f312213213david@gmail.com" className="hover:underline" style={{ color: 'var(--muted)' }}>
+              Email
+            </a>
+            <a href="https://chiendavid.com/linkedin" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--muted)' }}>
+              LinkedIn
+            </a>
+            <a href="https://chiendavid.com/github" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--muted)' }}>
+              GitHub
+            </a>
+            <a href="https://chiendavid.com/eth" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--muted)' }}>
+              davidchien.eth
+            </a>
+          </div>
+        </section>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+        {/* Side Projects */}
+        <ProjectSection projects={projects} />
+
+        {/* Work Experience */}
+        <ExperienceSection experiences={experiences} />
+
+        {/* Education */}
+        <EducationSection education={education} />
+      </div>
+    </main>
   );
 }
