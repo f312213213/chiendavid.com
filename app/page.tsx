@@ -75,11 +75,18 @@ export default function Home() {
           <h1 className="text-2xl font-semibold mb-6" style={{ color: 'var(--foreground)' }}>
             David Chien
           </h1>
-          <p className="text-base mb-8 leading-relaxed" style={{ color: 'var(--muted)' }}>
-            Software Engineer focused on frontend optimization, infrastructure modernization, 
-            and performance tuning for large-scale React applications. Currently based between 
-            Taipei, Taiwan 🇹🇼 and Seattle, USA 🇺🇸.
-          </p>
+          <div className="flex flex-col gap-4 mb-8">
+            <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
+              Software Engineer focused on frontend optimization, infrastructure modernization, 
+              and performance tuning for large-scale React applications. 
+            </p>
+            <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
+              I'm also involved in full-stack development, and I'm interested in building products that help people live better lives.
+            </p>
+            <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
+              Currently based between Taipei, Taiwan 🇹🇼 and Seattle, USA 🇺🇸.
+            </p>
+          </div>
           <div className="flex flex-wrap gap-4 text-sm">
             <a href="https://chiendavid.com/cv" className="hover:underline" style={{ color: 'var(--muted)' }}>
                 CV
