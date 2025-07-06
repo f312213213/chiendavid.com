@@ -19,10 +19,26 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
         className={`${inter.variable} antialiased`}
       >
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            (function() {
+              const theme = localStorage.getItem('theme') || 'system';
+              const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+              
+              document.documentElement.classList.remove('light', 'dark');
+              
+              if (theme === 'light') {
+                document.documentElement.classList.add('light');
+              } else if (theme === 'dark') {
+                document.documentElement.classList.add('dark');
+              }
+            })();
+          `
+        }} />
         {children}
       </body>
     </html>

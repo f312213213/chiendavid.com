@@ -1,6 +1,7 @@
 import ExperienceSection from './components/ExperienceSection';
 import ProjectSection from './components/ProjectSection';
 import EducationSection from './components/EducationSection';
+import Footer from './components/Footer';
 
 const experiences = [
   {
@@ -115,6 +116,7 @@ export default function Home() {
         {/* Education */}
         <EducationSection education={education} />
       </div>
+      <Footer />
     </main>
   );
 }
