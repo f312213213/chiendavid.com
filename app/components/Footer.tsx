@@ -42,7 +42,7 @@ export default function Footer() {
   };
 
   return (
-    <footer className="text-sm text-muted flex justify-between items-center max-w-screen-sm mx-auto px-6 py-12">
+    <footer className="text-sm text-muted flex justify-between items-center gap-2 max-w-screen-sm mx-auto px-6 py-12">
       <p>© {new Date().getFullYear()} David Chien. All rights reserved.</p>
       <button 
         onClick={cycleTheme}
