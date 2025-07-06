@@ -68,7 +68,7 @@ const education = [
 
 export default function Home() {
   return (
-    <div className="relative h-screen px-8 py-6 lg:px-40 lg:py-30 " style={{ background: 'var(--background)' }}>
+    <div className="relative h-[100dvh] px-8 py-6 lg:px-40 lg:py-30 " style={{ background: 'var(--background)' }}>
       
         <div className="fixed top-0 left-40 w-px h-24 border-l-2 border-t-2 border-foreground/30 hidden lg:block" />
         <div className="absolute top-6 left-8 lg:top-30 lg:left-40 w-8 h-8 border-l-2 border-t-2 border-foreground" />
