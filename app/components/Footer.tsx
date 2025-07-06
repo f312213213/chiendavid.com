@@ -27,7 +27,7 @@ export default function Footer() {
   };
 
   const cycleTheme = () => {
-    const nextTheme: ThemeMode = theme === 'light' ? 'dark' : 'light';
+    const nextTheme: ThemeMode = theme === 'light' ? 'dark' : theme === 'dark' ? 'system' : 'light';
     setTheme(nextTheme);
     localStorage.setItem('theme', nextTheme);
     applyTheme(nextTheme);
@@ -37,12 +37,13 @@ export default function Footer() {
     switch (theme) {
       case 'light': return '☀️';
       case 'dark': return '🌙';
+      case 'system': return '⚙️';
     }
   };
 
   return (
-    <footer className="text-sm text-muted flex justify-center items-center gap-4 max-w-screen-sm mx-auto px-6 py-8">
-      <p>© {new Date().getFullYear()} David Chien.</p>
+    <footer className="text-sm text-muted flex justify-between items-center max-w-screen-sm mx-auto px-6 py-12">
+      <p>© {new Date().getFullYear()} David Chien. All rights reserved.</p>
       <button 
         onClick={cycleTheme}
         className="text-lg hover:scale-110 cursor-pointer"
