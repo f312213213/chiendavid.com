@@ -36,5 +36,5 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   line-height: 1.6;
-  transition: background-color 0.5s ease, color 0.3s ease;
+  overflow-y: hidden;
 }

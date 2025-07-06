@@ -11,7 +11,7 @@ interface EducationSectionProps {
 
 export default function EducationSection({ education }: EducationSectionProps) {
   return (
-    <section className="mb-16">
+    <section>
       <h2 className="text-lg font-medium mb-6" style={{ color: 'var(--foreground)' }}>
         Education
       </h2>

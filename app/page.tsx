@@ -68,55 +68,76 @@ const education = [
 
 export default function Home() {
   return (
-    <main className="min-h-screen" style={{ background: 'var(--background)' }}>
-      <div className="max-w-screen-sm mx-auto px-6 py-12">
-        
-        {/* Intro */}
-        <section className="mb-16">
-          <h1 className="text-2xl font-semibold mb-6" style={{ color: 'var(--foreground)' }}>
-            David Chien
-          </h1>
-          <div className="flex flex-col gap-4 mb-8">
-            <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
-              Software Engineer focused on frontend optimization, infrastructure modernization, 
-              and performance tuning for large-scale React applications. 
-            </p>
-            <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
-              I'm also involved in full-stack development, and I'm interested in building products that help people live better lives.
-            </p>
-            <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
-              Currently based between Taipei, Taiwan 🇹🇼 and Seattle, USA 🇺🇸.
-            </p>
-          </div>
-          <div className="flex flex-wrap gap-4 text-sm">
-            <a href="https://chiendavid.com/cv" className="hover:underline" style={{ color: 'var(--muted)' }}>
-                CV
-            </a>
-            <a href="mailto:f312213213david@gmail.com" className="hover:underline" style={{ color: 'var(--muted)' }}>
-              Email
-            </a>
-            <a href="https://chiendavid.com/linkedin" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--muted)' }}>
-              LinkedIn
-            </a>
-            <a href="https://chiendavid.com/github" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--muted)' }}>
-              GitHub
-            </a>
-            <a href="https://chiendavid.com/eth" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--muted)' }}>
-              davidchien.eth
-            </a>
-          </div>
-        </section>
+    <div className="relative h-screen px-8 py-6 lg:px-40 lg:py-30 " style={{ background: 'var(--background)' }}>
+      
 
-        {/* Side Projects */}
-        <ProjectSection projects={projects} />
 
-        {/* Work Experience */}
-        <ExperienceSection experiences={experiences} />
+        <div className="fixed top-0 left-40 w-px h-24 border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="absolute top-6 left-8 lg:top-30 lg:left-40 w-8 h-8 border-l-2 border-t-2 border-foreground" />
+        <div className="fixed top-30 left-0 w-34 h-px border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
 
-        {/* Education */}
-        <EducationSection education={education} />
-      </div>
-      <Footer />
-    </main>
+        <div className="fixed top-0 right-40 w-px h-24 border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="absolute top-6 right-8 lg:top-30 lg:right-40 w-8 h-8 border-r-2 border-t-2 border-foreground" />
+        <div className="fixed top-30 right-0 w-34 h-px border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+
+        <div className="fixed bottom-0 left-40 w-px h-24 border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="absolute bottom-6 left-8 lg:bottom-30 lg:left-40 w-8 h-8 border-l-2 border-b-2 border-foreground" />
+        <div className="fixed bottom-30 left-0 w-34 h-px border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+
+        <div className="fixed bottom-0 right-40 w-px h-24 border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="absolute bottom-6 right-8 lg:bottom-30 lg:right-40 w-8 h-8 border-r-2 border-b-2 border-foreground" />
+        <div className="fixed bottom-30 right-0 w-34 h-px border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+      
+      <main className="flex flex-col justify-between h-full overflow-y-scroll border-1 border-muted/20 px-4 py-8">
+        <div className=" mx-auto px-6">
+          
+          {/* Intro */}
+          <section className="mb-16">
+            <h1 className="text-2xl font-semibold mb-6" style={{ color: 'var(--foreground)' }}>
+              David Chien
+            </h1>
+            <div className="flex flex-col gap-4 mb-8">
+              <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
+                Software Engineer focused on frontend optimization, infrastructure modernization, 
+                and performance tuning for large-scale React applications. 
+              </p>
+              <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
+                I'm also involved in full-stack development, and I'm interested in building products that help people live better lives.
+              </p>
+              <p className="text-base leading-relaxed" style={{ color: 'var(--muted)' }}>
+                Currently based between Taipei, Taiwan 🇹🇼 and Seattle, USA 🇺🇸.
+              </p>
+            </div>
+            <div className="flex flex-wrap gap-4 text-sm">
+              <a href="https://chiendavid.com/cv" className="hover:underline" style={{ color: 'var(--muted)' }}>
+                  CV
+              </a>
+              <a href="mailto:f312213213david@gmail.com" className="hover:underline" style={{ color: 'var(--muted)' }}>
+                Email
+              </a>
+              <a href="https://chiendavid.com/linkedin" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--muted)' }}>
+                LinkedIn
+              </a>
+              <a href="https://chiendavid.com/github" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--muted)' }}>
+                GitHub
+              </a>
+              <a href="https://chiendavid.com/eth" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--muted)' }}>
+                davidchien.eth
+              </a>
+            </div>
+          </section>
+
+          {/* Side Projects */}
+          <ProjectSection projects={projects} />
+
+          {/* Work Experience */}
+          <ExperienceSection experiences={experiences} />
+
+          {/* Education */}
+          <EducationSection education={education} />
+        </div>
+        <Footer />
+      </main>
+    </div>
   );
 }
