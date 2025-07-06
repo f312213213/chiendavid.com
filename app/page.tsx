@@ -70,23 +70,21 @@ export default function Home() {
   return (
     <div className="relative h-screen px-8 py-6 lg:px-40 lg:py-30 " style={{ background: 'var(--background)' }}>
       
-
-
-        <div className="fixed top-0 left-40 w-px h-24 border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="fixed top-0 left-40 w-px h-24 border-l-2 border-t-2 border-foreground/30 hidden lg:block" />
         <div className="absolute top-6 left-8 lg:top-30 lg:left-40 w-8 h-8 border-l-2 border-t-2 border-foreground" />
-        <div className="fixed top-30 left-0 w-34 h-px border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="fixed top-30 left-0 w-34 h-px border-l-2 border-t-2 border-foreground/30 hidden lg:block" />
 
-        <div className="fixed top-0 right-40 w-px h-24 border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="fixed top-0 right-40 w-px h-24 border-l-2 border-t-2 border-foreground/30 hidden lg:block" />
         <div className="absolute top-6 right-8 lg:top-30 lg:right-40 w-8 h-8 border-r-2 border-t-2 border-foreground" />
-        <div className="fixed top-30 right-0 w-34 h-px border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="fixed top-30 right-0 w-34 h-px border-l-2 border-t-2 border-foreground/30 hidden lg:block" />
 
-        <div className="fixed bottom-0 left-40 w-px h-24 border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="fixed bottom-0 left-40 w-px h-24 border-l-2 border-t-2 border-foreground/30 hidden lg:block" />
         <div className="absolute bottom-6 left-8 lg:bottom-30 lg:left-40 w-8 h-8 border-l-2 border-b-2 border-foreground" />
-        <div className="fixed bottom-30 left-0 w-34 h-px border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="fixed bottom-30 left-0 w-34 h-px border-l-2 border-t-2 border-foreground/30 hidden lg:block" />
 
-        <div className="fixed bottom-0 right-40 w-px h-24 border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="fixed bottom-0 right-40 w-px h-24 border-l-2 border-t-2 border-foreground/30 hidden lg:block" />
         <div className="absolute bottom-6 right-8 lg:bottom-30 lg:right-40 w-8 h-8 border-r-2 border-b-2 border-foreground" />
-        <div className="fixed bottom-30 right-0 w-34 h-px border-l-2 border-t-2 border-foreground/50 hidden lg:block" />
+        <div className="fixed bottom-30 right-0 w-34 h-px border-l-2 border-t-2 border-foreground/30 hidden lg:block" />
       
       <main className="flex flex-col justify-between h-full overflow-y-scroll border-1 border-muted/20 px-4 py-8">
         <div className=" mx-auto px-6">
