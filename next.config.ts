@@ -11,7 +11,7 @@ const nextConfig = {
       {
         source: "/cv",
         destination:
-          "https://docs.google.com/document/d/1yA6CUtoBA6DaTF0Lrv6rzup-IDB5v1zZiwLXUwq4Hzg/edit?usp=sharing",
+          "https://raw.githubusercontent.com/f312213213/resume/refs/heads/master/david_chien_resume.pdf",
         permanent: true,
       },
       {
