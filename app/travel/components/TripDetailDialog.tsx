@@ -13,23 +13,30 @@ interface TripDetailDialogProps {
 
 export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetailDialogProps) {
   const [current, setCurrent] = useState(0);
+  const [fading, setFading] = useState(false);
 
-  // Reset to first image when a new trip opens
   useEffect(() => {
     if (open) setCurrent(0);
   }, [open, trip?.slug]);
 
+  const goTo = useCallback((next: number) => {
+    setFading(true);
+    setTimeout(() => {
+      setCurrent(next);
+      setFading(false);
+    }, 150);
+  }, []);
+
   const prev = useCallback(() => {
     if (!trip) return;
-    setCurrent((c) => (c - 1 + trip.images.length) % trip.images.length);
-  }, [trip]);
+    goTo((current - 1 + trip.images.length) % trip.images.length);
+  }, [trip, current, goTo]);
 
   const next = useCallback(() => {
     if (!trip) return;
-    setCurrent((c) => (c + 1) % trip.images.length);
-  }, [trip]);
+    goTo((current + 1) % trip.images.length);
+  }, [trip, current, goTo]);
 
-  // Arrow key navigation
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
@@ -49,7 +56,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Backdrop className="dialog-backdrop fixed inset-0 bg-black/70 backdrop-blur-sm z-50" />
-        <Dialog.Popup className="dialog-popup fixed inset-4 md:inset-y-12 md:inset-x-[20%] lg:inset-x-[25%] z-50 bg-background border-2 border-border overflow-y-auto flex flex-col">
+        <Dialog.Popup className="dialog-popup fixed inset-0 md:inset-y-12 md:inset-x-[20%] lg:inset-x-[25%] z-50 bg-background border-0 md:border-2 border-border overflow-y-auto flex flex-col">
           <div className="flex items-start justify-between p-6 md:p-8 border-b border-border">
             <div>
               <Dialog.Title className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
@@ -66,7 +73,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
 
           <div className="p-6 md:p-8 flex-1 flex flex-col">
             {trip.description && (
-              <p className="text-base md:text-lg leading-relaxed text-muted max-w-2xl mb-8">
+              <p className="text-base md:text-lg leading-relaxed text-muted max-w-2xl mb-8 break-words">
                 {trip.description}
               </p>
             )}
@@ -76,24 +83,27 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
                 {hasMultiple && (
                   <button
                     onClick={prev}
-                    className="absolute left-0 z-10 text-muted hover:text-foreground transition-colors text-3xl p-2 cursor-pointer select-none"
+                    className="absolute left-0 z-10 w-10 h-10 flex items-center justify-center text-muted hover:text-foreground hover:bg-foreground/10 transition-all text-4xl cursor-pointer select-none"
                     aria-label="Previous image"
                   >
-                    &lsaquo;
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6"/></svg>
                   </button>
                 )}
 
-                <figure className="flex flex-col items-center px-10">
-                  <Image
-                    key={image.src}
-                    src={image.src}
-                    alt={image.alt}
-                    width={1600}
-                    height={1200}
-                    sizes="(max-width: 768px) 80vw, 500px"
-                    className="w-full h-auto max-h-[60vh] object-contain"
-                    priority
-                  />
+                <figure className="flex flex-col items-center px-12">
+                  <div className={`transition-opacity duration-150 ${fading ? 'opacity-0' : 'opacity-100'}`}>
+                    <Image
+                      key={image.src}
+                      src={image.src}
+                      alt={image.alt}
+                      width={1600}
+                      height={1200}
+                      sizes="(max-width: 768px) 80vw, 500px"
+                      className="w-full h-auto max-h-[60vh] object-contain"
+                      priority={current === 0}
+                      loading={current === 0 ? 'eager' : 'lazy'}
+                    />
+                  </div>
                   {image.caption && (
                     <figcaption className="text-sm text-muted mt-3 text-center">
                       {image.caption}
@@ -104,26 +114,31 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
                 {hasMultiple && (
                   <button
                     onClick={next}
-                    className="absolute right-0 z-10 text-muted hover:text-foreground transition-colors text-3xl p-2 cursor-pointer select-none"
+                    className="absolute right-0 z-10 w-10 h-10 flex items-center justify-center text-muted hover:text-foreground hover:bg-foreground/10 transition-all text-4xl cursor-pointer select-none"
                     aria-label="Next image"
                   >
-                    &rsaquo;
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4l6 6-6 6"/></svg>
                   </button>
                 )}
               </div>
 
               {hasMultiple && (
-                <div className="flex items-center gap-2 mt-4">
-                  {trip.images.map((_, idx) => (
-                    <button
-                      key={idx}
-                      onClick={() => setCurrent(idx)}
-                      className={`w-2 h-2 transition-colors cursor-pointer ${
-                        idx === current ? 'bg-accent' : 'bg-border hover:bg-muted'
-                      }`}
-                      aria-label={`Go to image ${idx + 1}`}
-                    />
-                  ))}
+                <div className="flex items-center gap-3 mt-4">
+                  <span className="text-xs text-muted tabular-nums">
+                    {current + 1} / {trip.images.length}
+                  </span>
+                  <div className="flex items-center gap-1.5">
+                    {trip.images.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => goTo(idx)}
+                        className={`w-2 h-2 transition-colors cursor-pointer ${
+                          idx === current ? 'bg-accent' : 'bg-border hover:bg-muted'
+                        }`}
+                        aria-label={`Go to image ${idx + 1}`}
+                      />
+                    ))}
+                  </div>
                 </div>
               )}
             </div>

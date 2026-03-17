@@ -6,14 +6,20 @@ import type { Trip } from '@/lib/travel';
 interface PolaroidCardProps {
   trip: Trip;
   onClick: () => void;
+  disableRotation?: boolean;
 }
 
-export default function PolaroidCard({ trip, onClick }: PolaroidCardProps) {
+export default function PolaroidCard({ trip, onClick, disableRotation }: PolaroidCardProps) {
+  const rotation = disableRotation ? 0 : trip.rotation;
+
   return (
     <button
       onClick={onClick}
-      className="scroll-reveal polaroid-card block w-full text-left p-2 pb-10 md:p-3 md:pb-14 bg-white dark:bg-[#2a2725] border-2 border-border shadow-md cursor-pointer outline-none focus-visible:border-accent"
-      style={{ transform: `rotate(${trip.rotation}deg)` }}
+      className="scroll-reveal polaroid-card block w-full text-left p-2 pb-10 md:p-3 md:pb-14 border-2 border-border shadow-md cursor-pointer outline-none focus-visible:border-accent"
+      style={{
+        transform: `rotate(${rotation}deg)`,
+        backgroundColor: 'color-mix(in srgb, var(--background) 100%, white 8%)',
+      }}
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         <Image
