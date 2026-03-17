@@ -1,12 +1,12 @@
 {
-  "title": "First Days in Ching Mai",
+  "title": "Golden Light in Chiang Mai",
   "date": "2025-11",
-  "location": "Ching Mai, Thailand",
+  "location": "Chiang Mai, Thailand",
   "lat": 18.79,
   "lng": 98.98,
-  "description": "Landing in a new city, finding my way through cobblestone streets and baroque architecture. Ching Mai feels like a city that was designed to be walked through slowly.",
-  "coverAlt": "Ching Mai Old Town Square at golden hour",
+  "description": "Landing in a new city, finding my way through cobblestone streets and baroque architecture. Chiang Mai feels like a city that was designed to be walked through slowly.",
+  "coverAlt": "Chiang Mai Old Town Square at golden hour",
   "images": [
-    { "file": "IMG_7143.jpeg", "alt": "Ching Mai Airport", "caption": "The astronomical clock in Old Town" }
+    { "file": "IMG_7143.jpeg", "alt": "Chiang Mai Airport", "caption": "The astronomical clock in Old Town" }
   ]
 }
