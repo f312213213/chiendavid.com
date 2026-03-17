@@ -8,7 +8,9 @@ const experiences = [
     title: "Software Engineer",
     company: "Make",
     period: "Feb 2026 – Present",
-    achievements: []
+    achievements: [
+      "Building automation tools and platform features for Make's no-code integration platform."
+    ]
   },
   {
     title: "Software Engineer",
@@ -46,7 +48,9 @@ const experiences = [
     title: "Software Engineer (Part time)",
     company: "Dimorder",
     period: "Feb 2022 – Feb 2023",
-    achievements: []
+    achievements: [
+      "Contributed to the development of a restaurant ordering and management platform."
+    ]
   }
 ];
 
@@ -77,26 +81,26 @@ const links = [
 
 export default function Home() {
   return (
-    <div className="min-h-[100dvh] px-6 py-12 md:px-12 lg:px-20" style={{ background: 'var(--background)' }}>
+    <div className="min-h-[100dvh] px-6 py-16 md:px-12 md:py-24 lg:px-20 lg:py-32" style={{ background: 'var(--background)' }}>
       <main className="max-w-2xl mx-auto">
 
-        {/* Intro */}
-        <section className="mb-20 md:mb-28">
-          <p className="text-sm font-medium tracking-wide uppercase mb-4" style={{ color: 'var(--accent)' }}>
+        {/* Hero */}
+        <section className="mb-24 md:mb-36">
+          <p className="animate-in delay-1 text-sm font-medium tracking-wide uppercase mb-6" style={{ color: 'var(--accent)' }}>
             Software Engineer
           </p>
-          <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8" style={{ color: 'var(--foreground)' }}>
-            David Chien
+          <h1 className="animate-in delay-2 font-display text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight mb-10 leading-[0.9]" style={{ color: 'var(--foreground)' }}>
+            David<br />Chien
           </h1>
-          <div className="flex flex-col gap-3 mb-10">
-            <p className="text-lg leading-relaxed" style={{ color: 'var(--muted)' }}>
-              Deep experience in building web applications. Passionate about creating products that help people live better lives.
+          <div className="animate-in delay-3 flex flex-col gap-3 mb-12">
+            <p className="text-lg md:text-xl leading-relaxed max-w-lg" style={{ color: 'var(--muted)' }}>
+              I build web applications and care deeply about creating products that help people live better lives.
             </p>
-            <p className="text-lg leading-relaxed" style={{ color: 'var(--muted)' }}>
+            <p className="text-lg md:text-xl leading-relaxed" style={{ color: 'var(--muted)' }}>
               Currently in Prague 🇨🇿 &mdash; also able to work in Taiwan 🇹🇼 and the USA 🇺🇸
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="animate-in delay-4 flex flex-wrap gap-3">
             {links.map((link) => (
               <a
                 key={link.label}
@@ -111,7 +115,9 @@ export default function Home() {
         </section>
 
         {/* Current Project */}
-        <ProjectSection projects={projects} />
+        <div className="animate-in delay-5">
+          <ProjectSection projects={projects} />
+        </div>
 
         {/* Work Experience */}
         <ExperienceSection experiences={experiences} />

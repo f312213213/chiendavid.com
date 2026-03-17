@@ -12,17 +12,17 @@ interface ExperienceSectionProps {
 export default function ExperienceSection({ experiences }: ExperienceSectionProps) {
   return (
     <section className="mb-20 md:mb-28">
-      <h2 className="text-xs font-semibold tracking-widest uppercase mb-8" style={{ color: 'var(--accent)' }}>
+      <h2 className="text-xs font-semibold tracking-widest uppercase mb-10" style={{ color: 'var(--accent)' }}>
         Work Experience
       </h2>
-      <div className="space-y-10">
+      <div className="space-y-12">
         {experiences.map((exp, index) => (
-          <div key={index} className="relative pl-6 border-l-2" style={{ borderColor: index === 0 ? 'var(--accent)' : 'var(--border)' }}>
+          <div key={index} className="exp-entry relative pl-6 border-l-2" style={index === 0 ? { borderColor: 'var(--accent)' } : undefined}>
             <div className="mb-3">
-              <h3 className="text-lg font-semibold" style={{ color: 'var(--foreground)' }}>
+              <h3 className="font-display text-2xl md:text-3xl font-bold tracking-tight" style={{ color: 'var(--foreground)' }}>
                 {exp.company}
               </h3>
-              <p className="text-sm font-medium" style={{ color: 'var(--muted)' }}>
+              <p className="text-sm font-medium mt-1" style={{ color: 'var(--muted)' }}>
                 {exp.title}
               </p>
               <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>

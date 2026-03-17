@@ -42,12 +42,12 @@ export default function Footer() {
   };
 
   return (
-    <footer className="text-sm flex justify-between items-center gap-4 pt-8 border-t" style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}>
+    <footer className="text-sm flex justify-between items-center gap-4 pt-16 mt-8 border-t" style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}>
       <p>&copy; {new Date().getFullYear()} David Chien</p>
       <button
         onClick={cycleTheme}
-        className="text-xs font-medium tracking-wide uppercase cursor-pointer transition-colors duration-200 hover:opacity-70"
-        style={{ color: 'var(--muted)' }}
+        className="text-xs font-medium tracking-wide uppercase cursor-pointer transition-all duration-200 px-3 py-1.5 border rounded-full hover:opacity-70"
+        style={{ color: 'var(--muted)', borderColor: 'var(--border)' }}
         aria-label={`Current theme: ${theme}. Click to cycle themes.`}
         title={`Current: ${theme}`}
       >

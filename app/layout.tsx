@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import Script from 'next/script'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import Footer from "./components/Footer";
+import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -11,9 +12,15 @@ const inter = Inter({
   display: "swap",
 });
 
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-display",
+  subsets: ["latin"],
+  display: "swap",
+});
+
 export const metadata: Metadata = {
   title: "David Chien - Software Engineer",
-  description: "Portfolio of David Chien, a Software Engineer with deep experience in building web applications.",
+  description: "David Chien — Software Engineer building web applications. Based in Prague, also available in Taiwan and the USA.",
 };
 
 export default function RootLayout({
@@ -24,7 +31,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} antialiased`}
+        className={`${inter.variable} ${spaceGrotesk.variable} antialiased`}
       >
         <Script id="woopra-analytics" strategy="afterInteractive">
           {`
@@ -62,6 +69,7 @@ export default function RootLayout({
         {children}
 
         {/* <Footer /> */}
+        <Analytics />
         <GoogleAnalytics gaId="G-TP0XQPDH1G" />
       </body>
     </html>
