@@ -43,7 +43,6 @@ body {
   line-height: 1.6;
 }
 
-/* Subtle grain texture */
 body::before {
   content: "";
   position: fixed;
@@ -61,16 +60,10 @@ body::before {
   color: #fff;
 }
 
-/* Entrance animations */
+/* Keyframes — can't be expressed as Tailwind utilities */
 @keyframes fade-up {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .animate-in {
@@ -82,96 +75,18 @@ body::before {
 .delay-3 { animation-delay: 0.2s; }
 .delay-4 { animation-delay: 0.3s; }
 
-/* Link pills — primary CTA */
-.link-pill-primary {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
+@keyframes tooltip-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-.link-pill-primary:hover,
-.link-pill-primary:focus-visible {
-  opacity: 0.85;
-  outline: none;
-}
-
-/* Link pills — secondary CTA */
-.link-pill-secondary {
-  color: var(--accent);
-  border-color: var(--accent);
-}
-
-.link-pill-secondary:hover,
-.link-pill-secondary:focus-visible {
-  background: var(--accent);
-  color: #fff;
-  outline: none;
-}
-
-/* Link pills — ghost */
-.link-pill {
-  color: var(--foreground);
-  border-color: var(--border);
-}
-
-.link-pill:hover,
-.link-pill:focus-visible {
-  color: var(--accent);
-  border-color: var(--accent);
-  outline: none;
-}
-
-.link-pill:active,
-.link-pill-primary:active,
-.link-pill-secondary:active {
-  transform: scale(0.95);
-}
-
-/* Project tooltip */
 .project-tooltip {
   border: 2px solid var(--border);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
   animation: tooltip-in 0.15s ease-out;
 }
 
-@keyframes tooltip-in {
-  from {
-    opacity: 0;
-    transform: scale(0.96);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* Project card */
-.project-card {
-  border-color: var(--border);
-  border-left-color: var(--accent);
-}
-
-.project-card:hover,
-.project-card:focus-visible {
-  border-color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 4%, transparent);
-}
-
-/* Experience entry hover */
-.exp-entry {
-  border-color: var(--border);
-  transition: border-color 0.3s ease, background 0.3s ease;
-}
-
-.exp-entry:hover {
-  border-color: var(--accent);
-}
-
-.exp-entry-current:hover {
-  background: color-mix(in srgb, var(--accent) 5%, transparent);
-}
-
-/* Scroll reveal — hidden only after JS initializes */
+/* Scroll reveal — requires parent selector, can't be Tailwind */
 .scroll-reveal-ready .scroll-reveal {
   opacity: 0;
   transform: translateY(20px);
@@ -190,4 +105,3 @@ body::before {
     transition: none;
   }
 }
-

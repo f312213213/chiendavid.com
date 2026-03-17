@@ -52,7 +52,7 @@ export default function Footer({ education }: FooterProps) {
   };
 
   return (
-    <footer className="scroll-reveal text-sm pt-16 mt-8 border-t" style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}>
+    <footer className="scroll-reveal text-sm pt-16 mt-8 border-t border-border text-muted">
       {education && education.length > 0 && (
         <div className="mb-8">
           {education.map((edu, index) => (
@@ -66,8 +66,7 @@ export default function Footer({ education }: FooterProps) {
         <p>&copy; {new Date().getFullYear()} David Chien</p>
         <button
           onClick={cycleTheme}
-          className="text-xs font-medium tracking-wide uppercase cursor-pointer transition-all duration-200 px-3 py-1.5 border hover:opacity-70"
-          style={{ color: 'var(--muted)', borderColor: 'var(--border)' }}
+          className="text-xs font-medium tracking-wide uppercase cursor-pointer transition-all duration-200 px-3 py-1.5 border border-border text-muted hover:opacity-70"
           aria-label={`Current theme: ${theme}. Click to cycle themes.`}
           title={`Current: ${theme}`}
         >

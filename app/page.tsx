@@ -97,22 +97,22 @@ const links = [
 
 export default function Home() {
   return (
-    <div className="min-h-[100dvh] px-6 py-16 md:px-12 md:py-24 lg:px-20 lg:py-32" style={{ background: 'var(--background)' }}>
+    <div className="min-h-[100dvh] px-6 py-16 md:px-12 md:py-24 lg:px-20 lg:py-32 bg-background">
       <main className="max-w-3xl mx-auto">
 
         {/* Hero */}
         <section className="mb-24 md:mb-36">
-          <p className="animate-in delay-1 text-sm font-medium tracking-wide uppercase mb-6" style={{ color: 'var(--accent)' }}>
+          <p className="animate-in delay-1 text-sm font-medium tracking-wide uppercase mb-6 text-accent">
             Software Engineer
           </p>
           <h1 className="animate-in delay-2 font-nabla text-6xl md:text-8xl lg:text-9xl tracking-tight mb-10 leading-[0.9]">
             David<br />Chien
           </h1>
           <div className="animate-in delay-3 mb-12">
-            <p className="text-xl md:text-2xl leading-relaxed max-w-xl font-light" style={{ color: 'var(--foreground)' }}>
+            <p className="text-xl md:text-2xl leading-relaxed max-w-xl font-light text-foreground">
               I obsess over build systems, billing pipelines, and making slow things fast.
             </p>
-            <p className="text-base md:text-lg leading-relaxed mt-4" style={{ color: 'var(--muted)' }}>
+            <p className="text-base md:text-lg leading-relaxed mt-4 text-muted">
               Currently in Prague 🇨🇿 &mdash; also available in Taiwan 🇹🇼 and the USA 🇺🇸
             </p>
           </div>
@@ -122,12 +122,12 @@ export default function Home() {
                 key={link.label}
                 href={link.href}
                 {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className={`px-5 py-2.5 text-sm font-semibold uppercase tracking-wider border-2 transition-all duration-200 hover:-translate-y-0.5 ${
+                className={`px-5 py-2.5 text-sm font-semibold uppercase tracking-wider border-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 outline-none ${
                   link.variant === 'primary'
-                    ? 'link-pill-primary'
+                    ? 'bg-accent border-accent text-white hover:opacity-85'
                     : link.variant === 'secondary'
-                    ? 'link-pill-secondary'
-                    : 'link-pill'
+                    ? 'text-accent border-accent hover:bg-accent hover:text-white'
+                    : 'text-foreground border-border hover:text-accent hover:border-accent'
                 }`}
               >
                 {link.label}
