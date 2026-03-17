@@ -24,7 +24,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
     setTimeout(() => {
       setCurrent(next);
       setFading(false);
-    }, 150);
+    }, 200);
   }, []);
 
   const prev = useCallback(() => {
@@ -55,94 +55,107 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Backdrop className="dialog-backdrop fixed inset-0 bg-black/70 backdrop-blur-sm z-50" />
-        <Dialog.Popup className="dialog-popup fixed inset-0 md:inset-y-12 md:inset-x-[20%] lg:inset-x-[25%] z-50 bg-background border-0 md:border-2 border-border overflow-y-auto flex flex-col">
-          <div className="flex items-start justify-between p-6 md:p-8 border-b border-border">
-            <div>
-              <Dialog.Title className="text-2xl md:text-3xl font-bold tracking-tight text-foreground">
-                {trip.title}
-              </Dialog.Title>
-              <Dialog.Description className="text-sm text-muted mt-1">
-                {trip.location} &middot; {trip.date}
-              </Dialog.Description>
-            </div>
-            <Dialog.Close className="text-muted hover:text-accent transition-colors text-2xl leading-none p-2 -m-2 cursor-pointer">
-              &times;
-            </Dialog.Close>
-          </div>
+        <Dialog.Backdrop className="dialog-backdrop fixed inset-0 bg-black/85 z-50" />
+        <Dialog.Popup className="dialog-popup fixed inset-0 md:inset-6 lg:inset-10 z-50 overflow-hidden flex flex-col md:flex-row bg-background border-0 md:border-2 border-border">
 
-          <div className="p-6 md:p-8 flex-1 flex flex-col">
-            {trip.description && (
-              <p className="text-base md:text-lg leading-relaxed text-muted max-w-2xl mb-8 break-words">
-                {trip.description}
-              </p>
+          {/* === Image panel — takes majority of space === */}
+          <div className="flex-1 min-h-0 min-w-0 bg-black/40 flex flex-col items-center justify-center relative">
+
+            {/* Nav arrows — overlaid on image */}
+            {hasMultiple && (
+              <>
+                <button
+                  onClick={prev}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer select-none"
+                  aria-label="Previous image"
+                >
+                  <svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6"/></svg>
+                </button>
+                <button
+                  onClick={next}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer select-none"
+                  aria-label="Next image"
+                >
+                  <svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4l6 6-6 6"/></svg>
+                </button>
+              </>
             )}
 
-            <div className="flex-1 flex flex-col items-center justify-center">
-              <div className="relative w-full flex items-center justify-center">
-                {hasMultiple && (
-                  <button
-                    onClick={prev}
-                    className="absolute left-0 z-10 w-10 h-10 flex items-center justify-center text-muted hover:text-foreground hover:bg-foreground/10 transition-all text-4xl cursor-pointer select-none"
-                    aria-label="Previous image"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6"/></svg>
-                  </button>
-                )}
+            {/* Image */}
+            <div className={`transition-opacity duration-200 ease-out flex items-center justify-center min-h-0 max-h-full max-w-full p-4 md:p-8 ${fading ? 'opacity-0' : 'opacity-100'}`}>
+              <Image
+                key={image.src}
+                src={image.src}
+                alt={image.alt}
+                width={1600}
+                height={1200}
+                sizes="(max-width: 768px) 100vw, 65vw"
+                className="max-w-full max-h-full w-auto h-auto object-contain"
+                priority={current === 0}
+                loading={current === 0 ? 'eager' : 'lazy'}
+              />
+            </div>
 
-                <figure className="flex flex-col items-center px-12">
-                  <div className={`transition-opacity duration-150 ${fading ? 'opacity-0' : 'opacity-100'}`}>
-                    <Image
-                      key={image.src}
-                      src={image.src}
-                      alt={image.alt}
-                      width={1600}
-                      height={1200}
-                      sizes="(max-width: 768px) 80vw, 500px"
-                      className="w-full h-auto max-h-[60vh] object-contain"
-                      priority={current === 0}
-                      loading={current === 0 ? 'eager' : 'lazy'}
+            {/* Image indicators — bottom of image panel */}
+            {hasMultiple && (
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3">
+                <span className="text-xs font-semibold tracking-wider text-white/50 tabular-nums">
+                  {current + 1} / {trip.images.length}
+                </span>
+                <div className="flex items-center gap-1.5">
+                  {trip.images.map((_, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => goTo(idx)}
+                      className={`h-0.5 transition-all cursor-pointer ${
+                        idx === current ? 'w-6 bg-accent' : 'w-3 bg-white/30 hover:bg-white/50'
+                      }`}
+                      aria-label={`Go to image ${idx + 1}`}
                     />
-                  </div>
-                  {image.caption && (
-                    <figcaption className="text-sm text-muted mt-3 text-center">
-                      {image.caption}
-                    </figcaption>
-                  )}
-                </figure>
-
-                {hasMultiple && (
-                  <button
-                    onClick={next}
-                    className="absolute right-0 z-10 w-10 h-10 flex items-center justify-center text-muted hover:text-foreground hover:bg-foreground/10 transition-all text-4xl cursor-pointer select-none"
-                    aria-label="Next image"
-                  >
-                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4l6 6-6 6"/></svg>
-                  </button>
-                )}
-              </div>
-
-              {hasMultiple && (
-                <div className="flex items-center gap-3 mt-4">
-                  <span className="text-xs text-muted tabular-nums">
-                    {current + 1} / {trip.images.length}
-                  </span>
-                  <div className="flex items-center gap-1.5">
-                    {trip.images.map((_, idx) => (
-                      <button
-                        key={idx}
-                        onClick={() => goTo(idx)}
-                        className={`w-2 h-2 transition-colors cursor-pointer ${
-                          idx === current ? 'bg-accent' : 'bg-border hover:bg-muted'
-                        }`}
-                        aria-label={`Go to image ${idx + 1}`}
-                      />
-                    ))}
-                  </div>
+                  ))}
                 </div>
+              </div>
+            )}
+          </div>
+
+          {/* === Info sidebar === */}
+          <div className="shrink-0 w-full md:w-80 lg:w-96 border-t md:border-t-0 md:border-l border-border overflow-y-auto flex flex-col">
+
+            {/* Close button */}
+            <div className="flex justify-end p-4 shrink-0">
+              <Dialog.Close className="w-10 h-10 flex items-center justify-center border-2 border-border text-muted hover:border-accent hover:text-accent transition-all cursor-pointer">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <path d="M3 3l10 10M13 3L3 13"/>
+                </svg>
+              </Dialog.Close>
+            </div>
+
+            {/* Trip info */}
+            <div className="px-6 md:px-8 pb-8 flex-1">
+              <p className="text-xs font-semibold tracking-widest uppercase text-accent mb-2">
+                {trip.location}
+              </p>
+              <Dialog.Title className="text-2xl md:text-3xl font-bold tracking-tight text-foreground leading-tight">
+                {trip.title}
+              </Dialog.Title>
+              <Dialog.Description className="text-xs text-muted mt-1">
+                {trip.date}
+              </Dialog.Description>
+
+              {trip.description && (
+                <p className="text-sm leading-relaxed text-muted mt-6 font-light break-words">
+                  {trip.description}
+                </p>
+              )}
+
+              {image.caption && (
+                <p className="text-xs tracking-wide uppercase text-muted/60 mt-8 pt-4 border-t border-border">
+                  {image.caption}
+                </p>
               )}
             </div>
           </div>
+
         </Dialog.Popup>
       </Dialog.Portal>
     </Dialog.Root>
