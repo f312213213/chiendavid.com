@@ -1,55 +1,71 @@
 import ExperienceSection from './components/ExperienceSection';
 import ProjectSection from './components/ProjectSection';
-import EducationSection from './components/EducationSection';
 import Footer from './components/Footer';
+import ScrollReveal from './components/ScrollReveal';
 
 const experiences = [
   {
-    title: "Software Engineer",
     company: "Make",
-    period: "Feb 2026 – Present",
-    achievements: [
-      "Owning and evolving the billing system powering Make's automation platform, ensuring reliable payment processing at scale."
+    current: true,
+    roles: [
+      {
+        title: "Software Engineer",
+        period: "Feb 2026 – Present",
+        achievements: [
+          "Owning and evolving the billing system powering Make's automation platform, ensuring reliable payment processing at scale."
+        ]
+      }
     ]
   },
   {
-    title: "Software Engineer",
     company: "Appier",
-    period: "July 2024 – Feb 2026",
-    achievements: [
-      "Modernized monorepo infrastructure by leading migration from Yarn/Lerna to pnpm/NX, reducing CI/CD pipeline execution time by 83%.",
-      "Designed and deployed a comprehensive logging service, enabling real-time performance monitoring and accelerating issue resolution by 15%.",
-      "Collaborated with cross-functional teams to implement scalable solutions and drive continuous improvement.",
-      "Acted as a key decision-maker in selecting and implementing new build tools."
+    roles: [
+      {
+        title: "Software Engineer",
+        period: "July 2024 – Feb 2026",
+        achievements: [
+          "Modernized monorepo infrastructure by leading migration from Yarn/Lerna to pnpm/NX, reducing CI/CD pipeline execution time by 83%.",
+          "Designed and deployed a comprehensive logging service, enabling real-time performance monitoring and accelerating issue resolution by 15%.",
+          "Collaborated with cross-functional teams to implement scalable solutions and drive continuous improvement.",
+          "Acted as a key decision-maker in selecting and implementing new build tools."
+        ]
+      },
+      {
+        title: "Software Engineer Intern",
+        period: "July 2023 – July 2024",
+        achievements: [
+          "Developed an intuitive campaign management dashboard, streamlining manager workflows.",
+          "Optimized mission-critical page performance, reducing load time from unresponsive to 1 second.",
+          "Spearheaded migration from Webpack to Rspack, achieving a 10x improvement in build times.",
+          "Led major UI library upgrade, coordinating systematic migration across multiple applications and teams."
+        ]
+      }
     ]
   },
   {
-    title: "Software Engineer Intern",
-    company: "Appier",
-    period: "July 2023 – July 2024",
-    achievements: [
-      "Developed an intuitive campaign management dashboard, streamlining manager workflows.",
-      "Optimized mission-critical page performance, reducing load time from unresponsive to 1 second.",
-      "Spearheaded migration from Webpack to Rspack, achieving a 10x improvement in build times.",
-      "Led major UI library upgrade, coordinating systematic migration across multiple applications and teams."
-    ]
-  },
-  {
-    title: "Software Engineer",
     company: "LangLive",
-    period: "June 2022 – June 2023",
-    achievements: [
-      "Refactored gift animation system with WebGL, reducing CPU usage by 30%.",
-      "Re-architected data fetching, cutting API calls by 50% and improving page load speed.",
-      "Implemented end-to-end testing with Playwright across three products."
+    roles: [
+      {
+        title: "Software Engineer",
+        period: "June 2022 – June 2023",
+        achievements: [
+          "Refactored gift animation system with WebGL, reducing CPU usage by 30%.",
+          "Re-architected data fetching, cutting API calls by 50% and improving page load speed.",
+          "Implemented end-to-end testing with Playwright across three products."
+        ]
+      }
     ]
   },
   {
-    title: "Software Engineer (Part time)",
     company: "Dimorder",
-    period: "Feb 2022 – Feb 2023",
-    achievements: [
-      "Owned and evolved a food delivery platform, building end-to-end ordering and restaurant management features."
+    roles: [
+      {
+        title: "Software Engineer (Part time)",
+        period: "Feb 2022 – Feb 2023",
+        achievements: [
+          "Owned and evolved a food delivery platform, building end-to-end ordering and restaurant management features."
+        ]
+      }
     ]
   }
 ];
@@ -120,18 +136,17 @@ export default function Home() {
           </div>
         </section>
 
+        <ScrollReveal />
+
         {/* Current Project */}
-        <div className="animate-in delay-5">
+        <div className="scroll-reveal">
           <ProjectSection projects={projects} />
         </div>
 
         {/* Work Experience */}
         <ExperienceSection experiences={experiences} />
 
-        {/* Education */}
-        <EducationSection education={education} />
-
-        <Footer />
+        <Footer education={education} />
       </main>
     </div>
   );

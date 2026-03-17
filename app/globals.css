@@ -61,7 +61,6 @@ body::before {
   color: #fff;
 }
 
-
 /* Entrance animations */
 @keyframes fade-up {
   from {
@@ -137,14 +136,40 @@ body::before {
 .project-card:hover,
 .project-card:focus-visible {
   border-color: var(--accent);
+  border-left-color: var(--accent);
 }
 
 /* Experience entry hover */
 .exp-entry {
   border-color: var(--border);
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease;
 }
 
 .exp-entry:hover {
   border-color: var(--accent);
+}
+
+.exp-entry-current:hover {
+  background: color-mix(in srgb, var(--accent) 5%, transparent);
+}
+
+/* Scroll reveal */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1), transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scroll-reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Project card left accent border */
+.project-card {
+  border-left-color: var(--accent);
+}
+
+.project-card:hover {
+  background: color-mix(in srgb, var(--accent) 4%, transparent);
 }
