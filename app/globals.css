@@ -16,6 +16,8 @@
   --color-accent: var(--accent);
   --font-sans: var(--font-inter);
   --font-display: var(--font-display);
+  --font-exo2: var(--font-exo2);
+  --font-nabla: var(--font-nabla);
 }
 
 @media (prefers-color-scheme: dark) {

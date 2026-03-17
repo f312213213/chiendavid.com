@@ -81,7 +81,7 @@ const links = [
 
 export default function Home() {
   return (
-    <div className="min-h-[100dvh] px-6 py-16 md:px-12 md:py-24 lg:px-20 lg:py-32" style={{ background: 'var(--background)' }}>
+    <div className="min-h-[100dvh] px-6 py-16 md:px-12 md:py-24 lg:px-20 lg:py-32 font-exo2" style={{ background: 'var(--background)' }}>
       <main className="max-w-2xl mx-auto">
 
         {/* Hero */}
@@ -89,10 +89,10 @@ export default function Home() {
           <p className="animate-in delay-1 text-sm font-medium tracking-wide uppercase mb-6" style={{ color: 'var(--accent)' }}>
             Software Engineer
           </p>
-          <h1 className="animate-in delay-2 font-display text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight mb-10 leading-[0.9]" style={{ color: 'var(--foreground)' }}>
+          <h1 className="animate-in delay-2 font-nabla text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight mb-10 leading-[0.9]" style={{ color: 'var(--foreground)' }}>
             David<br />Chien
           </h1>
-          <div className="animate-in delay-3 flex flex-col gap-3 mb-12">
+          <div className="animate-in delay-3 flex flex-col gap-3 mb-12 font-exo2">
             <p className="text-lg md:text-xl leading-relaxed max-w-lg" style={{ color: 'var(--muted)' }}>
               I build web applications and care deeply about creating products that help people live better lives.
             </p>
