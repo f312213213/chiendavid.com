@@ -18,6 +18,8 @@ export interface Trip {
   coverSrc: string;
   coverAlt: string;
   coverBlurDataURL?: string;
+  lat?: number;
+  lng?: number;
   images: TripImage[];
   rotation: number;
 }
@@ -85,6 +87,8 @@ export async function getAllTrips(): Promise<Trip[]> {
         coverSrc: images[0]?.src ?? '',
         coverAlt: images[0]?.alt ?? meta.title,
         coverBlurDataURL: images[0]?.blurDataURL,
+        lat: meta.lat,
+        lng: meta.lng,
         images,
         rotation: 0, // assigned after sorting
       });

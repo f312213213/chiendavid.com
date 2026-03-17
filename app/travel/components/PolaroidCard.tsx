@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import type { Trip } from '@/lib/travel';
+import DotMap from './DotMap';
 
 interface PolaroidCardProps {
   trip: Trip;
@@ -73,6 +74,15 @@ export default function PolaroidCard({ trip, onClick, disableRotation, featured 
           <p className="text-xs text-muted mt-0.5">
             {trip.date}
           </p>
+
+          {/* Dot map */}
+          {trip.lat != null && trip.lng != null && (
+            <DotMap
+              lat={trip.lat}
+              lng={trip.lng}
+              className={`absolute -bottom-12 -right-1 text-foreground ${featured ? 'w-36 md:w-44' : 'w-24 md:w-28'}`}
+            />
+          )}
         </div>
       </div>
     </button>
