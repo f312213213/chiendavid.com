@@ -90,6 +90,7 @@ const education = [
 const links = [
   { label: "CV", href: "https://chiendavid.com/cv", variant: "primary" as const },
   { label: "Email", href: "mailto:f312213213david@gmail.com", variant: "secondary" as const },
+  { label: "Travel", href: "/travel", variant: "ghost" as const },
   { label: "LinkedIn", href: "https://chiendavid.com/linkedin", external: true, variant: "ghost" as const },
   { label: "GitHub", href: "https://chiendavid.com/github", external: true, variant: "ghost" as const },
   { label: "davidchien.eth", href: "https://chiendavid.com/eth", external: true, variant: "ghost" as const },
@@ -121,8 +122,7 @@ export default function Home() {
               <a
                 key={link.label}
                 href={link.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                {...(link.href.startsWith('/') ? {} : { target: "_blank", rel: "noopener noreferrer" })}
                 className={`px-5 py-2.5 text-sm font-semibold uppercase tracking-wider border-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 outline-none ${
                   link.variant === 'primary'
                     ? 'bg-accent border-accent text-white hover:opacity-85'

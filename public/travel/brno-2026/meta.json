@@ -1,0 +1,11 @@
+{
+  "title": "First Days in Brno",
+  "date": "2026-03",
+  "location": "Brno, Czech Republic",
+  "description": "Landing in a new city, finding my way through cobblestone streets and baroque architecture. Brno feels like a city that was designed to be walked through slowly.",
+  "coverAlt": "Brno Old Town Square at golden hour",
+  "images": [
+    { "file": "IMG_8645.jpeg", "alt": "Brno Old Town astronomical clock", "caption": "The astronomical clock in Old Town" },
+    { "file": "IMG_8707.jpeg", "alt": "Brno Old Town astronomical clock", "caption": "The astronomical clock in Old Town" }
+  ]
+}
