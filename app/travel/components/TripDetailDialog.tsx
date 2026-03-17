@@ -12,10 +12,13 @@ interface TripDetailDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
+const SWIPE_THRESHOLD = 50;
+
 export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetailDialogProps) {
   const [current, setCurrent] = useState(0);
   const [previous, setPrevious] = useState<number | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
     if (open) {
@@ -41,6 +44,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
     goTo((current + 1) % trip.images.length);
   }, [trip, current, goTo]);
 
+  // Keyboard navigation
   useEffect(() => {
     if (!open) return;
     const handler = (e: KeyboardEvent) => {
@@ -51,11 +55,36 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
     return () => window.removeEventListener('keydown', handler);
   }, [open, prev, next]);
 
+  // Swipe handlers
+  const onTouchStart = useCallback((e: React.TouchEvent) => {
+    const touch = e.touches[0];
+    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
+  }, []);
+
+  const onTouchEnd = useCallback((e: React.TouchEvent) => {
+    if (!touchStartRef.current) return;
+    const touch = e.changedTouches[0];
+    const dx = touch.clientX - touchStartRef.current.x;
+    const dy = touch.clientY - touchStartRef.current.y;
+    touchStartRef.current = null;
+
+    // Only swipe if horizontal movement is dominant
+    if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
+      if (dx < 0) next();
+      else prev();
+    }
+  }, [prev, next]);
+
   if (!trip) return null;
 
-  const image = trip.images[current];
-  const prevImage = previous !== null ? trip.images[previous] : null;
+  const safeIndex = current < trip.images.length ? current : 0;
+  const image = trip.images[safeIndex];
+  const prevImage = previous !== null && previous < trip.images.length ? trip.images[previous] : null;
   const hasMultiple = trip.images.length > 1;
+
+  // Preload next image
+  const nextIdx = (safeIndex + 1) % trip.images.length;
+  const nextImage = hasMultiple ? trip.images[nextIdx] : null;
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -64,21 +93,25 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
         <Dialog.Popup className="dialog-popup fixed inset-0 md:inset-6 lg:inset-10 z-50 overflow-hidden flex flex-col md:flex-row bg-background border-0 md:border-2 border-border">
 
           {/* === Image panel === */}
-          <div className="relative flex-1 min-h-0 min-w-0 bg-background flex items-center justify-center overflow-hidden">
+          <div
+            className="relative flex-1 min-h-0 min-w-0 bg-background flex items-center justify-center overflow-hidden"
+            onTouchStart={hasMultiple ? onTouchStart : undefined}
+            onTouchEnd={hasMultiple ? onTouchEnd : undefined}
+          >
 
-            {/* Nav arrows with backdrop for visibility */}
+            {/* Nav arrows — square to match design language */}
             {hasMultiple && (
               <>
                 <button
                   onClick={prev}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-11 h-11 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-background/60 backdrop-blur-sm text-muted hover:text-foreground hover:bg-background/80 transition-all cursor-pointer select-none"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-11 h-11 md:w-12 md:h-12 hidden md:flex items-center justify-center bg-background/60 backdrop-blur-sm text-muted hover:text-foreground hover:bg-background/80 transition-all cursor-pointer select-none"
                   aria-label="Previous image"
                 >
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6"/></svg>
                 </button>
                 <button
                   onClick={next}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-11 h-11 md:w-12 md:h-12 flex items-center justify-center rounded-full bg-background/60 backdrop-blur-sm text-muted hover:text-foreground hover:bg-background/80 transition-all cursor-pointer select-none"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-11 h-11 md:w-12 md:h-12 hidden md:flex items-center justify-center bg-background/60 backdrop-blur-sm text-muted hover:text-foreground hover:bg-background/80 transition-all cursor-pointer select-none"
                   aria-label="Next image"
                 >
                   <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4l6 6-6 6"/></svg>
@@ -88,7 +121,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
 
             {/* Crossfade: outgoing image */}
             {prevImage && (
-              <div className="absolute inset-0 flex items-center justify-center p-12 pb-20 animate-[fade-out_0.3s_ease-out_forwards]">
+              <div className="absolute inset-0 flex items-center justify-center p-0 pb-12 md:p-12 md:pb-20 animate-[fade-out_0.3s_ease-out_forwards]">
                 <Image
                   src={prevImage.src}
                   alt={prevImage.alt}
@@ -104,7 +137,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
             )}
 
             {/* Current image */}
-            <div className={`absolute inset-0 flex items-center justify-center p-12 pb-20 ${previous !== null ? 'animate-[fade-in_0.3s_ease-out_forwards]' : ''}`}>
+            <div className={`absolute inset-0 flex items-center justify-center p-0 pb-12 md:p-12 md:pb-20 ${previous !== null ? 'animate-[fade-in_0.3s_ease-out_forwards]' : ''}`}>
               <Image
                 key={image.src}
                 src={image.src}
@@ -121,9 +154,14 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
               />
             </div>
 
-            {/* Image indicators with better touch targets */}
+            {/* Preload next image (hidden) */}
+            {nextImage && nextIdx !== current && (
+              <link rel="preload" as="image" href={nextImage.src} />
+            )}
+
+            {/* Image indicators */}
             {hasMultiple && (
-              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3">
+              <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3">
                 <span className="text-xs font-semibold tracking-wider text-muted tabular-nums">
                   {current + 1} / {trip.images.length}
                 </span>
@@ -147,7 +185,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
 
           {/* === Info sidebar with texture === */}
           <div className="shrink-0 w-full md:w-80 lg:w-96 border-t md:border-t-0 md:border-l border-border overflow-y-auto flex flex-col relative">
-            {/* Grain overlay to match polaroid cards */}
+            {/* Grain overlay */}
             <div className="absolute inset-0 pointer-events-none opacity-[0.035] polaroid-grain" />
 
             {/* Close button */}
@@ -180,16 +218,15 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
               )}
 
               {image.caption && (
-                <p className="text-xs tracking-wide uppercase text-muted/60 mt-8 pt-4 border-t border-border">
+                <p className="text-xs tracking-wide uppercase text-muted mt-8 pt-4 border-t border-border">
                   {image.caption}
                 </p>
               )}
-
             </div>
 
-            {/* Dot map pinned to bottom */}
+            {/* Dot map pinned to bottom — hidden on mobile to save space */}
             {trip.lat != null && trip.lng != null && (
-              <div className="px-6 md:px-8 pb-6 mt-auto relative">
+              <div className="hidden md:block px-6 md:px-8 pb-6 mt-auto relative">
                 <DotMap
                   lat={trip.lat}
                   lng={trip.lng}
