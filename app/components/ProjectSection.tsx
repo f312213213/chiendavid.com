@@ -21,7 +21,7 @@ export default function ProjectSection({ projects }: ProjectSectionProps) {
             target="_blank"
             rel="noopener noreferrer"
             key={index}
-            className="project-card block p-6 rounded-lg border-2 transition-all duration-200 hover:-translate-y-1 group"
+            className="project-card block p-6 border-2 transition-all duration-200 hover:-translate-y-1 group"
           >
             <div className="flex items-center justify-between mb-2">
               <h3 className="text-lg font-semibold" style={{ color: 'var(--foreground)' }}>

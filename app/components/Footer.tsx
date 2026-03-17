@@ -46,7 +46,7 @@ export default function Footer() {
       <p>&copy; {new Date().getFullYear()} David Chien</p>
       <button
         onClick={cycleTheme}
-        className="text-xs font-medium tracking-wide uppercase cursor-pointer transition-all duration-200 px-3 py-1.5 border rounded-full hover:opacity-70"
+        className="text-xs font-medium tracking-wide uppercase cursor-pointer transition-all duration-200 px-3 py-1.5 border hover:opacity-70"
         style={{ color: 'var(--muted)', borderColor: 'var(--border)' }}
         aria-label={`Current theme: ${theme}. Click to cycle themes.`}
         title={`Current: ${theme}`}

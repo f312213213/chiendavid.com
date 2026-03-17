@@ -1,22 +1,8 @@
 import type { Metadata } from "next";
-import { Inter, Space_Grotesk, Exo_2, Nabla } from "next/font/google";
+import { Exo_2, Nabla } from "next/font/google";
 import "./globals.css";
-import Script from 'next/script'
 import { GoogleAnalytics } from '@next/third-parties/google'
-import Footer from "./components/Footer";
 import { Analytics } from "@vercel/analytics/next";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const spaceGrotesk = Space_Grotesk({
-  variable: "--font-display",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 const exo2 = Exo_2({
   variable: "--font-exo2",
@@ -43,7 +29,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} ${exo2.variable} ${nabla.variable} antialiased`}
+        className={`${exo2.variable} ${nabla.variable} antialiased`}
       >
         
         <script dangerouslySetInnerHTML={{
@@ -63,9 +49,7 @@ export default function RootLayout({
           `
         }} />
         {children}
-
-        {/* <Footer /> */}
-        <Analytics />
+<Analytics />
         <GoogleAnalytics gaId="G-TP0XQPDH1G" />
       </body>
     </html>

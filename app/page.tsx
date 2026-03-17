@@ -9,7 +9,7 @@ const experiences = [
     company: "Make",
     period: "Feb 2026 – Present",
     achievements: [
-      "Building automation tools and platform features for Make's no-code integration platform."
+      "Owning and evolving the billing system powering Make's automation platform, ensuring reliable payment processing at scale."
     ]
   },
   {
@@ -49,7 +49,7 @@ const experiences = [
     company: "Dimorder",
     period: "Feb 2022 – Feb 2023",
     achievements: [
-      "Contributed to the development of a restaurant ordering and management platform."
+      "Owned and evolved a food delivery platform, building end-to-end ordering and restaurant management features."
     ]
   }
 ];
@@ -72,32 +72,32 @@ const education = [
 ];
 
 const links = [
-  { label: "CV", href: "https://chiendavid.com/cv" },
-  { label: "Email", href: "mailto:f312213213david@gmail.com" },
-  { label: "LinkedIn", href: "https://chiendavid.com/linkedin", external: true },
-  { label: "GitHub", href: "https://chiendavid.com/github", external: true },
-  { label: "davidchien.eth", href: "https://chiendavid.com/eth", external: true },
+  { label: "CV", href: "https://chiendavid.com/cv", variant: "primary" as const },
+  { label: "Email", href: "mailto:f312213213david@gmail.com", variant: "secondary" as const },
+  { label: "LinkedIn", href: "https://chiendavid.com/linkedin", external: true, variant: "ghost" as const },
+  { label: "GitHub", href: "https://chiendavid.com/github", external: true, variant: "ghost" as const },
+  { label: "davidchien.eth", href: "https://chiendavid.com/eth", external: true, variant: "ghost" as const },
 ];
 
 export default function Home() {
   return (
-    <div className="min-h-[100dvh] px-6 py-16 md:px-12 md:py-24 lg:px-20 lg:py-32 font-exo2" style={{ background: 'var(--background)' }}>
-      <main className="max-w-2xl mx-auto">
+    <div className="min-h-[100dvh] px-6 py-16 md:px-12 md:py-24 lg:px-20 lg:py-32" style={{ background: 'var(--background)' }}>
+      <main className="max-w-3xl mx-auto">
 
         {/* Hero */}
         <section className="mb-24 md:mb-36">
           <p className="animate-in delay-1 text-sm font-medium tracking-wide uppercase mb-6" style={{ color: 'var(--accent)' }}>
             Software Engineer
           </p>
-          <h1 className="animate-in delay-2 font-nabla text-6xl md:text-8xl lg:text-9xl font-bold tracking-tight mb-10 leading-[0.9]" style={{ color: 'var(--foreground)' }}>
+          <h1 className="animate-in delay-2 font-nabla text-6xl md:text-8xl lg:text-9xl tracking-tight mb-10 leading-[0.9]">
             David<br />Chien
           </h1>
-          <div className="animate-in delay-3 flex flex-col gap-3 mb-12 font-exo2">
-            <p className="text-lg md:text-xl leading-relaxed max-w-lg" style={{ color: 'var(--muted)' }}>
-              I build web applications and care deeply about creating products that help people live better lives.
+          <div className="animate-in delay-3 mb-12">
+            <p className="text-xl md:text-2xl leading-relaxed max-w-xl font-light" style={{ color: 'var(--foreground)' }}>
+              Software engineer who obsesses over build systems, billing pipelines, and making slow things fast.
             </p>
-            <p className="text-lg md:text-xl leading-relaxed" style={{ color: 'var(--muted)' }}>
-              Currently in Prague 🇨🇿 &mdash; also able to work in Taiwan 🇹🇼 and the USA 🇺🇸
+            <p className="text-base md:text-lg leading-relaxed mt-4" style={{ color: 'var(--muted)' }}>
+              Currently in Prague 🇨🇿 &mdash; also available in Taiwan 🇹🇼 and the USA 🇺🇸
             </p>
           </div>
           <div className="animate-in delay-4 flex flex-wrap gap-3">
@@ -106,7 +106,13 @@ export default function Home() {
                 key={link.label}
                 href={link.href}
                 {...(link.external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-                className="link-pill px-4 py-2 text-sm font-medium rounded-full border-2 transition-all duration-200 hover:-translate-y-0.5"
+                className={`px-5 py-2.5 text-sm font-semibold uppercase tracking-wider border-2 transition-all duration-200 hover:-translate-y-0.5 ${
+                  link.variant === 'primary'
+                    ? 'link-pill-primary'
+                    : link.variant === 'secondary'
+                    ? 'link-pill-secondary'
+                    : 'link-pill'
+                }`}
               >
                 {link.label}
               </a>

@@ -25,7 +25,7 @@ export default function EducationSection({ education }: EducationSectionProps) {
               {edu.degree}
             </p>
             <p className="text-xs mt-1" style={{ color: 'var(--muted)' }}>
-              {edu.period}
+              {edu.period} &middot; {edu.location}
             </p>
           </div>
         ))}
