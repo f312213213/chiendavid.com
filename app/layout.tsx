@@ -13,7 +13,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: "David Chien - Software Engineer",
-  description: "Portfolio of David Chien, a results-driven Software Engineer with expertise in frontend optimization, infrastructure modernization, and performance tuning.",
+  description: "Portfolio of David Chien, a Software Engineer with deep experience in building web applications.",
 };
 
 export default function RootLayout({

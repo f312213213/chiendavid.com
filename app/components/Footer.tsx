@@ -18,7 +18,7 @@ export default function Footer() {
 
   const applyTheme = (mode: ThemeMode) => {
     document.documentElement.classList.remove('light', 'dark');
-    
+
     if (mode === 'light') {
       document.documentElement.classList.add('light');
     } else if (mode === 'dark') {
@@ -33,24 +33,25 @@ export default function Footer() {
     applyTheme(nextTheme);
   };
 
-  const getThemeIcon = () => {
+  const getThemeLabel = () => {
     switch (theme) {
-      case 'light': return '☀️';
-      case 'dark': return '🌙';
-      case 'system': return '⚙️';
+      case 'light': return 'Light';
+      case 'dark': return 'Dark';
+      case 'system': return 'System';
     }
   };
 
   return (
-    <footer className="text-sm text-muted flex justify-between items-center gap-2 max-w-screen-sm mx-auto px-6 py-12">
-      <p>© {new Date().getFullYear()} David Chien. All rights reserved.</p>
-      <button 
+    <footer className="text-sm flex justify-between items-center gap-4 pt-8 border-t" style={{ borderColor: 'var(--border)', color: 'var(--muted)' }}>
+      <p>&copy; {new Date().getFullYear()} David Chien</p>
+      <button
         onClick={cycleTheme}
-        className="text-lg hover:scale-110 cursor-pointer"
+        className="text-xs font-medium tracking-wide uppercase cursor-pointer transition-colors duration-200 hover:opacity-70"
+        style={{ color: 'var(--muted)' }}
         aria-label={`Current theme: ${theme}. Click to cycle themes.`}
         title={`Current: ${theme}`}
       >
-        {mounted ? getThemeIcon() : '⚙️'}
+        {mounted ? getThemeLabel() : 'System'}
       </button>
     </footer>
   );

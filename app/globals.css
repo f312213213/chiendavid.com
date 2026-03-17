@@ -1,10 +1,11 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #0a0a0a;
-  --muted: #6b7280;
-  --border: #e5e7eb;
+  --background: #faf9f7;
+  --foreground: #1a1a1a;
+  --muted: #6b6560;
+  --border: #e8e4df;
+  --accent: #d95030;
 }
 
 @theme inline {
@@ -12,23 +13,26 @@
   --color-foreground: var(--foreground);
   --color-muted: var(--muted);
   --color-border: var(--border);
+  --color-accent: var(--accent);
   --font-sans: var(--font-inter);
 }
 
 @media (prefers-color-scheme: dark) {
   :root:not(.light) {
-    --background: #18181b;
-    --foreground: #fafafa;
-    --muted: #a1a1aa;
-    --border: #27272a;
+    --background: #161413;
+    --foreground: #f5f0eb;
+    --muted: #9a928b;
+    --border: #2e2a27;
+    --accent: #e8634a;
   }
 }
 
 :root.dark {
-  --background: #18181b;
-  --foreground: #fafafa;
-  --muted: #a1a1aa;
-  --border: #27272a;
+  --background: #161413;
+  --foreground: #f5f0eb;
+  --muted: #9a928b;
+  --border: #2e2a27;
+  --accent: #e8634a;
 }
 
 body {
@@ -36,5 +40,27 @@ body {
   color: var(--foreground);
   font-family: var(--font-inter), system-ui, -apple-system, sans-serif;
   line-height: 1.6;
-  overflow-y: hidden;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+.link-pill {
+  color: var(--foreground);
+  border-color: var(--border);
+}
+
+.link-pill:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.project-card {
+  border-color: var(--border);
+}
+
+.project-card:hover {
+  border-color: var(--accent);
 }
