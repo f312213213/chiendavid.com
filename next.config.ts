@@ -19,7 +19,7 @@ const nextConfig = {
       {
         source: "/cv",
         destination:
-          "https://raw.githubusercontent.com/f312213213/resume/refs/heads/master/david_chien_resume.pdf",
+          "https://docs.google.com/gview?url=https://raw.githubusercontent.com/f312213213/resume/refs/heads/master/david_chien_resume.pdf&embedded=false",
         permanent: true,
       },
       {
