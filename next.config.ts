@@ -6,6 +6,14 @@ const nextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https" as const,
+        hostname: "demodone.app",
+      },
+    ],
+  },
   async redirects() {
     return [
       {

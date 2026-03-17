@@ -16,15 +16,15 @@ interface ExperienceSectionProps {
 
 export default function ExperienceSection({ experiences }: ExperienceSectionProps) {
   return (
-    <section className="mb-20 md:mb-28 scroll-reveal">
-      <h2 className="text-xs font-semibold tracking-widest uppercase mb-10" style={{ color: 'var(--accent)' }}>
+    <section className="mb-20 md:mb-28">
+      <h2 className="scroll-reveal text-xs font-semibold tracking-widest uppercase mb-10" style={{ color: 'var(--accent)' }}>
         Work Experience
       </h2>
       <div className="space-y-10">
         {experiences.map((exp, index) => (
           <div
             key={index}
-            className={`exp-entry relative border-l-2 pl-6 transition-all duration-300 ${exp.current ? 'exp-entry-current' : ''}`}
+            className={`scroll-reveal exp-entry relative border-l-2 pl-6 ${exp.current ? 'exp-entry-current' : ''}`}
             style={exp.current ? { borderColor: 'var(--accent)' } : undefined}
           >
             <h3

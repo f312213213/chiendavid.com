@@ -12,7 +12,7 @@ const experiences = [
         title: "Software Engineer",
         period: "Feb 2026 – Present",
         achievements: [
-          "Owning and evolving the billing system powering Make's automation platform, ensuring reliable payment processing at scale."
+          "Working on the billing system powering Make's automation platform, ensuring reliable payment processing at scale."
         ]
       }
     ]
@@ -74,7 +74,8 @@ const projects = [
   {
     name: "demodone.app",
     link: "https://demodone.app",
-    description: "Building a web app to help teams showcase and track product demos."
+    description: "Building a web app to help teams showcase and track product demos.",
+    image: "https://demodone.app/og-image.png"
   }
 ];
 
@@ -82,8 +83,7 @@ const education = [
   {
     institution: "National Taipei University",
     degree: "Bachelor of Science: Computer Science",
-    period: "2019 - 2024",
-    location: "Sanxia campus"
+    period: "2019 - 2024"
   }
 ];
 
@@ -110,7 +110,7 @@ export default function Home() {
           </h1>
           <div className="animate-in delay-3 mb-12">
             <p className="text-xl md:text-2xl leading-relaxed max-w-xl font-light" style={{ color: 'var(--foreground)' }}>
-              Software engineer who obsesses over build systems, billing pipelines, and making slow things fast.
+              I obsess over build systems, billing pipelines, and making slow things fast.
             </p>
             <p className="text-base md:text-lg leading-relaxed mt-4" style={{ color: 'var(--muted)' }}>
               Currently in Prague 🇨🇿 &mdash; also available in Taiwan 🇹🇼 and the USA 🇺🇸
@@ -139,7 +139,7 @@ export default function Home() {
         <ScrollReveal />
 
         {/* Current Project */}
-        <div className="scroll-reveal">
+        <div className="animate-in delay-4">
           <ProjectSection projects={projects} />
         </div>
 
