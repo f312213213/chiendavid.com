@@ -4,9 +4,13 @@
   "location": "Lyon, France",
   "lat": 45.76,
   "lng": 4.83,
-  "description": "Landing in a new city, finding my way through cobblestone streets and baroque architecture. Lyon feels like a city that was designed to be walked through slowly.",
-  "coverAlt": "Lyon Old Town Square at golden hour",
+  "description": "Lyon in February is all soft edges — the city below fading into morning haze, rooftops stacked like a watercolor study. From the hills, it feels less like a metropolis and more like a memory of one.",
+  "coverAlt": "Hilltop view of Lyon's hazy skyline with residential buildings in the foreground",
   "images": [
-    { "file": "IMG_8499.jpeg", "alt": "Lyon Airport", "caption": "The astronomical clock in Old Town" }
+    {
+      "file": "IMG_8499.jpeg",
+      "alt": "Panoramic view from a Lyon hilltop, city skyline dissolving into winter haze, figures sitting along a low wall",
+      "caption": "Looking out over Lyon from the heights — the whole city wrapped in February haze"
+    }
   ]
 }

@@ -4,9 +4,13 @@
   "location": "Prague, Czech Republic",
   "lat": 50.08,
   "lng": 14.43,
-  "description": "Landing in a new city, finding my way through cobblestone streets and baroque architecture. Prague feels like a city that was designed to be walked through slowly.",
-  "coverAlt": "Prague Old Town Square at golden hour",
+  "description": "Touching down at Václav Havel Airport on a foggy night — not a visit this time, but an arrival. Prague under low clouds, the glow of terminal lights, the quiet weight of knowing this one isn't round-trip.",
+  "coverAlt": "Václav Havel Airport Prague illuminated at night under a misty sky",
   "images": [
-    { "file": "IMG_8324.jpeg", "alt": "Prague Airport", "caption": "The astronomical clock in Old Town" }
+    {
+      "file": "IMG_8324.jpeg",
+      "alt": "The exterior of Václav Havel Airport Prague at night, PRAHA sign glowing above the terminal entrance",
+      "caption": "Arrival — Václav Havel Airport on a foggy February night"
+    }
   ]
 }

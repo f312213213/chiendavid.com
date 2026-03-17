@@ -4,9 +4,13 @@
   "location": "Okinawa, Japan",
   "lat": 26.34,
   "lng": 127.77,
-  "description": "Landing in a new city, finding my way through cobblestone streets and baroque architecture. Okinawa feels like a city that was designed to be walked through slowly.",
-  "coverAlt": "Okinawa Old Town Square at golden hour",
+  "description": "Okinawa at sunset is almost too much — the sky goes orange, the sea turns gold, and everything below settles into silhouette. Time here doesn't pass so much as pool, warm and unhurried, like the air itself.",
+  "coverAlt": "Golden sunset over the sea seen through tropical foliage in Okinawa",
   "images": [
-    { "file": "IMG_6935.jpeg", "alt": "Okinawa Airport", "caption": "The astronomical clock in Old Town" }
+    {
+      "file": "IMG_6935.jpeg",
+      "alt": "Dramatic golden sunset over a coastal bay in Okinawa, framed by lush tropical trees",
+      "caption": "Sunset over the sea — the kind of sky that stops you mid-sentence"
+    }
   ]
 }

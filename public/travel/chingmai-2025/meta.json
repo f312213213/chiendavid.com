@@ -4,9 +4,13 @@
   "location": "Chiang Mai, Thailand",
   "lat": 18.79,
   "lng": 98.98,
-  "description": "Landing in a new city, finding my way through cobblestone streets and baroque architecture. Chiang Mai feels like a city that was designed to be walked through slowly.",
-  "coverAlt": "Chiang Mai Old Town Square at golden hour",
+  "description": "Chiang Mai moves at the speed of a long exhale. Green stretches out in every direction, mountains hover behind clouds, and the afternoon heat softens everything into a kind of pleasant stillness.",
+  "coverAlt": "Wide green lawn under dramatic clouds with distant mountains near Chiang Mai",
   "images": [
-    { "file": "IMG_7143.jpeg", "alt": "Chiang Mai Airport", "caption": "The astronomical clock in Old Town" }
+    {
+      "file": "IMG_7143.jpeg",
+      "alt": "Lush green lawn stretching toward tropical trees and misty mountains under a cloudy sky",
+      "caption": "The view from the veranda — mountains just barely visible through the afternoon clouds"
+    }
   ]
 }

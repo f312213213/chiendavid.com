@@ -4,10 +4,18 @@
   "location": "Brno, Czech Republic",
   "lat": 49.19,
   "lng": 16.61,
-  "description": "Landing in a new city, finding my way through cobblestone streets and baroque architecture. Brno feels like a city that was designed to be walked through slowly.",
-  "coverAlt": "Brno Old Town Square at golden hour",
+  "description": "Brno doesn't try to impress you — it just does. Ornate facades line tram-tracked streets, and beneath the city, a hidden world of vaulted cisterns and underground corridors waits in near-silence. It's the kind of place where you turn a corner and forget what century you're in.",
+  "coverAlt": "Neo-Gothic building facade along a cobblestone street with tram lines in Brno's old town",
   "images": [
-    { "file": "IMG_8645.jpeg", "alt": "Brno Old Town astronomical clock", "caption": "The astronomical clock in Old Town" },
-    { "file": "IMG_8707.jpeg", "alt": "Brno Old Town astronomical clock", "caption": "The astronomical clock in Old Town" }
+    {
+      "file": "IMG_8645.jpeg",
+      "alt": "Ornate Neo-Gothic building facade on a sunlit street with tram tracks and pedestrians in Brno",
+      "caption": "Afternoon light on the old town — somewhere near náměstí Svobody"
+    },
+    {
+      "file": "IMG_8707.jpeg",
+      "alt": "Underground cistern with rows of concrete columns lit by warm floor lights",
+      "caption": "Beneath the city: Brno's underground reservoir, cathedral-like in its stillness"
+    }
   ]
 }
