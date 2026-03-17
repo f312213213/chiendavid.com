@@ -70,6 +70,16 @@ body::before {
   animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
 }
 
+/* Skip all entrance animations when page loads already scrolled */
+.no-intro .animate-in {
+  animation: none;
+}
+
+.no-intro .scroll-reveal {
+  opacity: 1;
+  transform: none;
+}
+
 .delay-1 { animation-delay: 0.05s; }
 .delay-2 { animation-delay: 0.1s; }
 .delay-3 { animation-delay: 0.2s; }

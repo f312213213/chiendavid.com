@@ -42,6 +42,11 @@ export default function RootLayout({
               } else if (theme === 'dark') {
                 document.documentElement.classList.add('dark');
               }
+              requestAnimationFrame(function() {
+                if (window.scrollY > 300) {
+                  document.documentElement.classList.add('no-intro');
+                }
+              });
             })();
           `
         }} />
