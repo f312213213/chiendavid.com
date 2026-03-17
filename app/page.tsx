@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import ExperienceSection from './components/ExperienceSection';
 import ProjectSection from './components/ProjectSection';
 import Footer from './components/Footer';
@@ -118,22 +119,31 @@ export default function Home() {
             </p>
           </div>
           <div className="animate-in delay-4 flex flex-wrap gap-3">
-            {links.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                {...(link.href.startsWith('/') ? {} : { target: "_blank", rel: "noopener noreferrer" })}
-                className={`px-5 py-2.5 text-sm font-semibold uppercase tracking-wider border-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 outline-none ${
-                  link.variant === 'primary'
-                    ? 'bg-accent border-accent text-white hover:opacity-85'
-                    : link.variant === 'secondary'
-                    ? 'text-accent border-accent hover:bg-accent hover:text-white'
-                    : 'text-foreground border-border hover:text-accent hover:border-accent'
-                }`}
-              >
-                {link.label}
-              </a>
-            ))}
+            {links.map((link) => {
+              const className = `px-5 py-2.5 text-sm font-semibold uppercase tracking-wider border-2 transition-all duration-200 hover:-translate-y-0.5 active:scale-95 outline-none ${
+                link.variant === 'primary'
+                  ? 'bg-accent border-accent text-white hover:opacity-85'
+                  : link.variant === 'secondary'
+                  ? 'text-accent border-accent hover:bg-accent hover:text-white'
+                  : 'text-foreground border-border hover:text-accent hover:border-accent'
+              }`;
+
+              return link.href.startsWith('/') ? (
+                <Link key={link.label} href={link.href} className={className}>
+                  {link.label}
+                </Link>
+              ) : (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={className}
+                >
+                  {link.label}
+                </a>
+              );
+            })}
           </div>
         </section>
 

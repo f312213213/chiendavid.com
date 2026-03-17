@@ -1,0 +1,10 @@
+{
+  "title": "First Days in Lyon",
+  "date": "2026-02",
+  "location": "Lyon, France",
+  "description": "Landing in a new city, finding my way through cobblestone streets and baroque architecture. Lyon feels like a city that was designed to be walked through slowly.",
+  "coverAlt": "Lyon Old Town Square at golden hour",
+  "images": [
+    { "file": "IMG_8499.jpeg", "alt": "Lyon Airport", "caption": "The astronomical clock in Old Town" }
+  ]
+}
