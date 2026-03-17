@@ -43,6 +43,7 @@ body {
   line-height: 1.6;
 }
 
+/* Grain texture — requires ::before, can't be a utility */
 body::before {
   content: "";
   position: fixed;
@@ -60,43 +61,67 @@ body::before {
   color: #fff;
 }
 
-/* Keyframes — can't be expressed as Tailwind utilities */
+/* === Keyframes === */
 @keyframes fade-up {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
-.animate-in {
-  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/* Skip all entrance animations when page loads already scrolled */
-.no-intro .animate-in {
-  animation: none;
-}
-
-.no-intro .scroll-reveal {
-  opacity: 1;
-  transform: none;
-}
-
-.delay-1 { animation-delay: 0.05s; }
-.delay-2 { animation-delay: 0.1s; }
-.delay-3 { animation-delay: 0.2s; }
-.delay-4 { animation-delay: 0.3s; }
 
 @keyframes tooltip-in {
   from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
 }
 
-.project-tooltip {
+@keyframes dialog-backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes dialog-popup-in {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* === Tailwind utilities === */
+@utility animate-in {
+  animation: fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@utility delay-1 {
+  animation-delay: 0.05s;
+}
+
+@utility delay-2 {
+  animation-delay: 0.1s;
+}
+
+@utility delay-3 {
+  animation-delay: 0.2s;
+}
+
+@utility delay-4 {
+  animation-delay: 0.3s;
+}
+
+@utility dialog-backdrop {
+  animation: dialog-backdrop-in 0.2s ease-out;
+}
+
+@utility dialog-popup {
+  animation: dialog-popup-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@utility project-tooltip {
   border: 2px solid var(--border);
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.2);
   animation: tooltip-in 0.15s ease-out;
 }
 
-/* Scroll reveal — requires parent selector, can't be Tailwind */
+@utility polaroid-card {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.3s ease;
+}
+
+/* === Rules requiring parent selectors — can't be @utility === */
 .scroll-reveal-ready .scroll-reveal {
   opacity: 0;
   transform: translateY(20px);
@@ -106,6 +131,23 @@ body::before {
 .scroll-reveal.revealed {
   opacity: 1;
   transform: translateY(0);
+}
+
+.no-intro .animate-in {
+  animation: none;
+}
+
+.no-intro .scroll-reveal {
+  opacity: 1;
+  transform: none;
+}
+
+/* Polaroid hover — needs !important to override inline rotate() */
+.polaroid-card:hover {
+  transform: rotate(0deg) translateY(-12px) !important;
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+  border-color: var(--accent);
+  z-index: 10;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -118,35 +160,4 @@ body::before {
   .polaroid-card {
     transition: none !important;
   }
-}
-
-/* Polaroid card hover */
-.polaroid-card {
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.3s ease;
-}
-
-.polaroid-card:hover {
-  transform: rotate(0deg) translateY(-12px) !important;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
-  border-color: var(--accent);
-  z-index: 10;
-}
-
-/* Dialog animations */
-@keyframes dialog-backdrop-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-@keyframes dialog-popup-in {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-.dialog-backdrop {
-  animation: dialog-backdrop-in 0.2s ease-out;
-}
-
-.dialog-popup {
-  animation: dialog-popup-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }

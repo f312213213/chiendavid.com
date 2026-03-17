@@ -56,8 +56,6 @@ export async function getAllTrips(): Promise<Trip[]> {
         })
       );
 
-      const rotation = (hashSlug(slug) % 9) - 4; // -4 to +4 degrees
-
       trips.push({
         slug,
         title: meta.title,
@@ -67,12 +65,22 @@ export async function getAllTrips(): Promise<Trip[]> {
         coverSrc: images[0]?.src ?? '',
         coverAlt: images[0]?.alt ?? meta.title,
         images,
-        rotation,
+        rotation: 0, // assigned after sorting
       });
     } catch {
       // Skip folders without valid meta.json
     }
   }
 
-  return trips.sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = trips.sort((a, b) => b.date.localeCompare(a.date));
+
+  // Assign varied rotations: alternate sign, vary magnitude per card
+  sorted.forEach((trip, i) => {
+    const h = Math.abs(hashSlug(trip.slug + i));
+    const magnitude = (h % 5) + 2; // 2–6 degrees
+    const sign = i % 2 === 0 ? 1 : -1;
+    trip.rotation = sign * magnitude;
+  });
+
+  return sorted;
 }

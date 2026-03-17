@@ -1,0 +1,10 @@
+{
+  "title": "First Days in Prague",
+  "date": "2026-02",
+  "location": "Prague, Czech Republic",
+  "description": "Landing in a new city, finding my way through cobblestone streets and baroque architecture. Prague feels like a city that was designed to be walked through slowly.",
+  "coverAlt": "Prague Old Town Square at golden hour",
+  "images": [
+    { "file": "IMG_8324.jpeg", "alt": "Prague Airport", "caption": "The astronomical clock in Old Town" }
+  ]
+}
