@@ -121,6 +121,26 @@ body::before {
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, border-color 0.3s ease;
 }
 
+@utility polaroid-body {
+  background-color: color-mix(in srgb, var(--foreground) 4%, var(--background));
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06), 0 12px 36px rgba(0, 0, 0, 0.10), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+@utility polaroid-grain {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 200px 200px;
+}
+
+@utility polaroid-vignette {
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.15), inset 0 0 4px rgba(0, 0, 0, 0.08);
+}
+
+@utility polaroid-tape {
+  background: rgba(200, 185, 155, 0.45);
+  backdrop-filter: blur(1px);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
 /* === Rules requiring parent selectors — can't be @utility === */
 .scroll-reveal-ready .scroll-reveal {
   opacity: 0;
@@ -145,9 +165,12 @@ body::before {
 /* Polaroid hover — needs !important to override inline rotate() */
 .polaroid-card:hover {
   transform: rotate(0deg) translateY(-12px) !important;
-  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
-  border-color: var(--accent);
   z-index: 10;
+}
+
+.polaroid-card:hover > div:nth-child(2) {
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  border-color: var(--accent);
 }
 
 @media (prefers-reduced-motion: reduce) {
