@@ -55,6 +55,9 @@ export default function PolaroidCard({ trip, onClick, disableRotation, featured 
             sizes={featured ? '(max-width: 768px) 80vw, 50vw' : '(max-width: 768px) 80vw, 33vw'}
             className="object-cover transition-transform duration-500 ease-out group-hover:scale-105"
             loading="lazy"
+            {...(trip.coverBlurDataURL
+              ? { placeholder: 'blur', blurDataURL: trip.coverBlurDataURL }
+              : {})}
           />
           <div className="absolute inset-0 pointer-events-none polaroid-vignette" />
         </div>

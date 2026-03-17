@@ -1,10 +1,12 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import sharp from 'sharp';
 
 export interface TripImage {
   src: string;
   alt: string;
   caption?: string;
+  blurDataURL?: string;
 }
 
 export interface Trip {
@@ -15,8 +17,21 @@ export interface Trip {
   description: string;
   coverSrc: string;
   coverAlt: string;
+  coverBlurDataURL?: string;
   images: TripImage[];
   rotation: number;
+}
+
+async function generateBlurDataURL(filePath: string): Promise<string | undefined> {
+  try {
+    const buffer = await sharp(filePath)
+      .resize(16, 12, { fit: 'cover' })
+      .blur()
+      .toBuffer();
+    return `data:image/jpeg;base64,${buffer.toString('base64')}`;
+  } catch {
+    return undefined;
+  }
 }
 
 function hashSlug(slug: string): number {
@@ -48,12 +63,17 @@ export async function getAllTrips(): Promise<Trip[]> {
       const raw = await readFile(metaPath, 'utf-8');
       const meta = JSON.parse(raw);
 
-      const images: TripImage[] = (meta.images ?? []).map(
-        (img: { file: string; alt: string; caption?: string }) => ({
-          src: `/travel/${slug}/${img.file}`,
-          alt: img.alt,
-          caption: img.caption,
-        })
+      const images: TripImage[] = await Promise.all(
+        (meta.images ?? []).map(
+          async (img: { file: string; alt: string; caption?: string }) => ({
+            src: `/travel/${slug}/${img.file}`,
+            alt: img.alt,
+            caption: img.caption,
+            blurDataURL: await generateBlurDataURL(
+              path.join(travelDir, slug, img.file)
+            ),
+          })
+        )
       );
 
       trips.push({
@@ -64,6 +84,7 @@ export async function getAllTrips(): Promise<Trip[]> {
         description: meta.description,
         coverSrc: images[0]?.src ?? '',
         coverAlt: images[0]?.alt ?? meta.title,
+        coverBlurDataURL: images[0]?.blurDataURL,
         images,
         rotation: 0, // assigned after sorting
       });

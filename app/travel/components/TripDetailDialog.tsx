@@ -93,6 +93,9 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
                 className="max-w-full max-h-full w-auto h-auto object-contain"
                 priority={current === 0}
                 loading={current === 0 ? 'eager' : 'lazy'}
+                {...(image.blurDataURL
+                  ? { placeholder: 'blur', blurDataURL: image.blurDataURL }
+                  : {})}
               />
             </div>
 
