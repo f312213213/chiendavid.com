@@ -59,21 +59,21 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
         <Dialog.Popup className="dialog-popup fixed inset-0 md:inset-6 lg:inset-10 z-50 overflow-hidden flex flex-col md:flex-row bg-background border-0 md:border-2 border-border">
 
           {/* === Image panel — takes majority of space === */}
-          <div className="flex-1 min-h-0 min-w-0 bg-black/40 flex flex-col items-center justify-center relative">
+          <div className="relative flex-1 min-h-0 min-w-0 bg-background flex items-center justify-center overflow-hidden">
 
             {/* Nav arrows — overlaid on image */}
             {hasMultiple && (
               <>
                 <button
                   onClick={prev}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer select-none"
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-muted hover:text-foreground transition-colors cursor-pointer select-none"
                   aria-label="Previous image"
                 >
                   <svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6"/></svg>
                 </button>
                 <button
                   onClick={next}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-white/60 hover:text-white transition-colors cursor-pointer select-none"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-10 h-10 md:w-12 md:h-12 flex items-center justify-center text-muted hover:text-foreground transition-colors cursor-pointer select-none"
                   aria-label="Next image"
                 >
                   <svg width="24" height="24" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4l6 6-6 6"/></svg>
@@ -82,7 +82,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
             )}
 
             {/* Image */}
-            <div className={`transition-opacity duration-200 ease-out flex items-center justify-center min-h-0 max-h-full max-w-full p-4 md:p-8 ${fading ? 'opacity-0' : 'opacity-100'}`}>
+            <div className={`transition-opacity duration-200 ease-out absolute inset-0 flex items-center justify-center p-12 pb-20 ${fading ? 'opacity-0' : 'opacity-100'}`}>
               <Image
                 key={image.src}
                 src={image.src}
@@ -98,8 +98,8 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
 
             {/* Image indicators — bottom of image panel */}
             {hasMultiple && (
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3">
-                <span className="text-xs font-semibold tracking-wider text-white/50 tabular-nums">
+              <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-3">
+                <span className="text-xs font-semibold tracking-wider text-muted tabular-nums">
                   {current + 1} / {trip.images.length}
                 </span>
                 <div className="flex items-center gap-1.5">
@@ -108,7 +108,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
                       key={idx}
                       onClick={() => goTo(idx)}
                       className={`h-0.5 transition-all cursor-pointer ${
-                        idx === current ? 'w-6 bg-accent' : 'w-3 bg-white/30 hover:bg-white/50'
+                        idx === current ? 'w-6 bg-accent' : 'w-3 bg-border hover:bg-muted'
                       }`}
                       aria-label={`Go to image ${idx + 1}`}
                     />
