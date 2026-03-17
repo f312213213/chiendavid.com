@@ -29,7 +29,7 @@ export default async function TravelPage() {
         </header>
 
         {/* Cards — right column */}
-        <div className="flex-1 md:pt-8">
+        <div className="flex-1 md:pt-8 px-4 md:px-0">
           <TravelGrid trips={trips} />
         </div>
       </div>

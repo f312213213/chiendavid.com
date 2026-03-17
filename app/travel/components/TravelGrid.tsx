@@ -15,7 +15,7 @@ export default function TravelGrid({ trips }: TravelGridProps) {
   if (trips.length === 0) {
     return (
       <p className="text-muted text-lg">
-        Nothing here yet &mdash; check back soon.
+        No trips yet &mdash; the next adventure is coming.
       </p>
     );
   }

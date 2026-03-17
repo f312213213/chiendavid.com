@@ -13,6 +13,7 @@ export interface Trip {
   slug: string;
   title: string;
   date: string;
+  displayDate: string;
   location: string;
   description: string;
   coverSrc: string;
@@ -34,6 +35,13 @@ async function generateBlurDataURL(filePath: string): Promise<string | undefined
   } catch {
     return undefined;
   }
+}
+
+function formatDate(date: string): string {
+  const [year, month] = date.split('-');
+  if (!month) return year;
+  const d = new Date(Number(year), Number(month) - 1);
+  return d.toLocaleDateString('en', { month: 'long', year: 'numeric' });
 }
 
 function hashSlug(slug: string): number {
@@ -82,6 +90,7 @@ export async function getAllTrips(): Promise<Trip[]> {
         slug,
         title: meta.title,
         date: meta.date,
+        displayDate: formatDate(meta.date),
         location: meta.location,
         description: meta.description,
         coverSrc: images[0]?.src ?? '',

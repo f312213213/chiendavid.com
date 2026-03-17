@@ -72,7 +72,7 @@ export default function PolaroidCard({ trip, onClick, disableRotation, featured 
             {trip.title}
           </h3>
           <p className="text-xs text-muted mt-0.5">
-            {trip.date}
+            {trip.displayDate}
           </p>
 
           {/* Dot map */}
@@ -80,7 +80,7 @@ export default function PolaroidCard({ trip, onClick, disableRotation, featured 
             <DotMap
               lat={trip.lat}
               lng={trip.lng}
-              className={`absolute -bottom-12 -right-1 text-foreground ${featured ? 'w-36 md:w-44' : 'w-24 md:w-28'}`}
+              className={`absolute -bottom-12 -right-1 text-foreground ${featured ? 'w-40 md:w-52' : 'w-24 md:w-28'}`}
             />
           )}
         </div>
