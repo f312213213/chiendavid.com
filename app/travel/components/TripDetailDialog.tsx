@@ -183,10 +183,10 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
               )}
             </div>
 
-            {/* === Content panel === */}
+            {/* === Content panel — scrolls on mobile, centered on desktop === */}
             <div className="relative flex-1 min-h-0 overflow-y-auto bg-background flex flex-col md:justify-center">
-              {/* Grain overlay */}
-              <div className="absolute inset-0 pointer-events-none opacity-[0.035] polaroid-grain" />
+              {/* Grain overlay — fixed so it covers content during scroll */}
+              <div className="fixed inset-0 pointer-events-none opacity-[0.035] polaroid-grain z-10" />
 
               <div className="px-8 pt-8 pb-[max(2.5rem,env(safe-area-inset-bottom))] md:px-10 md:py-10 lg:px-12 relative">
                 <p className="text-[11px] font-normal tracking-[0.15em] uppercase text-muted mb-3">
