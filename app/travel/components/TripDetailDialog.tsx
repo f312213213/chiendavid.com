@@ -68,7 +68,6 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
     const dy = touch.clientY - touchStartRef.current.y;
     touchStartRef.current = null;
 
-    // Only swipe if horizontal movement is dominant
     if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
       if (dx < 0) next();
       else prev();
@@ -82,7 +81,6 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
   const prevImage = previous !== null && previous < trip.images.length ? trip.images[previous] : null;
   const hasMultiple = trip.images.length > 1;
 
-  // Preload next image
   const nextIdx = (safeIndex + 1) % trip.images.length;
   const nextImage = hasMultiple ? trip.images[nextIdx] : null;
 
@@ -90,166 +88,157 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Backdrop className="dialog-backdrop fixed inset-0 bg-black/90 z-50" />
-        <Dialog.Popup className="dialog-popup fixed inset-0 z-50 overflow-hidden flex flex-col md:flex-row bg-background">
+        <Dialog.Popup className="dialog-popup fixed inset-0 md:inset-8 lg:inset-12 z-50 overflow-hidden md:rounded-lg">
 
-          {/* === Image panel === */}
-          <div
-            className="relative flex-1 min-h-0 min-w-0 bg-black flex items-center justify-center overflow-hidden"
-            onTouchStart={hasMultiple ? onTouchStart : undefined}
-            onTouchEnd={hasMultiple ? onTouchEnd : undefined}
-          >
+          {/* Close button — top-right of dialog, over the image */}
+          <Dialog.Close className="absolute top-3 right-3 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm text-white/70 hover:bg-black/50 hover:text-white transition-all cursor-pointer">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              <path d="M3 3l10 10M13 3L3 13"/>
+            </svg>
+          </Dialog.Close>
 
-            {/* Blurred background fill — photo's own colors instead of dead black */}
-            {image.blurDataURL && (
-              <div
-                className="absolute inset-0 scale-110"
-                style={{
-                  backgroundImage: `url(${image.blurDataURL})`,
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  filter: 'blur(40px) saturate(1.3) brightness(0.35)',
-                }}
-              />
-            )}
+          {/* Grid layout: stack on mobile, 1.8fr/1fr on desktop */}
+          <div className="h-full flex flex-col md:grid md:grid-cols-[1.8fr_1fr] overflow-hidden">
 
-            {/* Vignette for depth + indicator readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none z-[1]" />
+            {/* === Image panel === */}
+            <div
+              className="relative h-[55vh] shrink-0 md:h-auto overflow-hidden bg-black"
+              onTouchStart={hasMultiple ? onTouchStart : undefined}
+              onTouchEnd={hasMultiple ? onTouchEnd : undefined}
+            >
+              {/* Blurred background fill for contain gaps — desktop only */}
+              {image.blurDataURL && (
+                <div
+                  className="absolute inset-0 scale-110 hidden md:block"
+                  style={{
+                    backgroundImage: `url(${image.blurDataURL})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    filter: 'blur(40px) saturate(1.3) brightness(0.35)',
+                  }}
+                />
+              )}
 
-            {/* Nav arrows */}
-            {hasMultiple && (
-              <>
-                <button
-                  onClick={prev}
-                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 hidden md:flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm text-white/70 hover:bg-black/50 hover:text-white transition-all cursor-pointer select-none"
-                  aria-label="Previous image"
-                >
-                  <svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6"/></svg>
-                </button>
-                <button
-                  onClick={next}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 hidden md:flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm text-white/70 hover:bg-black/50 hover:text-white transition-all cursor-pointer select-none"
-                  aria-label="Next image"
-                >
-                  <svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4l6 6-6 6"/></svg>
-                </button>
-              </>
-            )}
+              {/* Nav arrows */}
+              {hasMultiple && (
+                <>
+                  <button
+                    onClick={prev}
+                    className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm text-white/70 hover:bg-black/50 hover:text-white transition-all cursor-pointer select-none"
+                    aria-label="Previous image"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6"/></svg>
+                  </button>
+                  <button
+                    onClick={next}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm text-white/70 hover:bg-black/50 hover:text-white transition-all cursor-pointer select-none"
+                    aria-label="Next image"
+                  >
+                    <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4l6 6-6 6"/></svg>
+                  </button>
+                </>
+              )}
 
-            {/* Crossfade: outgoing image */}
-            {prevImage && (
-              <div className="absolute inset-0 flex items-center justify-center p-4 pb-14 md:p-8 md:pb-16 z-[2] animate-[fade-out_0.3s_ease-out_forwards]">
+              {/* Crossfade: outgoing image */}
+              {prevImage && (
+                <div className="absolute inset-0 z-[2] animate-[fade-out_0.3s_ease-out_forwards]">
+                  <Image
+                    src={prevImage.src}
+                    alt={prevImage.alt}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 65vw"
+                    className="object-cover md:object-contain"
+                    {...(prevImage.blurDataURL
+                      ? { placeholder: 'blur', blurDataURL: prevImage.blurDataURL }
+                      : {})}
+                  />
+                </div>
+              )}
+
+              {/* Current image */}
+              <div className={`absolute inset-0 z-[2] ${previous !== null ? 'animate-[fade-in_0.3s_ease-out_forwards]' : ''}`}>
                 <Image
-                  src={prevImage.src}
-                  alt={prevImage.alt}
-                  width={1600}
-                  height={1200}
-                  sizes="(max-width: 768px) 100vw, 70vw"
-                  className="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-[0_4px_24px_rgba(0,0,0,0.4)]"
-                  {...(prevImage.blurDataURL
-                    ? { placeholder: 'blur', blurDataURL: prevImage.blurDataURL }
+                  key={image.src}
+                  src={image.src}
+                  alt={image.alt}
+                  fill
+                  sizes="(max-width: 768px) 100vw, 65vw"
+                  className="object-cover md:object-contain"
+                  priority={current === 0}
+                  loading={current === 0 ? 'eager' : 'lazy'}
+                  {...(image.blurDataURL
+                    ? { placeholder: 'blur', blurDataURL: image.blurDataURL }
                     : {})}
                 />
               </div>
-            )}
 
-            {/* Current image */}
-            <div className={`absolute inset-0 flex items-center justify-center p-4 pb-14 md:p-8 md:pb-16 z-[2] ${previous !== null ? 'animate-[fade-in_0.3s_ease-out_forwards]' : ''}`}>
-              <Image
-                key={image.src}
-                src={image.src}
-                alt={image.alt}
-                width={1600}
-                height={1200}
-                sizes="(max-width: 768px) 100vw, 70vw"
-                className="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-[0_4px_24px_rgba(0,0,0,0.4)]"
-                priority={current === 0}
-                loading={current === 0 ? 'eager' : 'lazy'}
-                {...(image.blurDataURL
-                  ? { placeholder: 'blur', blurDataURL: image.blurDataURL }
-                  : {})}
-              />
-            </div>
+              {/* Preload next image */}
+              {nextImage && nextIdx !== current && (
+                <link rel="preload" as="image" href={nextImage.src} />
+              )}
 
-            {/* Preload next image (hidden) */}
-            {nextImage && nextIdx !== current && (
-              <link rel="preload" as="image" href={nextImage.src} />
-            )}
-
-            {/* Image indicators */}
-            {hasMultiple && (
-              <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 z-10">
-                <span className="text-[11px] font-bold tracking-[0.2em] text-white/50 tabular-nums">
-                  {current + 1} / {trip.images.length}
-                </span>
-                <div className="flex items-center gap-1">
+              {/* Dash indicators — no text counter */}
+              {hasMultiple && (
+                <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
                   {trip.images.map((_, idx) => (
                     <button
                       key={idx}
                       onClick={() => goTo(idx)}
-                      className="py-3 px-0.5 cursor-pointer"
+                      className="py-2.5 cursor-pointer"
                       aria-label={`Go to image ${idx + 1}`}
                     >
-                      <div className={`h-[3px] transition-all duration-300 ${
-                        idx === current ? 'w-8 bg-accent' : 'w-4 bg-white/20 hover:bg-white/40'
+                      <div className={`h-[3px] rounded-full transition-all duration-300 ${
+                        idx === current ? 'w-6 bg-white' : 'w-6 bg-white/40 hover:bg-white/60'
                       }`} />
                     </button>
                   ))}
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* === Info sidebar with texture === */}
-          <div className="shrink-0 w-full md:w-[340px] lg:w-[420px] border-t md:border-t-0 md:border-l border-border overflow-y-auto flex flex-col relative">
-            {/* Grain overlay */}
-            <div className="absolute inset-0 pointer-events-none opacity-[0.035] polaroid-grain" />
-
-            {/* Close button */}
-            <div className="flex justify-end p-5 shrink-0 relative">
-              <Dialog.Close className="w-9 h-9 flex items-center justify-center text-muted/50 hover:text-foreground transition-colors cursor-pointer">
-                <svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                  <path d="M3 3l10 10M13 3L3 13"/>
-                </svg>
-              </Dialog.Close>
-            </div>
-
-            {/* Trip info */}
-            <div className="px-7 md:px-10 pb-10 flex-1 relative">
-              <p className="text-[11px] font-bold tracking-[0.25em] uppercase text-accent mb-3">
-                {trip.location}
-              </p>
-              <Dialog.Title className="text-3xl md:text-4xl font-extrabold tracking-tight text-foreground leading-[1.1]">
-                {trip.title}
-              </Dialog.Title>
-              <Dialog.Description className="text-sm text-muted/60 mt-2 font-light tracking-wide">
-                {trip.displayDate}
-              </Dialog.Description>
-
-              <div className="w-16 h-1 bg-accent mt-8" />
-
-              {trip.description && (
-                <p className="text-[15px] leading-[1.7] text-muted mt-8 break-words">
-                  {trip.description}
-                </p>
-              )}
-
-              {image.caption && (
-                <p className="text-sm italic text-muted/60 mt-10 pt-5 border-t border-border/60">
-                  {image.caption}
-                </p>
               )}
             </div>
 
-            {/* Dot map pinned to bottom — hidden on mobile to save space */}
-            {trip.lat != null && trip.lng != null && (
-              <div className="hidden md:block px-7 md:px-10 pb-8 mt-auto relative">
-                <DotMap
-                  lat={trip.lat}
-                  lng={trip.lng}
-                  className="w-full max-w-[200px] text-foreground/80"
-                />
+            {/* === Content panel === */}
+            <div className="relative flex-1 min-h-0 overflow-y-auto bg-background flex flex-col md:justify-center">
+              {/* Grain overlay */}
+              <div className="absolute inset-0 pointer-events-none opacity-[0.035] polaroid-grain" />
+
+              <div className="px-8 py-10 md:px-10 lg:px-12 relative">
+                <p className="text-[11px] font-normal tracking-[0.15em] uppercase text-muted mb-3">
+                  {trip.location}
+                </p>
+                <Dialog.Title className="text-xl md:text-2xl font-semibold tracking-tight text-foreground leading-tight">
+                  {trip.title}
+                </Dialog.Title>
+                <Dialog.Description className="text-[13px] text-muted/50 mt-1.5">
+                  {trip.displayDate}
+                </Dialog.Description>
+
+                {/* Separator */}
+                <div className="w-7 h-0.5 bg-current opacity-20 my-6" />
+
+                {trip.description && (
+                  <p className="text-[15px] leading-[1.7] text-muted break-words">
+                    {trip.description}
+                  </p>
+                )}
+
+                {image.caption && (
+                  <p className="text-[13px] italic text-muted/50 mt-6">
+                    {image.caption}
+                  </p>
+                )}
               </div>
-            )}
+
+              {/* Dot map pinned to bottom */}
+              {trip.lat != null && trip.lng != null && (
+                <div className="hidden md:block px-10 lg:px-12 pb-8 mt-auto relative">
+                  <DotMap
+                    lat={trip.lat}
+                    lng={trip.lng}
+                    className="w-full max-w-[180px] text-foreground/80"
+                  />
+                </div>
+              )}
+            </div>
           </div>
 
         </Dialog.Popup>
