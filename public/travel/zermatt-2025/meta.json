@@ -1,5 +1,5 @@
 {
-  "title": "Zermatt - A Mountain Getaway",
+  "title": "Touching the Sky in Zermatt",
   "date": "2025-8",
   "location": "Zermatt, Switzerland",
   "lat": 46.02,
@@ -12,6 +12,11 @@
       "file": "IMG_6439.jpeg",
       "alt": "The Matterhorn's rocky summit catching warm sunset light, snow and glaciers visible on its flanks with dark ridges below",
       "caption": "Matterhorn, the iconic mountain of the Alps, towering over the charming town of Zermatt."
+    },
+    {
+      "file": "G0049953.jpeg",
+      "alt": "Paraglider soaring high above the alpine landscape with the Matterhorn in the background, under a clear blue sky",
+      "caption": "First time paragliding, and the view of the Matterhorn is breathtaking."
     }
   ]
 }

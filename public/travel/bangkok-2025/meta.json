@@ -1,0 +1,17 @@
+{
+  "title": "A Layover in Bangkok",
+  "date": "2025-9",
+  "location": "Bangkok, Thailand",
+  "lat": 13.76,
+  "lng": 100.50,
+  "order" : 10.5,
+  "description": "A quick stop in Bangkok between trips. The city is loud, hot, and alive — and the rooftop pools don't hurt either.",
+  "coverAlt": "Rooftop infinity pool overlooking the Bangkok skyline under a cloudy sky",
+  "images": [
+    {
+      "file": "IMG_6711.jpeg",
+      "alt": "Rooftop infinity pool with water reflecting the Bangkok cityscape, skyscrapers and low-rise buildings stretching to the horizon under scattered clouds",
+      "caption": "The view from a rooftop pool — Bangkok sprawling out in every direction."
+    }
+  ]
+}
