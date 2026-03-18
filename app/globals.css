@@ -88,8 +88,8 @@ body::before {
 }
 
 @keyframes dialog-popup-in {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
+  from { opacity: 0; transform: scale(0.97) translateY(8px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
 /* === Tailwind utilities === */
@@ -118,7 +118,7 @@ body::before {
 }
 
 @utility dialog-popup {
-  animation: dialog-popup-in 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  animation: dialog-popup-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @utility project-tooltip {
