@@ -81,9 +81,6 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
   const prevImage = previous !== null && previous < trip.images.length ? trip.images[previous] : null;
   const hasMultiple = trip.images.length > 1;
 
-  const nextIdx = (safeIndex + 1) % trip.images.length;
-  const nextImage = hasMultiple ? trip.images[nextIdx] : null;
-
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
@@ -166,11 +163,6 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
                     : {})}
                 />
               </div>
-
-              {/* Preload next image */}
-              {nextImage && nextIdx !== current && (
-                <link rel="preload" as="image" href={nextImage.src} />
-              )}
 
               {/* Dash indicators — no text counter */}
               {hasMultiple && (
