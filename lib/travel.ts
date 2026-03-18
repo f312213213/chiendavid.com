@@ -29,6 +29,7 @@ export interface Trip {
 async function generateBlurDataURL(filePath: string): Promise<string | undefined> {
   try {
     const buffer = await sharp(filePath)
+      .rotate()
       .resize(16, 12, { fit: 'cover' })
       .blur()
       .toBuffer();
