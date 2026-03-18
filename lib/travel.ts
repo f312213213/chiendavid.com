@@ -116,11 +116,13 @@ export async function getAllTrips(): Promise<Trip[]> {
     return b.date.localeCompare(a.date);
   });
 
-  // Assign varied rotations: alternate sign, vary magnitude per card
+  // Assign varied rotations: hash-driven sign and magnitude for organic scatter
   sorted.forEach((trip, i) => {
     const h = Math.abs(hashSlug(trip.slug + i));
-    const magnitude = (h % 5) + 2; // 2–6 degrees
-    const sign = i % 2 === 0 ? 1 : -1;
+    const h2 = Math.abs(hashSlug(trip.slug + 'rot'));
+    const isFeatured = i === 0;
+    const magnitude = isFeatured ? (h % 3) + 1 : (h % 9) + 1; // 1–3° for featured, 1–9° for rest
+    const sign = h2 % 3 === 0 ? 1 : h2 % 3 === 1 ? -1 : (h % 2 === 0 ? 1 : -1);
     trip.rotation = sign * magnitude;
   });
 

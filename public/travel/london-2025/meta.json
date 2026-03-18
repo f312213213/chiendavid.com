@@ -6,17 +6,17 @@
   "lat": 51.50,
   "lng": -0.12,
   "order" : 8,
-  "description": "The first stop of my Oasis trip is London, where I spent a few days exploring the city and finally have a chance to see Oasis in person.",
-  "coverAlt": "Snow-capped peaks of the Matterhorn dominating the skyline of Zermatt",
+  "description": "The first stop of my Oasis trip is London, where we spent a few days exploring the city and finally have a chance to see Oasis in person.",
+  "coverAlt": "Oasis reunion concert at Wembley Stadium with massive pink and yellow stage graphics and a crowd of fans",
   "images": [
     {
       "file": "IMG_6179.jpeg",
-      "alt": "Oasis performing at Wembley Stadium, with a sea of fans in the background",
+      "alt": "Oasis performing at Wembley Stadium, giant pink and yellow 'Oasis' branding on stage screens with thousands of fans cheering",
       "caption": "Oasis at Wembley Stadium, the best concert I have ever been to."
     },
     {
       "file": "IMG_6076.jpeg",
-      "alt": "Oasis performing at Wembley Stadium, with a sea of fans in the background",
+      "alt": "London skyline seen from the Thames, featuring the Walkie Talkie building and modern skyscrapers under a partly cloudy sky",
       "caption": "Skyline of London from Tower Bridge, my tutor said it is called \"woki toki\" building."
     }
   ]

@@ -5,17 +5,17 @@
   "lat": 50.08,
   "lng": 14.43,
   "order" : 13,
-  "description": "Landing in a new city that I will be calling home for the next few years(maybe?). With anxiety and excitement, new life begins.",
+  "description": "Landing in a new city that I will be calling home for the next few years (maybe?). With anxiety and excitement, new life begins.",
   "coverAlt": "Václav Havel Airport Prague illuminated at night under a misty sky",
   "images": [
     {
       "file": "IMG_8342.jpeg",
-      "alt": "Tram in Prague, with sunshine",
+      "alt": "A blue tram passing through a Prague street lined with warm-toned historic buildings bathed in golden afternoon light",
       "caption": "The most beautiful things in Prague IMO is the light."
     },
     {
       "file": "IMG_8324.jpeg",
-      "alt": "The exterior of Václav Havel Airport Prague at night, PRAHA sign glowing above the terminal entrance",
+      "alt": "The exterior of Václav Havel Airport Prague at night, PRAHA sign glowing above the terminal entrance in the fog",
       "caption": "Arrival — Václav Havel Airport on a foggy February night"
     }
   ]

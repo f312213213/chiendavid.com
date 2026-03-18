@@ -20,11 +20,13 @@ function slugHash(s: string) {
 
 export default function PolaroidCard({ trip, onClick, disableRotation, featured }: PolaroidCardProps) {
   const rotation = disableRotation ? 0 : trip.rotation;
-  const h = slugHash(trip.slug);
+  const h1 = slugHash(trip.slug + 'pos');
+  const h2 = slugHash(trip.slug + 'rot');
+  const h3 = slugHash(trip.slug + 'w');
 
-  const tapeRotate = (h % 30) - 15;
-  const tapeLeft = 30 + (h % 40);
-  const tapeWidth = featured ? 80 : 56;
+  const tapeLeft = 15 + (h1 % 65);       // 15–80% range
+  const tapeRotate = (h2 % 40) - 20;     // -20 to +20 degrees
+  const tapeWidth = featured ? 70 + (h3 % 20) : 48 + (h3 % 20); // varied width
 
   return (
     <button

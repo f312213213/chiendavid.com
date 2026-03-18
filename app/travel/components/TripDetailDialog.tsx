@@ -218,7 +218,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
               )}
 
               {image.caption && (
-                <p className="text-xs tracking-wide uppercase text-muted mt-8 pt-4 border-t border-border">
+                <p className="text-xs tracking-wide text-muted mt-8 pt-4 border-t border-border">
                   {image.caption}
                 </p>
               )}

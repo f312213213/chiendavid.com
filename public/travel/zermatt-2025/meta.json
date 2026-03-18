@@ -5,12 +5,12 @@
   "lat": 46.02,
   "lng": 7.75,
   "order" : 9,
-  "description": "Zermatt is a picturesque mountain town in the Swiss Alps.",
-  "coverAlt": "Snow-capped peaks of the Matterhorn dominating the skyline of Zermatt",
+  "description": "Zermatt is a picturesque mountain town in the Swiss Alps. I literally jump from the mountain beside it.",
+  "coverAlt": "The Matterhorn peak glowing with golden alpenglow at sunset against a clear sky",
   "images": [
     {
       "file": "IMG_6439.jpeg",
-      "alt": "Tram in Prague, with sunshine",
+      "alt": "The Matterhorn's rocky summit catching warm sunset light, snow and glaciers visible on its flanks with dark ridges below",
       "caption": "Matterhorn, the iconic mountain of the Alps, towering over the charming town of Zermatt."
     }
   ]

@@ -6,13 +6,13 @@
   "lat": -8.34,
   "lng": 115.09,
   "order" : 6,
-  "description": "The first stop of my Oasis trip is London, where I spent a few days exploring the city and finally have a chance to see Oasis in person.",
-  "coverAlt": "Snow-capped peaks of the Matterhorn dominating the skyline of Zermatt",
+  "description": "Bali is full of digital nomads, coworking cafés, and sunsets that make you forget about deadlines. Easy to see why people come and never leave.",
+  "coverAlt": "Golden sunset over the ocean on a Bali beach with waves washing onto the shore",
   "images": [
     {
       "file": "IMG_4929.jpeg",
-      "alt": "Oasis performing at Wembley Stadium, with a sea of fans in the background",
-      "caption": "Twin builidings of the Petronas Towers in Kuala Lumpur, Malaysia, standing tall against a dark sky."
+      "alt": "Golden sunset over the ocean on a Bali beach, sun reflecting off wet sand and gentle waves",
+      "caption": "Sunset on the beach — the kind of evening that makes you want to stay forever."
     }
   ]
 }

@@ -6,12 +6,12 @@
   "lat": 3.13,
   "lng": 101.65,
   "order" : 7,
-  "description": "The first stop of my Oasis trip is London, where I spent a few days exploring the city and finally have a chance to see Oasis in person.",
-  "coverAlt": "Snow-capped peaks of the Matterhorn dominating the skyline of Zermatt",
+  "description": "A quick stop in KL — the Petronas Towers are impressive at night, but the city didn't grab us the way other places did. Still glad we went.",
+  "coverAlt": "Petronas Twin Towers soaring into the night sky, viewed from directly below with the skybridge connecting them",
   "images": [
     {
       "file": "IMG_5857.jpeg",
-      "alt": "Oasis performing at Wembley Stadium, with a sea of fans in the background",
+      "alt": "Petronas Twin Towers lit up at night, shot from ground level looking straight up with the skybridge visible between them",
       "caption": "Twin builidings of the Petronas Towers in Kuala Lumpur, Malaysia, standing tall against a dark sky."
     }
   ]
