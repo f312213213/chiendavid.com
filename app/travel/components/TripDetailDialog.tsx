@@ -89,8 +89,8 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
-        <Dialog.Backdrop className="dialog-backdrop fixed inset-0 bg-black/85 z-50" />
-        <Dialog.Popup className="dialog-popup fixed inset-0 md:inset-6 lg:inset-10 z-50 overflow-hidden flex flex-col md:flex-row bg-background border-0 md:border-2 border-border">
+        <Dialog.Backdrop className="dialog-backdrop fixed inset-0 bg-black/90 z-50" />
+        <Dialog.Popup className="dialog-popup fixed inset-0 z-50 overflow-hidden flex flex-col md:flex-row bg-background">
 
           {/* === Image panel === */}
           <div
@@ -102,49 +102,49 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
             {/* Blurred background fill — photo's own colors instead of dead black */}
             {image.blurDataURL && (
               <div
-                className="absolute inset-0 scale-110 transition-opacity duration-500"
+                className="absolute inset-0 scale-110"
                 style={{
                   backgroundImage: `url(${image.blurDataURL})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
-                  filter: 'blur(40px) saturate(1.3) brightness(0.4)',
+                  filter: 'blur(40px) saturate(1.3) brightness(0.35)',
                 }}
               />
             )}
 
-            {/* Vignette over blurred bg */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/30 pointer-events-none" />
+            {/* Vignette for depth + indicator readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-black/20 pointer-events-none z-[1]" />
 
             {/* Nav arrows */}
             {hasMultiple && (
               <>
                 <button
                   onClick={prev}
-                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-12 h-12 md:w-14 md:h-14 hidden md:flex items-center justify-center text-white/40 hover:text-white transition-colors cursor-pointer select-none"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 hidden md:flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm text-white/70 hover:bg-black/50 hover:text-white transition-all cursor-pointer select-none"
                   aria-label="Previous image"
                 >
-                  <svg width="28" height="28" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6"/></svg>
+                  <svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6"/></svg>
                 </button>
                 <button
                   onClick={next}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-12 h-12 md:w-14 md:h-14 hidden md:flex items-center justify-center text-white/40 hover:text-white transition-colors cursor-pointer select-none"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 z-10 w-12 h-12 hidden md:flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm text-white/70 hover:bg-black/50 hover:text-white transition-all cursor-pointer select-none"
                   aria-label="Next image"
                 >
-                  <svg width="28" height="28" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4l6 6-6 6"/></svg>
+                  <svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 4l6 6-6 6"/></svg>
                 </button>
               </>
             )}
 
             {/* Crossfade: outgoing image */}
             {prevImage && (
-              <div className="absolute inset-0 md:flex md:items-center md:justify-center md:p-10 md:pb-20 animate-[fade-out_0.3s_ease-out_forwards]">
+              <div className="absolute inset-0 flex items-center justify-center p-4 pb-14 md:p-8 md:pb-16 z-[2] animate-[fade-out_0.3s_ease-out_forwards]">
                 <Image
                   src={prevImage.src}
                   alt={prevImage.alt}
                   width={1600}
                   height={1200}
-                  sizes="(max-width: 768px) 100vw, 65vw"
-                  className="w-full h-full object-cover md:max-w-full md:max-h-full md:w-auto md:h-auto md:object-contain md:drop-shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+                  sizes="(max-width: 768px) 100vw, 70vw"
+                  className="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-[0_4px_24px_rgba(0,0,0,0.4)]"
                   {...(prevImage.blurDataURL
                     ? { placeholder: 'blur', blurDataURL: prevImage.blurDataURL }
                     : {})}
@@ -153,15 +153,15 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
             )}
 
             {/* Current image */}
-            <div className={`absolute inset-0 md:flex md:items-center md:justify-center md:p-10 md:pb-20 ${previous !== null ? 'animate-[fade-in_0.3s_ease-out_forwards]' : ''}`}>
+            <div className={`absolute inset-0 flex items-center justify-center p-4 pb-14 md:p-8 md:pb-16 z-[2] ${previous !== null ? 'animate-[fade-in_0.3s_ease-out_forwards]' : ''}`}>
               <Image
                 key={image.src}
                 src={image.src}
                 alt={image.alt}
                 width={1600}
                 height={1200}
-                sizes="(max-width: 768px) 100vw, 65vw"
-                className="w-full h-full object-cover md:max-w-full md:max-h-full md:w-auto md:h-auto md:object-contain md:drop-shadow-[0_8px_32px_rgba(0,0,0,0.5)]"
+                sizes="(max-width: 768px) 100vw, 70vw"
+                className="max-w-full max-h-full w-auto h-auto object-contain drop-shadow-[0_4px_24px_rgba(0,0,0,0.4)]"
                 priority={current === 0}
                 loading={current === 0 ? 'eager' : 'lazy'}
                 {...(image.blurDataURL
@@ -177,7 +177,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
 
             {/* Image indicators */}
             {hasMultiple && (
-              <div className="absolute bottom-4 md:bottom-8 left-1/2 -translate-x-1/2 flex items-center gap-4 z-10">
+              <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-4 z-10">
                 <span className="text-[11px] font-bold tracking-[0.2em] text-white/50 tabular-nums">
                   {current + 1} / {trip.images.length}
                 </span>
