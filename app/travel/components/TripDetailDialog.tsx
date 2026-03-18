@@ -109,13 +109,8 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
               {/* Blurred background fill for contain gaps — desktop only */}
               {image.blurDataURL && (
                 <div
-                  className="absolute inset-0 scale-110 hidden md:block"
-                  style={{
-                    backgroundImage: `url(${image.blurDataURL})`,
-                    backgroundSize: 'cover',
-                    backgroundPosition: 'center',
-                    filter: 'blur(40px) saturate(1.3) brightness(0.35)',
-                  }}
+                  className="absolute inset-0 scale-110 hidden md:block bg-cover bg-center blur-[40px] saturate-[1.3] brightness-[0.35]"
+                  style={{ backgroundImage: `url(${image.blurDataURL})` }}
                 />
               )}
 
