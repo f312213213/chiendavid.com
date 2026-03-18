@@ -1,0 +1,22 @@
+{
+  "title": "Paris has the best Crepes",
+  "date": "2025-8",
+  "location": "Paris, France",
+  "lat": 48.85,
+  "lng": 2.35,
+  "order" : 10,
+  "description": "Paris is the last stop of my Oasis trip.",
+  "coverAlt": "Václav Havel Airport Prague illuminated at night under a misty sky",
+  "images": [
+    {
+      "file": "IMG_6545.jpeg",
+      "alt": "Tram in Prague, with sunshine",
+      "caption": "Beautiful shinny Eiffel tower."
+    },
+    {
+      "file": "IMG_6560.jpeg",
+      "alt": "Tram in Prague, with sunshine",
+      "caption": "The best crepes I have ever had."
+    }
+  ]
+}

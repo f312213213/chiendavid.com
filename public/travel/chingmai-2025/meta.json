@@ -1,16 +1,22 @@
 {
-  "title": "Golden Light in Chiang Mai",
+  "title": "Nomad in Chiang Mai",
   "date": "2025-11",
   "location": "Chiang Mai, Thailand",
   "lat": 18.79,
   "lng": 98.98,
-  "description": "Chiang Mai moves at the speed of a long exhale. Green stretches out in every direction, mountains hover behind clouds, and the afternoon heat softens everything into a kind of pleasant stillness.",
+  "order" : 12,
+  "description": "There is some much things to love about Chiang Mai — the food, the culture, the people. Everyone just chilling out and enjoying life.",
   "coverAlt": "Wide green lawn under dramatic clouds with distant mountains near Chiang Mai",
   "images": [
     {
       "file": "IMG_7143.jpeg",
       "alt": "Lush green lawn stretching toward tropical trees and misty mountains under a cloudy sky",
-      "caption": "The view from the veranda — mountains just barely visible through the afternoon clouds"
+      "caption": "The view from a resort in Chiang Dow — its truly a place with nothing, but nature and tranquility"
+    },
+    {
+      "file": "IMG_7131.jpeg",
+      "alt": "A police officer holding a POS machine try to open a ticket.",
+      "caption": "Caught by a police officer for not wearing a helmet while riding a scooter, 不嘻嘻"
     }
   ]
 }

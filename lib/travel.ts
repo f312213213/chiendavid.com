@@ -21,6 +21,7 @@ export interface Trip {
   coverBlurDataURL?: string;
   lat?: number;
   lng?: number;
+  order?: number;
   images: TripImage[];
   rotation: number;
 }
@@ -98,6 +99,7 @@ export async function getAllTrips(): Promise<Trip[]> {
         coverBlurDataURL: images[0]?.blurDataURL,
         lat: meta.lat,
         lng: meta.lng,
+        order: meta.order,
         images,
         rotation: 0, // assigned after sorting
       });
@@ -106,7 +108,13 @@ export async function getAllTrips(): Promise<Trip[]> {
     }
   }
 
-  const sorted = trips.sort((a, b) => b.date.localeCompare(a.date));
+  const sorted = trips.sort((a, b) => {
+    // Sort by explicit order first (lower = first), then by date descending
+    const orderA = a.order ?? Infinity;
+    const orderB = b.order ?? Infinity;
+    if (orderA !== orderB) return orderB - orderA;
+    return b.date.localeCompare(a.date);
+  });
 
   // Assign varied rotations: alternate sign, vary magnitude per card
   sorted.forEach((trip, i) => {

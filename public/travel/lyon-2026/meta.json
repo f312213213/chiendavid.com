@@ -4,13 +4,20 @@
   "location": "Lyon, France",
   "lat": 45.76,
   "lng": 4.83,
-  "description": "Lyon in February is all soft edges — the city below fading into morning haze, rooftops stacked like a watercolor study. From the hills, it feels less like a metropolis and more like a memory of one.",
+  "order" : 14,
+  "description": "Lyon feels like a vibrant city that somehow manages to remain peaceful. We are hooked on the cultural and historical charm.",
   "coverAlt": "Hilltop view of Lyon's hazy skyline with residential buildings in the foreground",
   "images": [
     {
       "file": "IMG_8499.jpeg",
       "alt": "Panoramic view from a Lyon hilltop, city skyline dissolving into winter haze, figures sitting along a low wall",
-      "caption": "Looking out over Lyon from the heights — the whole city wrapped in February haze"
+      "caption": "Looking out over Lyon from La Croix-Rousse — the whole city wrapped in February haze"
+    },
+
+    {
+      "file": "IMG_8520.jpeg",
+      "alt": "Panoramic view from a Lyon hilltop, city skyline dissolving into winter haze, figures sitting along a low wall",
+      "caption": "Spotted a Giant store in Lyon! Proudly from Taiwan! (And the store is pretty cute too)"
     }
   ]
 }

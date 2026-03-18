@@ -4,9 +4,15 @@
   "location": "Prague, Czechia",
   "lat": 50.08,
   "lng": 14.43,
-  "description": "Touching down at Václav Havel Airport on a foggy night — not a visit this time, but an arrival. Prague under low clouds, the glow of terminal lights, the quiet weight of knowing this one isn't round-trip.",
+  "order" : 13,
+  "description": "Landing in a new city that I will be calling home for the next few years(maybe?). With anxiety and excitement, new life begins.",
   "coverAlt": "Václav Havel Airport Prague illuminated at night under a misty sky",
   "images": [
+    {
+      "file": "IMG_8342.jpeg",
+      "alt": "Tram in Prague, with sunshine",
+      "caption": "The most beautiful things in Prague IMO is the light."
+    },
     {
       "file": "IMG_8324.jpeg",
       "alt": "The exterior of Václav Havel Airport Prague at night, PRAHA sign glowing above the terminal entrance",

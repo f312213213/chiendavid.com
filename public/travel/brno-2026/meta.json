@@ -4,18 +4,19 @@
   "location": "Brno, Czechia",
   "lat": 49.19,
   "lng": 16.61,
-  "description": "Brno doesn't try to impress you — it just does. Ornate facades line tram-tracked streets, and beneath the city, a hidden world of vaulted cisterns and underground corridors waits in near-silence. It's the kind of place where you turn a corner and forget what century you're in.",
+  "order" : 15,
+  "description": "First trip in Chechia outside of Prague, it is a charming surprise. The city has a relaxed vibe, with a mix of architectural styles and a lively café culture. It's the perfect place for a weekend escape.",
   "coverAlt": "Neo-Gothic building facade along a cobblestone street with tram lines in Brno's old town",
   "images": [
     {
       "file": "IMG_8645.jpeg",
       "alt": "Ornate Neo-Gothic building facade on a sunlit street with tram tracks and pedestrians in Brno",
-      "caption": "Afternoon light on the old town — somewhere near náměstí Svobody"
+      "caption": "Afternoon light on the old town."
     },
     {
       "file": "IMG_8707.jpeg",
       "alt": "Underground cistern with rows of concrete columns lit by warm floor lights",
-      "caption": "Beneath the city: Brno's underground reservoir, cathedral-like in its stillness"
+      "caption": "Beneath the city: Brno's underground water tanks, cathedral-like in its stillness."
     }
   ]
 }

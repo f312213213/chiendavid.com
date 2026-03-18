@@ -1,0 +1,17 @@
+{
+  "title": "Zermatt - A Mountain Getaway",
+  "date": "2025-8",
+  "location": "Zermatt, Switzerland",
+  "lat": 46.02,
+  "lng": 7.75,
+  "order" : 9,
+  "description": "Zermatt is a picturesque mountain town in the Swiss Alps.",
+  "coverAlt": "Snow-capped peaks of the Matterhorn dominating the skyline of Zermatt",
+  "images": [
+    {
+      "file": "IMG_6439.jpeg",
+      "alt": "Tram in Prague, with sunshine",
+      "caption": "Matterhorn, the iconic mountain of the Alps, towering over the charming town of Zermatt."
+    }
+  ]
+}

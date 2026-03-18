@@ -1,0 +1,18 @@
+
+{
+  "title": "Full of Nomads - Bali",
+  "date": "2025-2",
+  "location": "Bali, Indonesia",
+  "lat": -8.34,
+  "lng": 115.09,
+  "order" : 6,
+  "description": "The first stop of my Oasis trip is London, where I spent a few days exploring the city and finally have a chance to see Oasis in person.",
+  "coverAlt": "Snow-capped peaks of the Matterhorn dominating the skyline of Zermatt",
+  "images": [
+    {
+      "file": "IMG_4929.jpeg",
+      "alt": "Oasis performing at Wembley Stadium, with a sea of fans in the background",
+      "caption": "Twin builidings of the Petronas Towers in Kuala Lumpur, Malaysia, standing tall against a dark sky."
+    }
+  ]
+}

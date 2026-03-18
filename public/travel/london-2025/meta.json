@@ -1,0 +1,23 @@
+
+{
+  "title": "Oasis Trip: Started!",
+  "date": "2025-8",
+  "location": "London, UK",
+  "lat": 51.50,
+  "lng": -0.12,
+  "order" : 8,
+  "description": "The first stop of my Oasis trip is London, where I spent a few days exploring the city and finally have a chance to see Oasis in person.",
+  "coverAlt": "Snow-capped peaks of the Matterhorn dominating the skyline of Zermatt",
+  "images": [
+    {
+      "file": "IMG_6179.jpeg",
+      "alt": "Oasis performing at Wembley Stadium, with a sea of fans in the background",
+      "caption": "Oasis at Wembley Stadium, the best concert I have ever been to."
+    },
+    {
+      "file": "IMG_6076.jpeg",
+      "alt": "Oasis performing at Wembley Stadium, with a sea of fans in the background",
+      "caption": "Skyline of London from Tower Bridge, my tutor said it is called \"woki toki\" building."
+    }
+  ]
+}

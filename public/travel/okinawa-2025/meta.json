@@ -4,13 +4,14 @@
   "location": "Okinawa, Japan",
   "lat": 26.34,
   "lng": 127.77,
-  "description": "Okinawa at sunset is almost too much — the sky goes orange, the sea turns gold, and everything below settles into silhouette. Time here doesn't pass so much as pool, warm and unhurried, like the air itself.",
-  "coverAlt": "Golden sunset over the sea seen through tropical foliage in Okinawa",
+  "order" : 11,
+  "description": "Okinawa at sunset is almost too much — the sky goes orange, the sea turns gold, and everything below settles into silhouette.",
+  "coverAlt": "Golden sunset over a coastal bay in Okinawa, captured from an amazing homestay",
   "images": [
     {
       "file": "IMG_6935.jpeg",
-      "alt": "Dramatic golden sunset over a coastal bay in Okinawa, framed by lush tropical trees",
-      "caption": "Sunset over the sea — the kind of sky that stops you mid-sentence"
+      "alt": "Golden sunset over a coastal bay in Okinawa, captured from an amazing homestay",
+      "caption": "Golden sunset over a coastal bay in Okinawa, captured from an amazing homestay"
     }
   ]
 }
