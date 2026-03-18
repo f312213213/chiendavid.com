@@ -188,7 +188,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
               {/* Grain overlay */}
               <div className="absolute inset-0 pointer-events-none opacity-[0.035] polaroid-grain" />
 
-              <div className="px-8 py-10 md:px-10 lg:px-12 relative">
+              <div className="px-8 pt-8 pb-[max(2.5rem,env(safe-area-inset-bottom))] md:px-10 md:py-10 lg:px-12 relative">
                 <p className="text-[11px] font-normal tracking-[0.15em] uppercase text-muted mb-3">
                   {trip.location}
                 </p>

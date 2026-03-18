@@ -5,13 +5,13 @@
   "lat": 48.85,
   "lng": 2.35,
   "order" : 10,
-  "description": "Paris is the last stop of my Oasis trip. Amaxing food, beautiful architecture, and the vibrant atmosphere makes it the perfect ending to our journey.",
+  "description": "Paris is the last stop of my Oasis trip. Amazing food, beautiful architecture, and the vibrant atmosphere makes it the perfect ending to our journey.",
   "coverAlt": "The Eiffel Tower illuminated in golden light at night with visitors gathered at its base",
   "images": [
     {
       "file": "IMG_6545.jpeg",
       "alt": "The Eiffel Tower glowing golden against the night sky, its beacon light sweeping horizontally, crowds gathered below",
-      "caption": "Beautiful shinny Eiffel tower."
+      "caption": "Beautiful shiny Eiffel Tower."
     },
     {
       "file": "IMG_6560.jpeg",
