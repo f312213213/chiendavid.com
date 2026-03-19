@@ -50,7 +50,7 @@ export default function PolaroidCard({ trip, onClick, disableRotation, featured 
         <div className="absolute inset-0 pointer-events-none opacity-[0.035] polaroid-grain" />
 
         {/* Image with vignette */}
-        <div className={`relative w-full overflow-hidden ${featured ? 'aspect-[2/1]' : 'aspect-[4/3]'}`}>
+        <div className={`relative w-full overflow-hidden ${featured ? 'aspect-[4/3] md:aspect-[2/1]' : 'aspect-[4/3]'}`}>
           <Image
             src={trip.coverSrc}
             alt={trip.coverAlt}
