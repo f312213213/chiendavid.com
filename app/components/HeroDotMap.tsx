@@ -142,6 +142,7 @@ function clusterPins(
 
 export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
+  const hoverCountRef = useRef<Map<number, number>>(new Map());
   const containerRef = useRef<HTMLDivElement>(null);
 
   const projected = pins.map((pin) => ({
@@ -158,15 +159,31 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
         trips: [pinToTrip(p)],
       }));
 
-  const handleClick = useCallback((cluster: Cluster) => {
-    const slug = cluster.trips[0].slug;
-    const el = document.getElementById(`trip-${slug}`);
+  const handleEnter = useCallback((idx: number) => {
+    const prev = hoverCountRef.current.get(idx) ?? 0;
+    hoverCountRef.current.set(idx, prev + 1);
+    setHoveredIdx(idx);
+  }, []);
+
+  const handleLeave = useCallback(() => {
+    setHoveredIdx(null);
+  }, []);
+
+  /** Which trip to show for a given cluster (cycles each hover). */
+  const getVisibleTrip = useCallback((idx: number, cluster: Cluster) => {
+    const count = hoverCountRef.current.get(idx) ?? 0;
+    return cluster.trips[count % cluster.trips.length];
+  }, []);
+
+  const handleClick = useCallback((idx: number, cluster: Cluster) => {
+    const trip = getVisibleTrip(idx, cluster);
+    const el = document.getElementById(`trip-${trip.slug}`);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
       el.classList.add('pin-highlight');
       setTimeout(() => el.classList.remove('pin-highlight'), 1200);
     }
-  }, []);
+  }, [getVisibleTrip]);
 
   // Convert SVG coords (0..W, 0..H) to percentage for HTML tooltip positioning
   const toPercent = (svgX: number, svgY: number) => ({
@@ -217,9 +234,9 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
             <g
               key={i}
               style={{ pointerEvents: 'auto', outline: 'none' }}
-              onMouseEnter={() => setHoveredIdx(i)}
-              onMouseLeave={() => setHoveredIdx(null)}
-              onClick={() => handleClick(c)}
+              onMouseEnter={() => handleEnter(i)}
+              onMouseLeave={handleLeave}
+              onClick={() => handleClick(i, c)}
               className="cursor-pointer"
             >
               {/* Invisible hit area */}
@@ -252,16 +269,21 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
       </svg>
 
       {/* HTML tooltip — mini polaroid preview */}
-      {hoveredCluster && (() => {
+      {hoveredCluster && hoveredIdx !== null && (() => {
+        const idx = hoveredIdx;
         const onLeft = hoveredCluster.x > W * 0.55;
         const pos = toPercent(hoveredCluster.x, hoveredCluster.y);
-        const trip = hoveredCluster.trips[0];
+        const trip = getVisibleTrip(idx, hoveredCluster);
         const count = hoveredCluster.count;
 
         return (
           <div
-            className="absolute pointer-events-none"
-            style={{ ...pos, transform: 'translate(-50%, -50%)' }}
+            className="absolute"
+            style={{
+              ...pos,
+              transform: 'translate(-50%, -50%)',
+              pointerEvents: 'none',
+            }}
           >
             {/* Connector line */}
             <div
@@ -276,10 +298,11 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
               }}
             />
 
-            {/* Mini polaroid card */}
+            {/* Mini polaroid card — receives pointer events to persist hover */}
             <div
-              className="absolute top-1/2"
+              className="absolute top-1/2 cursor-pointer"
               style={{
+                pointerEvents: 'auto',
                 ...(onLeft
                   ? { right: '50%', marginRight: 38 }
                   : { left: '50%', marginLeft: 38 }),
@@ -287,6 +310,9 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
                 animation: 'tooltip-tag 0.25s cubic-bezier(0.16, 1, 0.3, 1) both',
                 animationDelay: '0.05s',
               }}
+              onMouseEnter={() => setHoveredIdx(idx)}
+              onMouseLeave={handleLeave}
+              onClick={() => handleClick(idx, hoveredCluster)}
             >
               <div
                 className="relative"
@@ -307,9 +333,7 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
                       src={trip.coverSrc}
                       alt=""
                       className="w-full h-full object-cover"
-                      style={{
-                        filter: 'saturate(0.85)',
-                      }}
+                      style={{ filter: 'saturate(0.85)' }}
                     />
                     {/* Vignette */}
                     <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]" />
@@ -325,7 +349,7 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
                   {/* Caption area */}
                   <div className="px-1 py-2">
                     <p className="text-[9px] font-bold tracking-[0.2em] uppercase text-accent leading-none">
-                      {hoveredCluster.trips.map(t => t.label).join(' \u00B7 ')}
+                      {trip.label}
                     </p>
                     <p className="text-[11px] font-semibold text-background mt-1 leading-tight truncate">
                       {trip.title}
