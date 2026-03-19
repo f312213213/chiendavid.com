@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useCallback, useRef } from 'react';
+import Image from 'next/image';
 import { MAP, ROWS, COLS } from '@/lib/dotmap';
 
 /**
@@ -138,12 +139,7 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
 
   const handleClick = useCallback((idx: number, cluster: Cluster) => {
     const trip = getVisibleTrip(idx, cluster);
-    const el = document.getElementById(`trip-${trip.slug}`);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-      el.classList.add('pin-highlight');
-      setTimeout(() => el.classList.remove('pin-highlight'), 1200);
-    }
+    window.dispatchEvent(new CustomEvent('open-trip', { detail: { slug: trip.slug } }));
   }, [getVisibleTrip]);
 
   // Convert SVG coords (0..W, 0..H) to percentage for HTML tooltip positioning
@@ -182,7 +178,8 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
       <svg
         viewBox={`0 0 ${W} ${H}`}
         className="absolute inset-0 w-full h-full"
-        aria-hidden="true"
+        role="img"
+        aria-label={`Map showing ${clusters.length} trip locations`}
         fill="currentColor"
         style={{ pointerEvents: 'none' }}
       >
@@ -289,12 +286,16 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
                 <div className="w-[180px] p-1.5 pb-0 bg-foreground/90 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
                   {/* Thumbnail */}
                   <div className="relative w-full aspect-[3/2] overflow-hidden">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
+                    <Image
                       src={trip.coverSrc}
                       alt=""
+                      width={180}
+                      height={120}
                       className="w-full h-full object-cover"
                       style={{ filter: 'saturate(0.85)' }}
+                      {...(trip.coverBlur
+                        ? { placeholder: 'blur' as const, blurDataURL: trip.coverBlur }
+                        : {})}
                     />
                     {/* Vignette */}
                     <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]" />

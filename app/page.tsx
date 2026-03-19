@@ -14,7 +14,6 @@ const links = [
 
 export default async function Home() {
   const trips = await getAllTrips();
-  const countrySet = new Set(trips.map(t => t.location.split(',').pop()?.trim()));
   const heroPins = trips
     .filter(t => t.lat != null && t.lng != null)
     .map(t => ({
@@ -33,7 +32,7 @@ export default async function Home() {
       <ScrollReveal />
 
       {/* Hero */}
-      <header className="relative min-h-[85dvh] flex flex-col justify-end px-6 pb-12 md:px-12 md:pb-20 lg:px-20 lg:pb-24 overflow-hidden">
+      <header className="relative min-h-[85dvh] flex flex-col justify-end px-6 pb-12 md:px-12 md:pb-20 lg:px-20 lg:pb-24 overflow-x-clip">
         {/* Dot map — bottom-anchored, shifted right to avoid title collision */}
         <div className="animate-in delay-2 absolute bottom-8 right-0 md:right-[5%] hidden md:block w-[70%] max-w-4xl z-10 pointer-events-none">
           <HeroDotMap pins={heroPins} className="w-full text-foreground" />

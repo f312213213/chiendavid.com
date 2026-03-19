@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import type { Trip } from '@/lib/travel';
 import PolaroidCard from './PolaroidCard';
 import TripDetailDialog from './TripDetailDialog';
@@ -11,6 +11,16 @@ interface TravelGridProps {
 
 export default function TravelGrid({ trips }: TravelGridProps) {
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
+
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const slug = (e as CustomEvent).detail.slug;
+      const trip = trips.find(t => t.slug === slug);
+      if (trip) setSelectedTrip(trip);
+    };
+    window.addEventListener('open-trip', handler);
+    return () => window.removeEventListener('open-trip', handler);
+  }, [trips]);
 
   if (trips.length === 0) {
     return (

@@ -207,6 +207,7 @@ body::before {
 .pin-pulse:nth-child(3n) { animation-delay: 1.2s; }
 .pin-pulse:nth-child(5n) { animation-delay: 1.8s; }
 
+
 /* Pin click → scroll highlight on trip card */
 .pin-highlight .polaroid-body {
   animation: pin-highlight-flash 1.2s ease-out forwards;

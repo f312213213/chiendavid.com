@@ -63,6 +63,13 @@ export default function PolaroidCard({ trip, onClick, disableRotation, featured 
               : {})}
           />
           <div className="absolute inset-0 pointer-events-none polaroid-vignette" />
+
+          {/* View indicator on hover */}
+          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/10">
+            <div className="px-3 py-1.5 bg-black/40 backdrop-blur-sm text-white text-[10px] font-semibold tracking-[0.15em] uppercase">
+              View
+            </div>
+          </div>
         </div>
 
         {/* Caption */}
