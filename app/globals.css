@@ -111,8 +111,9 @@ body::before {
 }
 
 @keyframes error-drift {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6%); }
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  25% { transform: translateY(-16%) rotate(2.5deg); }
+  75% { transform: translateY(8%) rotate(-1.5deg); }
 }
 
 @keyframes pin-highlight-flash {

@@ -10,8 +10,8 @@ export default function Error({ reset }: { error: Error; reset: () => void }) {
           {'500'.split('').map((digit, i) => (
             <span
               key={i}
-              className="error-digit font-nabla text-[clamp(8rem,25vw,14rem)] leading-none tracking-tight dark:text-accent/30 text-accent select-none inline-block animate-[error-drift_3s_cubic-bezier(0.45,0,0.55,1)_infinite]"
-              style={{ animationDelay: `${i * -0.6}s` }}
+              className="error-digit font-nabla text-[clamp(8rem,25vw,14rem)] leading-none tracking-tight dark:text-accent/30 text-accent select-none inline-block animate-[error-drift_4s_cubic-bezier(0.45,0,0.55,1)_infinite]"
+              style={{ animationDelay: `${i * -1.1}s` }}
             >
               {digit}
             </span>
