@@ -110,6 +110,11 @@ body::before {
   50% { opacity: 0.3; r: 5; }
 }
 
+@keyframes error-drift {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6%); }
+}
+
 @keyframes pin-highlight-flash {
   0% { box-shadow: 0 0 0 0 var(--accent); }
   30% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 25%, transparent); }
@@ -244,5 +249,9 @@ body::before {
   .polaroid-card img {
     filter: none;
     transition: none;
+  }
+
+  .error-digit {
+    animation: none !important;
   }
 }

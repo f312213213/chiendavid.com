@@ -6,10 +6,16 @@ export default function NotFound() {
       <main className="max-w-3xl mx-auto text-center">
 
         {/* 404 display — Nabla font, staggered entrance */}
-        <div className="animate-in delay-1 mb-6" aria-hidden="true">
-          <span className="font-nabla text-[clamp(8rem,25vw,14rem)] leading-none tracking-tight dark:text-accent/30 text-accent select-none">
-            404
-          </span>
+        <div className="animate-in delay-1 mb-6 flex justify-center" aria-hidden="true">
+          {'404'.split('').map((digit, i) => (
+            <span
+              key={i}
+              className="error-digit font-nabla text-[clamp(8rem,25vw,14rem)] leading-none tracking-tight dark:text-accent/30 text-accent select-none inline-block animate-[error-drift_3s_cubic-bezier(0.45,0,0.55,1)_infinite]"
+              style={{ animationDelay: `${i * -0.6}s` }}
+            >
+              {digit}
+            </span>
+          ))}
         </div>
 
         {/* Headline */}
