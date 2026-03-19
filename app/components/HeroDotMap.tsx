@@ -236,6 +236,7 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
 
         return (
           <div
+            key={idx}
             className="absolute"
             style={{
               ...pos,
@@ -273,7 +274,7 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
             >
               <div
                 className="relative"
-                style={{ transform: `rotate(${onLeft ? -2 : 2}deg)` }}
+                style={{ transform: `rotate(${((((hoverCountRef.current.get(idx) ?? 0) * 7 + idx * 13) % 9) - 4) * (onLeft ? -1 : 1)}deg)` }}
               >
                 {/* Accent edge */}
                 <div
