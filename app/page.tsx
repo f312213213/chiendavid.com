@@ -32,27 +32,27 @@ export default async function Home() {
       <ScrollReveal />
 
       {/* Hero */}
-      <header className="relative min-h-[85dvh] flex flex-col justify-end px-6 pb-12 md:px-12 md:pb-20 lg:px-20 lg:pb-24 overflow-x-clip">
+      <header className="relative md:min-h-[90dvh] flex flex-col md:justify-end px-6 pt-20 pb-12 md:px-12 lg:px-20 overflow-x-clip">
         {/* Dot map — bottom-anchored, shifted right to avoid title collision */}
         <div className="animate-in delay-2 absolute bottom-8 right-0 md:right-[5%] hidden md:block w-[70%] max-w-4xl z-10 pointer-events-none">
           <HeroDotMap pins={heroPins} className="w-full text-foreground" />
         </div>
 
-        <div className="max-w-7xl w-full mx-auto relative z-20 pointer-events-none">
+        <div className="max-w-7xl w-full mx-auto relative z-20 pointer-events-none text-center md:text-left">
           <p className="animate-in delay-1 text-xs font-bold tracking-[0.3em] uppercase text-accent mb-8">
             David Chien
           </p>
 
-          <h1 className="animate-in delay-2 font-nabla text-[4.5rem] md:text-[9rem] lg:text-[12rem] xl:text-[14rem] tracking-tight leading-[0.82] -ml-1 md:-ml-3">
+          <h1 className="animate-in delay-2 font-nabla text-[4.5rem] md:text-[9rem] lg:text-[12rem] xl:text-[14rem] tracking-tight leading-[0.82]">
             Travel<br />Log
           </h1>
 
-          <div className="animate-in delay-3 flex flex-col gap-6 mt-12 md:mt-20">
+          <div className="animate-in delay-3 flex flex-col items-center md:items-start gap-6 mt-12 md:mt-20">
             <p className="text-lg md:text-xl font-light text-muted">
               Places I&apos;ve been, things I&apos;ve seen.
             </p>
 
-            <nav className="flex flex-wrap items-center gap-x-5 gap-y-3 pointer-events-auto">
+            <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 pointer-events-auto">
               {links.map((link) => (
                 <a
                   key={link.label}
@@ -73,7 +73,7 @@ export default async function Home() {
       </header>
 
       {/* Grid */}
-      <main className="px-6 pt-8 pb-24 md:px-12 md:pt-12 md:pb-32 lg:px-20 lg:pb-40">
+      <main className="px-6 pt-4 pb-24 md:px-12 md:pb-32 lg:px-20 lg:pb-40">
         <div className="max-w-7xl mx-auto">
           <TravelGrid trips={trips} />
         </div>
