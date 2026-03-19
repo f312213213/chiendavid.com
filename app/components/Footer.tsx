@@ -4,17 +4,7 @@ import { useEffect, useState } from 'react';
 
 type ThemeMode = 'light' | 'dark' | 'system';
 
-interface Education {
-  institution: string;
-  degree: string;
-  period: string;
-}
-
-interface FooterProps {
-  education?: Education[];
-}
-
-export default function Footer({ education }: FooterProps) {
+export default function Footer() {
   const [theme, setTheme] = useState<ThemeMode>('system');
   const [mounted, setMounted] = useState(false);
 
@@ -53,15 +43,6 @@ export default function Footer({ education }: FooterProps) {
 
   return (
     <footer className="scroll-reveal text-sm pt-16 mt-8 border-t border-border text-muted">
-      {education && education.length > 0 && (
-        <div className="mb-8">
-          {education.map((edu, index) => (
-            <p key={index}>
-              {edu.degree}, {edu.institution} &middot; {edu.period}
-            </p>
-          ))}
-        </div>
-      )}
       <div className="flex justify-between items-center gap-4">
         <p>&copy; {new Date().getFullYear()} David Chien</p>
         <button

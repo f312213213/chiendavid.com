@@ -17,8 +17,8 @@ const nabla = Nabla({
 });
 
 export const metadata: Metadata = {
-  title: "David Chien - Software Engineer",
-  description: "David Chien — Software Engineer building web applications. Based in Prague, also available in Taiwan and the USA.",
+  title: "David Chien - Travel Log",
+  description: "Places I've been, things I've seen. A travel journal by David Chien.",
 };
 
 export default function RootLayout({

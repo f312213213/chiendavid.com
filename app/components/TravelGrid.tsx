@@ -24,8 +24,8 @@ export default function TravelGrid({ trips }: TravelGridProps) {
 
   return (
     <>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 md:gap-8">
-        <div className={`relative ${rest.length > 0 ? 'lg:col-span-2' : 'max-w-sm'}`}>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        <div className={`relative ${rest.length > 0 ? 'md:col-span-2' : 'max-w-sm'}`}>
           <PolaroidCard
             trip={featured}
             onClick={() => setSelectedTrip(featured)}

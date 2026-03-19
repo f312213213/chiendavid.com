@@ -46,6 +46,16 @@ function formatDate(date: string): string {
   return d.toLocaleDateString('en', { month: 'long', year: 'numeric' });
 }
 
+// Mulberry32 PRNG — returns a function that yields 0–1 floats from a seed
+function mulberry32(seed: number) {
+  return () => {
+    seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
 function hashSlug(slug: string): number {
   let hash = 0;
   for (let i = 0; i < slug.length; i++) {
@@ -117,14 +127,15 @@ export async function getAllTrips(): Promise<Trip[]> {
     return b.date.localeCompare(a.date);
   });
 
-  // Assign varied rotations: hash-driven sign and magnitude for organic scatter
+  // Assign varied rotations: seeded PRNG per slug for true scatter
   sorted.forEach((trip, i) => {
-    const h = Math.abs(hashSlug(trip.slug + i));
-    const h2 = Math.abs(hashSlug(trip.slug + 'rot'));
+    const rand = mulberry32(hashSlug(trip.slug));
     const isFeatured = i === 0;
-    const magnitude = isFeatured ? (h % 3) + 1 : (h % 9) + 1; // 1–3° for featured, 1–9° for rest
-    const sign = h2 % 3 === 0 ? 1 : h2 % 3 === 1 ? -1 : (h % 2 === 0 ? 1 : -1);
-    trip.rotation = sign * magnitude;
+    const maxDeg = isFeatured ? 3 : 7;
+    const minDeg = isFeatured ? 0.5 : 1.5;
+    const mag = minDeg + rand() * (maxDeg - minDeg);
+    const sign = rand() > 0.5 ? 1 : -1;
+    trip.rotation = Math.round(sign * mag * 10) / 10;
   });
 
   return sorted;
