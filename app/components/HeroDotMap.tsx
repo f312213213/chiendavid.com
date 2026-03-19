@@ -68,19 +68,35 @@ export interface HeroPin {
   lng: number;
   label: string;
   slug: string;
+  title: string;
+  coverSrc: string;
+  coverBlur?: string;
+  displayDate: string;
+}
+
+interface ClusterTrip {
+  label: string;
+  slug: string;
+  title: string;
+  coverSrc: string;
+  coverBlur?: string;
+  displayDate: string;
 }
 
 interface Cluster {
   x: number;
   y: number;
   count: number;
-  labels: string[];
-  slugs: string[];
+  trips: ClusterTrip[];
 }
 
 interface HeroDotMapProps {
   pins: HeroPin[];
   className?: string;
+}
+
+function pinToTrip(pin: HeroPin): ClusterTrip {
+  return { label: pin.label, slug: pin.slug, title: pin.title, coverSrc: pin.coverSrc, coverBlur: pin.coverBlur, displayDate: pin.displayDate };
 }
 
 /** Group projected pins within `threshold` SVG units. */
@@ -96,31 +112,28 @@ function clusterPins(
     if (used.has(i)) continue;
     let sx = projected[i].x;
     let sy = projected[i].y;
-    const labels: string[] = [pins[i].label];
-    const slugs: string[] = [pins[i].slug];
+    const trips: ClusterTrip[] = [pinToTrip(pins[i])];
     used.add(i);
 
     for (let j = i + 1; j < projected.length; j++) {
       if (used.has(j)) continue;
-      const cx = sx / labels.length;
-      const cy = sy / labels.length;
+      const cx = sx / trips.length;
+      const cy = sy / trips.length;
       const dx = projected[j].x - cx;
       const dy = projected[j].y - cy;
       if (Math.sqrt(dx * dx + dy * dy) < threshold) {
         sx += projected[j].x;
         sy += projected[j].y;
-        labels.push(pins[j].label);
-        slugs.push(pins[j].slug);
+        trips.push(pinToTrip(pins[j]));
         used.add(j);
       }
     }
 
     clusters.push({
-      x: sx / labels.length,
-      y: sy / labels.length,
-      count: labels.length,
-      labels,
-      slugs,
+      x: sx / trips.length,
+      y: sy / trips.length,
+      count: trips.length,
+      trips,
     });
   }
 
@@ -142,12 +155,11 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
         x: projected[i].x,
         y: projected[i].y,
         count: 1,
-        labels: [p.label],
-        slugs: [p.slug],
+        trips: [pinToTrip(p)],
       }));
 
   const handleClick = useCallback((cluster: Cluster) => {
-    const slug = cluster.slugs[0];
+    const slug = cluster.trips[0].slug;
     const el = document.getElementById(`trip-${slug}`);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -239,10 +251,11 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
         })}
       </svg>
 
-      {/* HTML tooltip — styled as a travel tag */}
+      {/* HTML tooltip — mini polaroid preview */}
       {hoveredCluster && (() => {
         const onLeft = hoveredCluster.x > W * 0.55;
         const pos = toPercent(hoveredCluster.x, hoveredCluster.y);
+        const trip = hoveredCluster.trips[0];
         const count = hoveredCluster.count;
 
         return (
@@ -250,7 +263,7 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
             className="absolute pointer-events-none"
             style={{ ...pos, transform: 'translate(-50%, -50%)' }}
           >
-            {/* Connector line from pin to tag */}
+            {/* Connector line */}
             <div
               className="absolute top-1/2 h-px bg-accent/50"
               style={{
@@ -263,42 +276,64 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
               }}
             />
 
-            {/* Tag body */}
+            {/* Mini polaroid card */}
             <div
-              className="absolute top-1/2 -translate-y-1/2"
+              className="absolute top-1/2"
               style={{
                 ...(onLeft
                   ? { right: '50%', marginRight: 38 }
                   : { left: '50%', marginLeft: 38 }),
+                transform: 'translateY(-50%)',
                 animation: 'tooltip-tag 0.25s cubic-bezier(0.16, 1, 0.3, 1) both',
                 animationDelay: '0.05s',
               }}
             >
               <div
-                className="relative whitespace-nowrap flex items-center gap-2"
-                style={{ transform: `rotate(${onLeft ? -1.5 : 1.5}deg)` }}
+                className="relative"
+                style={{ transform: `rotate(${onLeft ? -2 : 2}deg)` }}
               >
-                {/* Accent edge — like a washi tape strip */}
+                {/* Accent edge */}
                 <div
-                  className="absolute top-0 bottom-0 w-[3px] bg-accent"
+                  className="absolute top-0 bottom-0 w-[3px] bg-accent z-10"
                   style={onLeft ? { right: 0 } : { left: 0 }}
                 />
 
-                <div
-                  className="px-3 py-1.5 bg-foreground/90 backdrop-blur-sm"
-                  style={onLeft
-                    ? { paddingRight: 12 }
-                    : { paddingLeft: 12 }
-                  }
-                >
-                  <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-background leading-none">
-                    {hoveredCluster.labels.join(' \u00B7 ')}
-                  </p>
-                  {count > 1 && (
-                    <p className="text-[8px] tracking-[0.15em] uppercase text-background/50 mt-0.5 leading-none">
-                      {count} trips
+                {/* Card body */}
+                <div className="w-[180px] p-1.5 pb-0 bg-foreground/90 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
+                  {/* Thumbnail */}
+                  <div className="relative w-full aspect-[3/2] overflow-hidden">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={trip.coverSrc}
+                      alt=""
+                      className="w-full h-full object-cover"
+                      style={{
+                        filter: 'saturate(0.85)',
+                      }}
+                    />
+                    {/* Vignette */}
+                    <div className="absolute inset-0 shadow-[inset_0_0_20px_rgba(0,0,0,0.2)]" />
+
+                    {/* Trip count badge for clusters */}
+                    {count > 1 && (
+                      <div className="absolute top-1.5 right-1.5 px-1.5 py-0.5 bg-accent text-white text-[9px] font-bold tracking-wider">
+                        +{count - 1}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Caption area */}
+                  <div className="px-1 py-2">
+                    <p className="text-[9px] font-bold tracking-[0.2em] uppercase text-accent leading-none">
+                      {hoveredCluster.trips.map(t => t.label).join(' \u00B7 ')}
                     </p>
-                  )}
+                    <p className="text-[11px] font-semibold text-background mt-1 leading-tight truncate">
+                      {trip.title}
+                    </p>
+                    <p className="text-[9px] text-background/40 mt-0.5 leading-none">
+                      {trip.displayDate}
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>

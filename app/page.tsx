@@ -22,6 +22,10 @@ export default async function Home() {
       lng: t.lng!,
       label: t.location.split(',')[0].trim(),
       slug: t.slug,
+      title: t.title,
+      coverSrc: t.coverSrc,
+      coverBlur: t.coverBlurDataURL,
+      displayDate: t.displayDate,
     }));
 
   return (
