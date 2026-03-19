@@ -61,6 +61,16 @@ body::before {
   to { opacity: 1; transform: scale(1); }
 }
 
+@keyframes tooltip-line {
+  from { transform: scaleX(0); opacity: 0; }
+  to { transform: scaleX(1); opacity: 1; }
+}
+
+@keyframes tooltip-tag {
+  from { opacity: 0; transform: translateX(var(--tag-dir, 4px)) translateY(-50%); }
+  to { opacity: 1; transform: translateX(0) translateY(-50%); }
+}
+
 @keyframes fade-in {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -84,6 +94,12 @@ body::before {
 @keyframes pin-pulse {
   0%, 100% { opacity: 0.18; r: 3.5; }
   50% { opacity: 0.3; r: 5; }
+}
+
+@keyframes pin-highlight-flash {
+  0% { box-shadow: 0 0 0 0 var(--accent); }
+  30% { box-shadow: 0 0 0 6px color-mix(in srgb, var(--accent) 25%, transparent); }
+  100% { box-shadow: 0 0 0 0 transparent; }
 }
 
 /* === Tailwind utilities === */
@@ -190,6 +206,12 @@ body::before {
 .pin-pulse:nth-child(2n) { animation-delay: 0.5s; }
 .pin-pulse:nth-child(3n) { animation-delay: 1.2s; }
 .pin-pulse:nth-child(5n) { animation-delay: 1.8s; }
+
+/* Pin click → scroll highlight on trip card */
+.pin-highlight .polaroid-body {
+  animation: pin-highlight-flash 1.2s ease-out forwards;
+  border-color: var(--accent);
+}
 
 @media (prefers-reduced-motion: reduce) {
   .scroll-reveal-ready .scroll-reveal {

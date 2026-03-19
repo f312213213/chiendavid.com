@@ -25,7 +25,7 @@ export default function TravelGrid({ trips }: TravelGridProps) {
   return (
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 lg:gap-12 pt-4">
-        <div className={`relative ${rest.length > 0 ? 'md:col-span-2' : 'max-w-sm'}`}>
+        <div id={`trip-${featured.slug}`} className={`relative ${rest.length > 0 ? 'md:col-span-2' : 'max-w-sm'}`}>
           <PolaroidCard
             trip={featured}
             onClick={() => setSelectedTrip(featured)}
@@ -33,7 +33,7 @@ export default function TravelGrid({ trips }: TravelGridProps) {
           />
         </div>
         {rest.map((trip) => (
-          <div key={trip.slug} className="relative">
+          <div key={trip.slug} id={`trip-${trip.slug}`} className="relative">
             <PolaroidCard
               trip={trip}
               onClick={() => setSelectedTrip(trip)}

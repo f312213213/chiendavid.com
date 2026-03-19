@@ -2,7 +2,7 @@ import { getAllTrips } from '@/lib/travel';
 import TravelGrid from './components/TravelGrid';
 import ScrollReveal from './components/ScrollReveal';
 import Footer from './components/Footer';
-import DotMap from './components/DotMap';
+import HeroDotMap from './components/HeroDotMap';
 
 const links = [
   { label: "CV", href: "https://chiendavid.com/cv", external: true, primary: true },
@@ -15,9 +15,14 @@ const links = [
 export default async function Home() {
   const trips = await getAllTrips();
   const countrySet = new Set(trips.map(t => t.location.split(',').pop()?.trim()));
-  const pins = trips
+  const heroPins = trips
     .filter(t => t.lat != null && t.lng != null)
-    .map(t => ({ lat: t.lat!, lng: t.lng! }));
+    .map(t => ({
+      lat: t.lat!,
+      lng: t.lng!,
+      label: t.location.split(',')[0].trim(),
+      slug: t.slug,
+    }));
 
   return (
     <div className="min-h-[100dvh] bg-background">
@@ -26,8 +31,8 @@ export default async function Home() {
       {/* Hero */}
       <header className="relative min-h-[85dvh] flex flex-col justify-end px-6 pb-12 md:px-12 md:pb-20 lg:px-20 lg:pb-24 overflow-hidden">
         {/* Dot map — bottom-anchored, shifted right to avoid title collision */}
-        <div className="animate-in delay-2 absolute bottom-8 right-0 md:right-[5%] pointer-events-none hidden md:block w-[70%] max-w-4xl">
-          <DotMap pins={pins} pulse className="w-full text-foreground opacity-30" />
+        <div className="animate-in delay-2 absolute bottom-8 right-0 md:right-[5%] hidden md:block w-[70%] max-w-4xl z-10 pointer-events-none">
+          <HeroDotMap pins={heroPins} className="w-full text-foreground" />
         </div>
 
         <div className="max-w-7xl w-full mx-auto relative">
