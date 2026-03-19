@@ -53,9 +53,11 @@ export default function TravelGrid({ trips }: TravelGridProps) {
       </div>
 
       <TripDetailDialog
+        trips={trips}
         trip={selectedTrip}
         open={!!selectedTrip}
         onOpenChange={(open) => { if (!open) setSelectedTrip(null); }}
+        onTripChange={setSelectedTrip}
       />
     </>
   );
