@@ -32,9 +32,9 @@ export default async function Home() {
       <ScrollReveal />
 
       {/* Hero */}
-      <header className="relative md:min-h-[90dvh] flex flex-col md:justify-end px-6 pt-20 pb-12 md:px-12 lg:px-20 overflow-x-clip">
+      <header className="relative min-h-[100dvh] flex flex-col justify-center px-6 py-20 md:px-12 lg:px-20 overflow-x-clip">
         {/* Dot map — bottom-anchored, shifted right to avoid title collision */}
-        <div className="animate-in delay-2 absolute bottom-8 right-0 md:right-[5%] hidden md:block w-[70%] max-w-4xl z-10 pointer-events-none">
+        <div className="animate-in delay-2 absolute bottom-8 right-0 md:right-[5%] hidden md:block w-[60%] lg:w-[55%] max-w-3xl z-10 pointer-events-none">
           <HeroDotMap pins={heroPins} className="w-full text-foreground" />
         </div>
 
