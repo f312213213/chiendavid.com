@@ -39,7 +39,7 @@ export default async function Home() {
           <HeroDotMap pins={heroPins} className="w-full text-foreground" />
         </div>
 
-        <div className="max-w-7xl w-full mx-auto relative">
+        <div className="max-w-7xl w-full mx-auto relative z-20 pointer-events-none">
           <p className="animate-in delay-1 text-xs font-bold tracking-[0.3em] uppercase text-accent mb-8">
             David Chien
           </p>
@@ -53,7 +53,7 @@ export default async function Home() {
               Places I&apos;ve been, things I&apos;ve seen.
             </p>
 
-            <nav className="flex flex-wrap items-center gap-x-5 gap-y-3">
+            <nav className="flex flex-wrap items-center gap-x-5 gap-y-3 pointer-events-auto">
               {links.map((link) => (
                 <a
                   key={link.label}
