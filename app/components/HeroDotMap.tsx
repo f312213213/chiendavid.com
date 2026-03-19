@@ -143,6 +143,7 @@ function clusterPins(
 export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const hoverCountRef = useRef<Map<number, number>>(new Map());
+  const leaveTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
   const projected = pins.map((pin) => ({
@@ -159,14 +160,25 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
         trips: [pinToTrip(p)],
       }));
 
+  /** Enter a pin or tooltip — cancels any pending hide. */
   const handleEnter = useCallback((idx: number) => {
-    const prev = hoverCountRef.current.get(idx) ?? 0;
-    hoverCountRef.current.set(idx, prev + 1);
+    if (leaveTimerRef.current) {
+      clearTimeout(leaveTimerRef.current);
+      leaveTimerRef.current = null;
+    }
+    // Only bump hover count when entering a *new* pin (not re-entering same via tooltip)
+    if (idx !== hoveredIdx) {
+      const prev = hoverCountRef.current.get(idx) ?? 0;
+      hoverCountRef.current.set(idx, prev + 1);
+    }
     setHoveredIdx(idx);
-  }, []);
+  }, [hoveredIdx]);
 
+  /** Leave a pin or tooltip — short delay so mouse can cross the gap. */
   const handleLeave = useCallback(() => {
-    setHoveredIdx(null);
+    leaveTimerRef.current = setTimeout(() => {
+      setHoveredIdx(null);
+    }, 120);
   }, []);
 
   /** Which trip to show for a given cluster (cycles each hover). */
@@ -310,7 +322,7 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
                 animation: 'tooltip-tag 0.25s cubic-bezier(0.16, 1, 0.3, 1) both',
                 animationDelay: '0.05s',
               }}
-              onMouseEnter={() => setHoveredIdx(idx)}
+              onMouseEnter={() => handleEnter(idx)}
               onMouseLeave={handleLeave}
               onClick={() => handleClick(idx, hoveredCluster)}
             >
