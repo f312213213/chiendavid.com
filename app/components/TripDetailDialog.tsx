@@ -18,7 +18,6 @@ interface TripDetailDialogProps {
 }
 
 const FADE_MS = 120;
-const CLOSE_ANIMATION_MS = 350;
 
 export default function TripDetailDialog({ trips, trip, open, onOpenChange, onTripChange }: TripDetailDialogProps) {
   const [current, setCurrent] = useState(0);
@@ -30,9 +29,9 @@ export default function TripDetailDialog({ trips, trip, open, onOpenChange, onTr
   // Buffered trip transition: fade out → swap content (while hidden) → fade in after paint
   useEffect(() => {
     if (!trip) {
-      // Delay cleanup so content stays mounted during close animation
-      const id = setTimeout(() => setDisplayTrip(null), CLOSE_ANIMATION_MS);
-      return () => clearTimeout(id);
+      // Don't clear displayTrip — keepMounted keeps DOM alive for exit animation.
+      // displayTrip stays so Swiper doesn't unmount mid-animation.
+      return;
     }
     if (!displayTrip || trip.slug === displayTrip.slug) {
       setDisplayTrip(trip);
@@ -112,16 +111,17 @@ export default function TripDetailDialog({ trips, trip, open, onOpenChange, onTr
   }, [trips, tripIndex]);
 
   const hasMultiple = (displayTrip?.images.length ?? 0) > 1;
+  const renderTrip = displayTrip ?? trip;
 
-  if (!displayTrip) return null;
+  if (!renderTrip) return null;
 
-  const image = displayTrip.images[current < displayTrip.images.length ? current : 0];
+  const image = renderTrip.images[current < renderTrip.images.length ? current : 0];
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
-      <Dialog.Portal>
-        <Dialog.Backdrop className="dialog-backdrop fixed inset-0 bg-black/90 z-50" />
-        <Dialog.Popup className="dialog-popup fixed inset-0 md:inset-8 lg:inset-12 z-50 overflow-hidden md:rounded-lg">
+      <Dialog.Portal keepMounted>
+        <Dialog.Backdrop className="dialog-backdrop fixed inset-0 bg-black/90 z-50 transition-opacity duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] data-[ending-style]:opacity-0" />
+        <Dialog.Popup className="dialog-popup fixed inset-0 md:inset-8 lg:inset-12 z-50 overflow-hidden md:rounded-lg transition-[opacity,transform] duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] data-[ending-style]:opacity-0 data-[ending-style]:scale-[0.97] data-[ending-style]:translate-y-2">
 
           {/* Close button */}
           <Dialog.Close className="absolute top-3 right-3 z-20 w-9 h-9 flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm text-white/70 hover:bg-black/50 hover:text-white transition-all cursor-pointer">
@@ -176,7 +176,7 @@ export default function TripDetailDialog({ trips, trip, open, onOpenChange, onTr
 
               {/* Swiper carousel */}
               <Swiper
-                key={displayTrip.slug}
+                key={renderTrip.slug}
                 onSwiper={(s) => { swiperRef.current = s; }}
                 onSlideChange={(s) => setCurrent(s.realIndex)}
                 loop={hasMultiple}
@@ -185,7 +185,7 @@ export default function TripDetailDialog({ trips, trip, open, onOpenChange, onTr
                 touchEventsTarget="container"
                 className="absolute inset-0 z-[2] h-full"
               >
-                {displayTrip.images.map((img, idx) => (
+                {renderTrip.images.map((img, idx) => (
                   <SwiperSlide key={img.src} className="relative h-full">
                     <Image
                       src={img.src}
@@ -206,7 +206,7 @@ export default function TripDetailDialog({ trips, trip, open, onOpenChange, onTr
               {/* Dash indicators */}
               {hasMultiple && (
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
-                  {displayTrip.images.map((_, idx) => (
+                  {renderTrip.images.map((_, idx) => (
                     <button
                       key={idx}
                       onClick={() => swiperRef.current?.slideTo(idx)}
@@ -228,20 +228,20 @@ export default function TripDetailDialog({ trips, trip, open, onOpenChange, onTr
 
               <div className="px-8 pt-8 pb-[max(2.5rem,env(safe-area-inset-bottom))] md:px-10 md:py-10 lg:px-12 relative">
                 <p className="text-[11px] font-normal tracking-[0.15em] uppercase text-muted mb-3">
-                  {displayTrip.location}
+                  {renderTrip.location}
                 </p>
                 <Dialog.Title className="text-xl md:text-2xl font-semibold tracking-tight text-foreground leading-tight">
-                  {displayTrip.title}
+                  {renderTrip.title}
                 </Dialog.Title>
                 <Dialog.Description className="text-[13px] text-muted/50 mt-1.5">
-                  {displayTrip.displayDate}
+                  {renderTrip.displayDate}
                 </Dialog.Description>
 
                 <div className="w-7 h-0.5 bg-current opacity-20 my-6" />
 
-                {displayTrip.description && (
+                {renderTrip.description && (
                   <p className="text-[15px] leading-[1.7] text-muted break-words">
-                    {displayTrip.description}
+                    {renderTrip.description}
                   </p>
                 )}
 
@@ -252,11 +252,11 @@ export default function TripDetailDialog({ trips, trip, open, onOpenChange, onTr
                 )}
               </div>
 
-              {displayTrip.lat != null && displayTrip.lng != null && (
+              {renderTrip.lat != null && renderTrip.lng != null && (
                 <div className="hidden md:block px-10 lg:px-12 pb-8 mt-auto relative">
                   <DotMap
-                    lat={displayTrip.lat}
-                    lng={displayTrip.lng}
+                    lat={renderTrip.lat}
+                    lng={renderTrip.lng}
                     className="w-full max-w-[180px] text-foreground/80"
                   />
                 </div>
