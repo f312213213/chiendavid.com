@@ -243,7 +243,7 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
               pointerEvents: 'none',
             }}
           >
-            {/* Connector line */}
+            {/* Connector line — draws outward from pin */}
             <div
               className="absolute top-1/2 h-px bg-accent/50"
               style={{
@@ -252,7 +252,7 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
                   ? { right: '50%', marginRight: 8 }
                   : { left: '50%', marginLeft: 8 }),
                 transformOrigin: onLeft ? 'right center' : 'left center',
-                animation: 'tooltip-line 0.2s ease-out both',
+                animation: 'tooltip-line 0.18s cubic-bezier(0.16, 1, 0.3, 1) both',
               }}
             />
 
@@ -264,9 +264,8 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
                 ...(onLeft
                   ? { right: '50%', marginRight: 38 }
                   : { left: '50%', marginLeft: 38 }),
-                transform: 'translateY(-50%)',
-                animation: 'tooltip-tag 0.25s cubic-bezier(0.16, 1, 0.3, 1) both',
-                animationDelay: '0.05s',
+                animation: 'tooltip-card-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both',
+                transformOrigin: onLeft ? 'right center' : 'left center',
               }}
               onMouseEnter={() => handleEnter(idx)}
               onMouseLeave={handleLeave}
@@ -284,8 +283,11 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
 
                 {/* Card body */}
                 <div className="w-[180px] p-1.5 pb-0 bg-foreground/90 backdrop-blur-sm shadow-[0_8px_32px_rgba(0,0,0,0.3)]">
-                  {/* Thumbnail */}
-                  <div className="relative w-full aspect-[3/2] overflow-hidden">
+                  {/* Thumbnail — clips open from bottom to top */}
+                  <div
+                    className="relative w-full aspect-[3/2] overflow-hidden"
+                    style={{ animation: 'tooltip-img-reveal 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both' }}
+                  >
                     <Image
                       src={trip.coverSrc}
                       alt=""
@@ -308,15 +310,24 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
                     )}
                   </div>
 
-                  {/* Caption area */}
+                  {/* Caption area — staggered reveal */}
                   <div className="px-1 py-2">
-                    <p className="text-[9px] font-bold tracking-[0.2em] uppercase text-accent leading-none">
+                    <p
+                      className="text-[9px] font-bold tracking-[0.2em] uppercase text-accent leading-none"
+                      style={{ animation: 'tooltip-caption-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both' }}
+                    >
                       {trip.label}
                     </p>
-                    <p className="text-[11px] font-semibold text-background mt-1 leading-tight truncate">
+                    <p
+                      className="text-[11px] font-semibold text-background mt-1 leading-tight truncate"
+                      style={{ animation: 'tooltip-caption-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both' }}
+                    >
                       {trip.title}
                     </p>
-                    <p className="text-[9px] text-background/40 mt-0.5 leading-none">
+                    <p
+                      className="text-[9px] text-background/40 mt-0.5 leading-none"
+                      style={{ animation: 'tooltip-caption-in 0.25s cubic-bezier(0.16, 1, 0.3, 1) 0.30s both' }}
+                    >
                       {trip.displayDate}
                     </p>
                   </div>
