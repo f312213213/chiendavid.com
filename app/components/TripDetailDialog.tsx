@@ -3,8 +3,12 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { Dialog } from '@base-ui-components/react/dialog';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Keyboard } from 'swiper/modules';
+import type { SwiperClass } from 'swiper/react';
 import type { Trip } from '@/lib/travel';
 import DotMap from './DotMap';
+import 'swiper/css';
 
 interface TripDetailDialogProps {
   trip: Trip | null;
@@ -12,74 +16,22 @@ interface TripDetailDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-const SWIPE_THRESHOLD = 50;
-
 export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetailDialogProps) {
   const [current, setCurrent] = useState(0);
-  const [previous, setPrevious] = useState<number | null>(null);
-  const timeoutRef = useRef<ReturnType<typeof setTimeout>>(null);
-  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const swiperRef = useRef<SwiperClass | null>(null);
 
   useEffect(() => {
     if (open) {
       setCurrent(0);
-      setPrevious(null);
+      swiperRef.current?.slideTo(0, 0);
     }
   }, [open, trip?.slug]);
 
-  const goTo = useCallback((next: number) => {
-    if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    setPrevious(current);
-    setCurrent(next);
-    timeoutRef.current = setTimeout(() => setPrevious(null), 300);
-  }, [current]);
-
-  const prev = useCallback(() => {
-    if (!trip) return;
-    goTo((current - 1 + trip.images.length) % trip.images.length);
-  }, [trip, current, goTo]);
-
-  const next = useCallback(() => {
-    if (!trip) return;
-    goTo((current + 1) % trip.images.length);
-  }, [trip, current, goTo]);
-
-  // Keyboard navigation
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') prev();
-      if (e.key === 'ArrowRight') next();
-    };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [open, prev, next]);
-
-  // Swipe handlers
-  const onTouchStart = useCallback((e: React.TouchEvent) => {
-    const touch = e.touches[0];
-    touchStartRef.current = { x: touch.clientX, y: touch.clientY };
-  }, []);
-
-  const onTouchEnd = useCallback((e: React.TouchEvent) => {
-    if (!touchStartRef.current) return;
-    const touch = e.changedTouches[0];
-    const dx = touch.clientX - touchStartRef.current.x;
-    const dy = touch.clientY - touchStartRef.current.y;
-    touchStartRef.current = null;
-
-    if (Math.abs(dx) > SWIPE_THRESHOLD && Math.abs(dx) > Math.abs(dy)) {
-      if (dx < 0) next();
-      else prev();
-    }
-  }, [prev, next]);
+  const hasMultiple = (trip?.images.length ?? 0) > 1;
 
   if (!trip) return null;
 
-  const safeIndex = current < trip.images.length ? current : 0;
-  const image = trip.images[safeIndex];
-  const prevImage = previous !== null && previous < trip.images.length ? trip.images[previous] : null;
-  const hasMultiple = trip.images.length > 1;
+  const image = trip.images[current < trip.images.length ? current : 0];
 
   return (
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
@@ -98,11 +50,7 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
           <div className="h-full flex flex-col md:grid md:grid-cols-[1.8fr_1fr] overflow-hidden">
 
             {/* === Image panel === */}
-            <div
-              className="relative h-[55vh] shrink-0 md:h-auto overflow-hidden bg-black"
-              onTouchStart={hasMultiple ? onTouchStart : undefined}
-              onTouchEnd={hasMultiple ? onTouchEnd : undefined}
-            >
+            <div className="relative h-[55vh] shrink-0 md:h-auto overflow-hidden bg-black">
               {/* Blurred background fill for contain gaps — desktop only */}
               {image.blurDataURL && (
                 <div
@@ -111,18 +59,18 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
                 />
               )}
 
-              {/* Nav arrows */}
+              {/* Nav arrows — desktop only */}
               {hasMultiple && (
                 <>
                   <button
-                    onClick={prev}
+                    onClick={() => swiperRef.current?.slidePrev()}
                     className="absolute left-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm text-white/70 hover:bg-black/50 hover:text-white transition-all cursor-pointer select-none"
                     aria-label="Previous image"
                   >
                     <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 4l-6 6 6 6"/></svg>
                   </button>
                   <button
-                    onClick={next}
+                    onClick={() => swiperRef.current?.slideNext()}
                     className="absolute right-3 top-1/2 -translate-y-1/2 z-10 w-9 h-9 hidden md:flex items-center justify-center rounded-full bg-black/30 backdrop-blur-sm text-white/70 hover:bg-black/50 hover:text-white transition-all cursor-pointer select-none"
                     aria-label="Next image"
                   >
@@ -131,46 +79,43 @@ export default function TripDetailDialog({ trip, open, onOpenChange }: TripDetai
                 </>
               )}
 
-              {/* Crossfade: outgoing image */}
-              {prevImage && (
-                <div className="absolute inset-0 z-[2] animate-[fade-out_0.3s_ease-out_forwards]">
-                  <Image
-                    src={prevImage.src}
-                    alt={prevImage.alt}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 65vw"
-                    className="object-cover md:object-contain"
-                    {...(prevImage.blurDataURL
-                      ? { placeholder: 'blur', blurDataURL: prevImage.blurDataURL }
-                      : {})}
-                  />
-                </div>
-              )}
+              {/* Swiper carousel */}
+              <Swiper
+                modules={[Keyboard]}
+                onSwiper={(s) => { swiperRef.current = s; }}
+                onSlideChange={(s) => setCurrent(s.realIndex)}
+                keyboard={{ enabled: open }}
+                loop={hasMultiple}
+                spaceBetween={0}
+                slidesPerView={1}
+                touchEventsTarget="container"
+                className="absolute inset-0 z-[2] h-full"
+              >
+                {trip.images.map((img, idx) => (
+                  <SwiperSlide key={img.src} className="relative h-full">
+                    <Image
+                      src={img.src}
+                      alt={img.alt}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 65vw"
+                      className="object-cover md:object-contain"
+                      priority={idx === 0}
+                      loading={idx === 0 ? 'eager' : 'lazy'}
+                      {...(img.blurDataURL
+                        ? { placeholder: 'blur', blurDataURL: img.blurDataURL }
+                        : {})}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
 
-              {/* Current image */}
-              <div className={`absolute inset-0 z-[2] ${previous !== null ? 'animate-[fade-in_0.3s_ease-out_forwards]' : ''}`}>
-                <Image
-                  key={image.src}
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  sizes="(max-width: 768px) 100vw, 65vw"
-                  className="object-cover md:object-contain"
-                  priority={current === 0}
-                  loading={current === 0 ? 'eager' : 'lazy'}
-                  {...(image.blurDataURL
-                    ? { placeholder: 'blur', blurDataURL: image.blurDataURL }
-                    : {})}
-                />
-              </div>
-
-              {/* Dash indicators — no text counter */}
+              {/* Dash indicators */}
               {hasMultiple && (
                 <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-1.5 z-10">
                   {trip.images.map((_, idx) => (
                     <button
                       key={idx}
-                      onClick={() => goTo(idx)}
+                      onClick={() => swiperRef.current?.slideTo(idx)}
                       className="py-2.5 cursor-pointer"
                       aria-label={`Go to image ${idx + 1}`}
                     >
