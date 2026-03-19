@@ -2,6 +2,9 @@
  * Dot-matrix world map with a highlighted location pin.
  * 90×45 grid derived from Natural Earth 110m GeoJSON.
  * Equirectangular projection.
+ *
+ * When multiple pins are close together, they are clustered
+ * into a single larger pin to avoid visual overlap.
  */
 
 // prettier-ignore
@@ -60,10 +63,50 @@ interface DotMapProps {
   lat?: number;
   lng?: number;
   pins?: { lat: number; lng: number }[];
+  pulse?: boolean;
   className?: string;
 }
 
-export default function DotMap({ lat, lng, pins, className = '' }: DotMapProps) {
+interface Cluster {
+  x: number;
+  y: number;
+  count: number;
+}
+
+/** Group projected pins that are within `threshold` SVG units. */
+function clusterPins(
+  projected: { x: number; y: number }[],
+  threshold: number,
+): Cluster[] {
+  const used = new Set<number>();
+  const clusters: Cluster[] = [];
+
+  for (let i = 0; i < projected.length; i++) {
+    if (used.has(i)) continue;
+    let sx = projected[i].x;
+    let sy = projected[i].y;
+    let count = 1;
+    used.add(i);
+
+    for (let j = i + 1; j < projected.length; j++) {
+      if (used.has(j)) continue;
+      const dx = projected[j].x - sx / count;
+      const dy = projected[j].y - sy / count;
+      if (Math.sqrt(dx * dx + dy * dy) < threshold) {
+        sx += projected[j].x;
+        sy += projected[j].y;
+        count++;
+        used.add(j);
+      }
+    }
+
+    clusters.push({ x: sx / count, y: sy / count, count });
+  }
+
+  return clusters;
+}
+
+export default function DotMap({ lat, lng, pins, pulse, className = '' }: DotMapProps) {
   const cols = MAP[0].length;
   const gap = 2;
   const r = 0.6;
@@ -76,6 +119,17 @@ export default function DotMap({ lat, lng, pins, className = '' }: DotMapProps) 
     : lat != null && lng != null
       ? [{ lat, lng }]
       : [];
+
+  // Project to SVG coordinates
+  const projected = allPins.map((pin) => ({
+    x: ((pin.lng + 180) / 360) * cols * gap + gap / 2,
+    y: ((90 - pin.lat) / 180) * ROWS * gap + gap / 2,
+  }));
+
+  // Cluster pins that are too close (threshold ~8 SVG units ≈ 4 grid cells)
+  const clusters = allPins.length > 1
+    ? clusterPins(projected, 8)
+    : projected.map((p) => ({ ...p, count: 1 }));
 
   return (
     <svg
@@ -97,13 +151,23 @@ export default function DotMap({ lat, lng, pins, className = '' }: DotMapProps) 
           ) : null
         )
       )}
-      {allPins.map((pin, i) => {
-        const px = ((pin.lng + 180) / 360) * cols * gap + gap / 2;
-        const py = ((90 - pin.lat) / 180) * ROWS * gap + gap / 2;
+      {clusters.map((c, i) => {
+        // Scale pin size based on cluster count
+        const outerR = 3.5 + Math.min(c.count - 1, 4) * 1.2;
+        const innerR = 1.5 + Math.min(c.count - 1, 4) * 0.4;
         return (
           <g key={i}>
-            <circle cx={px} cy={py} r={3.5} className="fill-accent" opacity={0.18} />
-            <circle cx={px} cy={py} r={1.5} className="fill-accent" />
+            <circle
+              cx={c.x} cy={c.y}
+              r={outerR}
+              className={`fill-accent ${pulse ? 'pin-pulse' : ''}`}
+              opacity={0.22}
+            />
+            <circle
+              cx={c.x} cy={c.y}
+              r={innerR}
+              className="fill-accent"
+            />
           </g>
         );
       })}

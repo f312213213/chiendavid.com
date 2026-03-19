@@ -47,6 +47,8 @@ export default function RootLayout({
                   document.documentElement.classList.add('no-intro');
                 }
               });
+              console.log('%c\u2708\uFE0F Hey, curious one.', 'font-size:16px;font-weight:bold');
+              console.log('%cBuilt by David Chien \u2014 chiendavid.com', 'color:#d95030');
             })();
           `
         }} />

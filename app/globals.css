@@ -81,6 +81,11 @@ body::before {
   to { opacity: 1; transform: scale(1) translateY(0); }
 }
 
+@keyframes pin-pulse {
+  0%, 100% { opacity: 0.18; r: 3.5; }
+  50% { opacity: 0.3; r: 5; }
+}
+
 /* === Tailwind utilities === */
 @utility animate-in {
   @apply animate-[fade-up_0.8s_cubic-bezier(0.16,1,0.3,1)_both];
@@ -167,6 +172,25 @@ body::before {
   @apply shadow-[0_24px_48px_rgba(0,0,0,0.2),inset_0_1px_0_rgba(255,255,255,0.06)] border-accent;
 }
 
+/* Polaroid image — subtle desaturation that lifts on hover */
+.polaroid-card img {
+  filter: saturate(0.85);
+  transition: filter 0.5s ease-out, transform 0.5s ease-out;
+}
+
+.polaroid-card:hover img {
+  filter: saturate(1.1);
+}
+
+/* Dot map pin pulse — gentle breathing on hero pins */
+.pin-pulse {
+  animation: pin-pulse 3s ease-in-out infinite;
+}
+
+.pin-pulse:nth-child(2n) { animation-delay: 0.5s; }
+.pin-pulse:nth-child(3n) { animation-delay: 1.2s; }
+.pin-pulse:nth-child(5n) { animation-delay: 1.8s; }
+
 @media (prefers-reduced-motion: reduce) {
   .scroll-reveal-ready .scroll-reveal {
     @apply opacity-100 translate-y-0 transition-none;
@@ -174,5 +198,14 @@ body::before {
 
   .polaroid-card {
     transition: none !important;
+  }
+
+  .pin-pulse {
+    animation: none;
+  }
+
+  .polaroid-card img {
+    filter: none;
+    transition: none;
   }
 }

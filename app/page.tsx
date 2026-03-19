@@ -27,7 +27,7 @@ export default async function Home() {
       <header className="relative min-h-[85dvh] flex flex-col justify-end px-6 pb-12 md:px-12 md:pb-20 lg:px-20 lg:pb-24 overflow-hidden">
         {/* Dot map — bottom-anchored, shifted right to avoid title collision */}
         <div className="animate-in delay-2 absolute bottom-8 right-0 md:right-[5%] pointer-events-none hidden md:block w-[70%] max-w-4xl">
-          <DotMap pins={pins} className="w-full text-foreground opacity-20" />
+          <DotMap pins={pins} pulse className="w-full text-foreground opacity-30" />
         </div>
 
         <div className="max-w-7xl w-full mx-auto relative">
@@ -39,9 +39,9 @@ export default async function Home() {
             Travel<br />Log
           </h1>
 
-          <div className="animate-in delay-3 flex flex-col gap-6 mt-10 md:mt-14">
+          <div className="animate-in delay-3 flex flex-col gap-6 mt-12 md:mt-20">
             <p className="text-lg md:text-xl font-light text-muted">
-              {trips.length} trips across {countrySet.size} countries.
+              Places I&apos;ve been, things I&apos;ve seen.
             </p>
 
             <nav className="flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -65,13 +65,13 @@ export default async function Home() {
       </header>
 
       {/* Grid */}
-      <main className="px-6 pb-16 md:px-12 md:pb-24 lg:px-20 lg:pb-32">
+      <main className="px-6 pt-8 pb-24 md:px-12 md:pt-12 md:pb-32 lg:px-20 lg:pb-40">
         <div className="max-w-7xl mx-auto">
           <TravelGrid trips={trips} />
         </div>
       </main>
 
-      <div className="px-6 pb-16 md:px-12 md:pb-24 lg:px-20 lg:pb-32">
+      <div className="px-6 pb-12 md:px-12 md:pb-16 lg:px-20 lg:pb-20">
         <div className="max-w-7xl mx-auto">
           <Footer />
         </div>
