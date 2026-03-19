@@ -57,23 +57,25 @@ const MAP: string[] = [
 const ROWS = MAP.length;
 
 interface DotMapProps {
-  lat: number;
-  lng: number;
+  lat?: number;
+  lng?: number;
+  pins?: { lat: number; lng: number }[];
   className?: string;
 }
 
-export default function DotMap({ lat, lng, className = '' }: DotMapProps) {
+export default function DotMap({ lat, lng, pins, className = '' }: DotMapProps) {
   const cols = MAP[0].length;
-  const pinX = ((lng + 180) / 360) * cols;
-  const pinY = ((90 - lat) / 180) * ROWS;
-
   const gap = 2;
   const r = 0.6;
   const w = cols * gap;
   const h = ROWS * gap;
 
-  const px = pinX * gap + gap / 2;
-  const py = pinY * gap + gap / 2;
+  // Build pin list from either single lat/lng or pins array
+  const allPins = pins
+    ? pins
+    : lat != null && lng != null
+      ? [{ lat, lng }]
+      : [];
 
   return (
     <svg
@@ -95,8 +97,16 @@ export default function DotMap({ lat, lng, className = '' }: DotMapProps) {
           ) : null
         )
       )}
-      <circle cx={px} cy={py} r={3.5} className="fill-accent" opacity={0.18} />
-      <circle cx={px} cy={py} r={1.5} className="fill-accent" />
+      {allPins.map((pin, i) => {
+        const px = ((pin.lng + 180) / 360) * cols * gap + gap / 2;
+        const py = ((90 - pin.lat) / 180) * ROWS * gap + gap / 2;
+        return (
+          <g key={i}>
+            <circle cx={px} cy={py} r={3.5} className="fill-accent" opacity={0.18} />
+            <circle cx={px} cy={py} r={1.5} className="fill-accent" />
+          </g>
+        );
+      })}
     </svg>
   );
 }

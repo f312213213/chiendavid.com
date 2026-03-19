@@ -127,14 +127,15 @@ export async function getAllTrips(): Promise<Trip[]> {
     return b.date.localeCompare(a.date);
   });
 
-  // Assign varied rotations: seeded PRNG per slug for true scatter
+  // Assign varied rotations: alternating sign guarantees visual scatter,
+  // PRNG magnitude keeps each card's tilt unique
   sorted.forEach((trip, i) => {
     const rand = mulberry32(hashSlug(trip.slug));
     const isFeatured = i === 0;
     const maxDeg = isFeatured ? 3 : 7;
     const minDeg = isFeatured ? 0.5 : 1.5;
     const mag = minDeg + rand() * (maxDeg - minDeg);
-    const sign = rand() > 0.5 ? 1 : -1;
+    const sign = i % 2 === 0 ? 1 : -1;
     trip.rotation = Math.round(sign * mag * 10) / 10;
   });
 
