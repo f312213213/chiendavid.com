@@ -1,0 +1,27 @@
+{
+  "title": "Finding Oasis in Manchester",
+  "date": "2026-03",
+  "location": "Manchester, UK",
+  "lat": 53.48,
+  "lng": -2.24,
+  "order" : 16,
+  "description": "Manchester is where music and machines collide. From Oasis's roots to the birthplace of modern computing, this city punches well above its weight.",
+  "coverAlt": "Blue heritage plaque on a red brick wall in Manchester commemorating a historic music venue",
+  "images": [
+    {
+      "file": "IMG_8763.jpeg",
+      "alt": "Blue heritage plaque mounted on a weathered red brick wall in Manchester",
+      "caption": "The spot where Oasis had their first gig."
+    },
+    {
+      "file": "IMG_8787.jpeg",
+      "alt": "Tall rack of early computing hardware with rows of valves, switches, and wiring at the Science and Industry Museum",
+      "caption": "The world's first stored-program computer — it's super impressive to see the scale of the machine and the engineering behind it."
+    },
+    {
+      "file": "IMG_8788.jpeg",
+      "alt": "Victorian-era Jacquard loom mechanism with stacks of orange and grey punched cards feeding through the frame",
+      "caption": "The \"code\" in the 19th century was punched cards."
+    }
+  ]
+}
