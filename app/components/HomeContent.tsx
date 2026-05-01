@@ -6,6 +6,7 @@ import HeroDotMap, { type HeroPin } from './HeroDotMap';
 
 const links = [
   { label: "CV", href: "https://chiendavid.com/cv", external: true, primary: true },
+  { label: "Projects", href: "/projects" },
   { label: "Email", href: "mailto:me@chiendavid.com" },
   { label: "LinkedIn", href: "https://chiendavid.com/linkedin", external: true },
   { label: "GitHub", href: "https://chiendavid.com/github", external: true },
