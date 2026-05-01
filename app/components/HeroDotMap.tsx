@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useRef } from 'react';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { MAP, ROWS, COLS } from '@/lib/dotmap';
 
 /**
@@ -91,6 +92,7 @@ function clusterPins(
 }
 
 export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
+  const router = useRouter();
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
   const hoverCountRef = useRef<Map<number, number>>(new Map());
   const leaveTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
@@ -139,8 +141,8 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
 
   const handleClick = useCallback((idx: number, cluster: Cluster) => {
     const trip = getVisibleTrip(idx, cluster);
-    window.dispatchEvent(new CustomEvent('open-trip', { detail: { slug: trip.slug } }));
-  }, [getVisibleTrip]);
+    router.push(`/trip/${trip.slug}`);
+  }, [getVisibleTrip, router]);
 
   // Convert SVG coords (0..W, 0..H) to percentage for HTML tooltip positioning
   const toPercent = (svgX: number, svgY: number) => ({

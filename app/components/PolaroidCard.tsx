@@ -1,12 +1,11 @@
-'use client';
-
 import Image from 'next/image';
+import Link from 'next/link';
 import type { Trip } from '@/lib/travel';
 import DotMap from './DotMap';
 
 interface PolaroidCardProps {
   trip: Trip;
-  onClick: () => void;
+  href: string;
   disableRotation?: boolean;
   featured?: boolean;
 }
@@ -18,7 +17,7 @@ function slugHash(s: string) {
   return Math.abs(h);
 }
 
-export default function PolaroidCard({ trip, onClick, disableRotation, featured }: PolaroidCardProps) {
+export default function PolaroidCard({ trip, href, disableRotation, featured }: PolaroidCardProps) {
   const rotation = disableRotation ? 0 : trip.rotation;
   const h1 = slugHash(trip.slug + 'pos');
   const h2 = slugHash(trip.slug + 'rot');
@@ -29,8 +28,9 @@ export default function PolaroidCard({ trip, onClick, disableRotation, featured 
   const tapeWidth = featured ? 70 + (h3 % 20) : 48 + (h3 % 20); // varied width
 
   return (
-    <button
-      onClick={onClick}
+    <Link
+      href={href}
+      scroll={false}
       className="scroll-reveal polaroid-card block w-full text-left cursor-pointer outline-none focus-visible:border-accent group relative"
       style={{ transform: `rotate(${rotation}deg)` }}
     >
@@ -94,6 +94,6 @@ export default function PolaroidCard({ trip, onClick, disableRotation, featured 
           )}
         </div>
       </div>
-    </button>
+    </Link>
   );
 }

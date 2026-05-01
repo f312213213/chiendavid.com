@@ -23,15 +23,17 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body
         className={`${exo2.variable} ${nabla.variable} antialiased`}
       >
-        
+
         <script dangerouslySetInnerHTML={{
           __html: `
             (function() {
@@ -53,6 +55,7 @@ export default function RootLayout({
           `
         }} />
         {children}
+        {modal}
         <Analytics />
         <GoogleAnalytics gaId="G-TP0XQPDH1G" />
       </body>
