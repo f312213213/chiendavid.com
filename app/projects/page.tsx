@@ -23,21 +23,21 @@ export default async function ProjectsPage() {
 
   return (
     <main className="mx-auto max-w-3xl px-6 pt-24 pb-32">
-      <nav className="mb-20 text-sm">
+      <nav className="animate-in delay-1 mb-20 text-sm">
         <Link href="/" className="text-muted hover:text-foreground transition-colors">
           ← Home
         </Link>
       </nav>
 
       <section className="mb-28">
-        <p className="text-xs uppercase tracking-[0.25em] text-muted mb-8">
+        <p className="animate-in delay-1 text-xs uppercase tracking-[0.25em] text-muted mb-8">
           Monthly recurring revenue
         </p>
-        <h1 className="text-[clamp(4.5rem,18vw,11rem)] font-bold tracking-tight tabular-nums leading-[0.85] text-accent">
+        <h1 className="animate-in delay-2 text-[clamp(4.5rem,18vw,11rem)] font-bold tracking-tight tabular-nums leading-[0.85] text-accent">
           {formatMoney(totalMrr, dominantCurrency)}
         </h1>
         {totalActive > 0 && (
-          <p className="text-lg text-foreground/70 mt-10 max-w-prose">
+          <p className="animate-in delay-3 text-lg text-foreground/70 mt-10 max-w-prose">
             From{' '}
             <span className="text-foreground font-medium">{totalPaying}</span>{' '}
             paying {totalPaying === 1 ? 'customer' : 'customers'}
@@ -60,14 +60,15 @@ export default async function ProjectsPage() {
         <p className="text-muted">No paying customers yet — still building.</p>
       ) : (
         <section>
-          <h2 className="text-xs uppercase tracking-[0.25em] text-muted mb-8">
+          <h2 className="animate-in delay-4 text-xs uppercase tracking-[0.25em] text-muted mb-8">
             The lineup
           </h2>
           <ol>
             {stats.map((s, i) => (
               <li
                 key={s.project}
-                className="flex items-baseline justify-between gap-8 py-6 border-b border-border first:border-t group"
+                style={{ animationDelay: `${0.5 + i * 0.08}s` }}
+                className="animate-in flex items-baseline justify-between gap-8 py-6 border-b border-border first:border-t group"
               >
                 <div className="flex items-baseline gap-6 min-w-0">
                   <span className="text-xs tabular-nums text-muted w-5 shrink-0">
