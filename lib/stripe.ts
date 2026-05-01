@@ -12,6 +12,8 @@ const stripe = stripeKey
 const ACCOUNTS: Array<{ id: string; name: string; url?: string }> = [
   // { id: 'acct_xxx', name: 'My Project', url: 'https://example.com' },
   { id: 'acct_1TG5j8RVqXcKPMLg', name: 'JobBeacon', url: 'https://jobbeacon.app' },
+  { id: 'acct_1T9O0SEzPqGqEGFX', name: 'Demo Done', url: 'https://demodone.app' },
+  { id: 'acct_1TIHpTGZjIzQLRBu', name: 'Ryven', url: 'https://ryven.dev' },
 ];
 
 export type ProjectStats = {
@@ -21,6 +23,7 @@ export type ProjectStats = {
   mrr: number;
   currency: string;
   activeSubscriptions: number;
+  payingSubscriptions: number;
 };
 
 function intervalToMonthlyFactor(interval: Stripe.Price.Recurring.Interval, count: number): number {
@@ -46,6 +49,16 @@ async function fetchAccountStats(
   if (!stripe) return [];
 
   const buckets = new Map<string, ProjectStats>();
+  // Seed an empty bucket so every configured account appears even with no subs.
+  buckets.set(displayName, {
+    project: displayName,
+    accountId,
+    url,
+    mrr: 0,
+    currency: 'usd',
+    activeSubscriptions: 0,
+    payingSubscriptions: 0,
+  });
   let starting_after: string | undefined;
 
   const couponCache = new Map<string, Stripe.Coupon | null>();
@@ -73,25 +86,32 @@ async function fetchAccountStats(
     );
 
     for (const sub of page.data) {
+      // "Forward-committed MRR" — exclude subs scheduled to cancel or paused.
+      // These are still active right now but won't recur, so we don't count them.
+      // Doesn't match Stripe's "Active Subscription MRR" exactly; matches "Net New MRR".
       const countsTowardMrr =
         !sub.cancel_at_period_end && !sub.cancel_at && !sub.pause_collection;
 
-      let subMrrCents = 0;
+      // Compute the per-period subtotal first, apply coupons there, then normalize.
+      // Critical for amount_off coupons on yearly plans: $120/yr - $10 must become
+      // $110/yr → $9.17/mo, not $10/mo - $10 = $0.
+      let subPerPeriodCents = 0;
+      let factor = 0;
       let currency = 'usd';
 
       for (const item of sub.items.data) {
         const price = item.price;
         if (!price.recurring || !price.unit_amount) continue;
+        // Metered: actual usage requires invoice access we don't have.
+        // Treat as $0; the sub still counts as a customer.
+        if (price.recurring.usage_type === 'metered') continue;
 
-        const factor = intervalToMonthlyFactor(price.recurring.interval, price.recurring.interval_count || 1);
-        const itemMonthly = price.unit_amount * (item.quantity ?? 1) * factor;
-        if (countsTowardMrr) {
-          subMrrCents += itemMonthly;
-          currency = price.currency;
-        }
+        factor = intervalToMonthlyFactor(price.recurring.interval, price.recurring.interval_count || 1);
+        subPerPeriodCents += price.unit_amount * (item.quantity ?? 1);
+        currency = price.currency;
       }
 
-      if (countsTowardMrr && subMrrCents > 0) {
+      if (countsTowardMrr && subPerPeriodCents > 0) {
         const coupons: Stripe.Coupon[] = [];
 
         for (const d of sub.discounts) {
@@ -115,12 +135,15 @@ async function fetchAccountStats(
 
         for (const coupon of coupons) {
           if (coupon.percent_off) {
-            subMrrCents *= 1 - coupon.percent_off / 100;
+            subPerPeriodCents *= 1 - coupon.percent_off / 100;
           } else if (coupon.amount_off) {
-            subMrrCents = Math.max(0, subMrrCents - coupon.amount_off);
+            subPerPeriodCents = Math.max(0, subPerPeriodCents - coupon.amount_off);
           }
         }
       }
+
+      const subMrrCents = countsTowardMrr ? subPerPeriodCents * factor : 0;
+
 
       const bucket = buckets.get(displayName) ?? {
         project: displayName,
@@ -129,10 +152,12 @@ async function fetchAccountStats(
         mrr: 0,
         currency,
         activeSubscriptions: 0,
+        payingSubscriptions: 0,
       };
 
       bucket.mrr += subMrrCents;
       bucket.activeSubscriptions += 1;
+      if (subMrrCents > 0) bucket.payingSubscriptions += 1;
 
       buckets.set(displayName, bucket);
     }
@@ -158,7 +183,9 @@ async function fetchProjectStats(): Promise<ProjectStats[]> {
     ACCOUNTS.map(({ id, name, url }) => fetchAccountStats(id, name, url)),
   );
 
-  return results.flat().sort((a, b) => b.mrr - a.mrr);
+  return results.flat().sort(
+    (a, b) => b.mrr - a.mrr || b.activeSubscriptions - a.activeSubscriptions,
+  );
 }
 
 export const getProjectStats = unstable_cache(fetchProjectStats, ['stripe-project-stats'], {

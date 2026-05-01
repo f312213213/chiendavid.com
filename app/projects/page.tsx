@@ -11,9 +11,15 @@ export const revalidate = 900;
 
 export default async function ProjectsPage() {
   const stats = await getProjectStats();
-  const totalMrr = stats.reduce((sum, s) => sum + s.mrr, 0);
-  const totalCurrency = stats[0]?.currency ?? 'usd';
+
+  // Only sum projects that share the dominant currency — prevents mixing
+  // e.g. cents of USD and EUR into a meaningless total.
+  const dominantCurrency = stats[0]?.currency ?? 'usd';
+  const sameCurrency = stats.filter(s => s.currency === dominantCurrency);
+  const totalMrr = sameCurrency.reduce((sum, s) => sum + s.mrr, 0);
   const totalActive = stats.reduce((sum, s) => sum + s.activeSubscriptions, 0);
+  const totalPaying = stats.reduce((sum, s) => sum + s.payingSubscriptions, 0);
+  const freeUsers = totalActive - totalPaying;
 
   return (
     <main className="mx-auto max-w-3xl px-6 pt-24 pb-32">
@@ -28,15 +34,24 @@ export default async function ProjectsPage() {
           Monthly recurring revenue
         </p>
         <h1 className="text-[clamp(4.5rem,18vw,11rem)] font-bold tracking-tight tabular-nums leading-[0.85] text-accent">
-          {formatMoney(totalMrr, totalCurrency)}
+          {formatMoney(totalMrr, dominantCurrency)}
         </h1>
         {totalActive > 0 && (
           <p className="text-lg text-foreground/70 mt-10 max-w-prose">
-            From <span className="text-foreground font-medium">{totalActive}</span>{' '}
-            {totalActive === 1 ? 'person' : 'people'} paying for{' '}
+            From{' '}
+            <span className="text-foreground font-medium">{totalPaying}</span>{' '}
+            paying {totalPaying === 1 ? 'customer' : 'customers'}
+            {freeUsers > 0 && (
+              <>
+                {' '}
+                (plus{' '}
+                <span className="text-foreground font-medium">{freeUsers}</span>{' '}
+                on free plans)
+              </>
+            )}{' '}
+            across{' '}
             <span className="text-foreground font-medium">{stats.length}</span>{' '}
-            {stats.length === 1 ? 'project' : 'projects'} I&apos;ve built.
-            Refreshed every 15 minutes.
+            {stats.length === 1 ? 'project' : 'projects'}.
           </p>
         )}
       </section>
@@ -75,8 +90,17 @@ export default async function ProjectsPage() {
                       </div>
                     )}
                     <div className="text-sm text-muted mt-1">
-                      {s.activeSubscriptions} active{' '}
-                      {s.activeSubscriptions === 1 ? 'customer' : 'customers'}
+                      {(() => {
+                        const free = s.activeSubscriptions - s.payingSubscriptions;
+                        const parts: string[] = [];
+                        if (s.payingSubscriptions > 0) {
+                          parts.push(`${s.payingSubscriptions} paying`);
+                        }
+                        if (free > 0) {
+                          parts.push(`${free} free`);
+                        }
+                        return parts.length === 0 ? 'No customers yet' : parts.join(' · ');
+                      })()}
                     </div>
                   </div>
                 </div>
