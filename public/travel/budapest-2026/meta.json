@@ -1,0 +1,27 @@
+{
+  "title": "Birthday Trip in Budapest",
+  "date": "2026-04",
+  "location": "Budapest, Hungary",
+  "lat": 47.50,
+  "lng": 19.04,
+  "order" : 17,
+  "description": "Spent my birthday wandering between the Buda and Pest sides of the Danube. The city has this faded grandeur to it — palaces, thermal baths, and trams rattling past — and somehow it all just works.",
+  "coverAlt": "View across the Danube to Buda Castle on a clear afternoon, with the green dome and palace walls catching the light",
+  "images": [
+    {
+      "file": "IMG_8947.JPG",
+      "alt": "Buda Castle seen across the Danube under a bright blue sky, the green dome of the Royal Palace rising above the fortress walls with construction cranes in the distance",
+      "caption": "First proper look at Buda Castle from the Pest side. Hard to believe this is just across a river."
+    },
+    {
+      "file": "IMG_8949.JPG",
+      "alt": "A yellow Budapest tram on the riverside line beside an ornate cast-iron lamppost, the Danube and Pest skyline stretching into the distance",
+      "caption": "Riding the tram along the Danube — supposedly one of the most scenic tram rides in the world. Hard to argue."
+    },
+    {
+      "file": "IMG_8991.JPG",
+      "alt": "The Széchenyi Chain Bridge lit up at blue hour, golden lights tracing the suspension cables and reflecting off the dark surface of the Danube",
+      "caption": "Chain Bridge at blue hour. Worth the wait."
+    }
+  ]
+}
