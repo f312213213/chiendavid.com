@@ -14,6 +14,7 @@ const ACCOUNTS: Array<{ id: string; name: string; url?: string }> = [
   { id: 'acct_1TG5j8RVqXcKPMLg', name: 'JobBeacon', url: 'https://jobbeacon.app' },
   { id: 'acct_1T9O0SEzPqGqEGFX', name: 'Demo Done', url: 'https://demodone.app' },
   { id: 'acct_1TIHpTGZjIzQLRBu', name: 'Ryven', url: 'https://ryven.dev' },
+  { id: 'acct_1TUpN7Gvh0moignF', name: 'Replier', url: 'https://usereplier.com' },
 ];
 
 export type ProjectStats = {
