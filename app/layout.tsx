@@ -3,6 +3,7 @@ import { Exo_2, Nabla } from "next/font/google";
 import "./globals.css";
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { Analytics } from "@vercel/analytics/next";
+import Script from "next/script";
 
 const exo2 = Exo_2({
   variable: "--font-exo2",
@@ -58,6 +59,12 @@ export default function RootLayout({
         {modal}
         <Analytics />
         <GoogleAnalytics gaId="G-TP0XQPDH1G" />
+        <Script
+          defer
+          src="https://t.chiendavid.com/script.js"
+          data-website-id="1f2aa763-4762-4979-b75b-3c4a09463a4a"
+          strategy="afterInteractive"
+        />
       </body>
     </html>
   );

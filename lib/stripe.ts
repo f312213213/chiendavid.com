@@ -23,23 +23,95 @@ export type ProjectStats = {
   url?: string;
   mrr: number;
   currency: string;
+  totalCustomers: number;
   activeSubscriptions: number;
   payingSubscriptions: number;
+  payingCustomers: Array<{
+    id: string;
+    name?: string;
+    email?: string;
+    amount: number;
+    currency: string;
+  }>;
 };
 
-function intervalToMonthlyFactor(interval: Stripe.Price.Recurring.Interval, count: number): number {
-  switch (interval) {
-    case 'month':
-      return 1 / count;
-    case 'year':
-      return 1 / (12 * count);
-    case 'week':
-      return 52 / 12 / count;
-    case 'day':
-      return 30 / count;
-    default:
-      return 0;
+function errorMessage(error: unknown): string {
+  return error instanceof Error ? error.message : String(error);
+}
+
+type PaidTotal = {
+  amount: number;
+  currency: string;
+  paymentCount: number;
+};
+
+async function listAccountCustomers(
+  accountId: string,
+  displayName: string,
+): Promise<Stripe.Customer[]> {
+  if (!stripe) return [];
+
+  const customers: Stripe.Customer[] = [];
+  let starting_after: string | undefined;
+
+  try {
+    do {
+      const page: Stripe.ApiList<Stripe.Customer> = await stripe.customers.list(
+        {
+          limit: 100,
+          starting_after,
+        },
+        { stripeContext: accountId },
+      );
+
+      for (const customer of page.data) {
+        customers.push(customer);
+      }
+
+      starting_after = page.has_more ? page.data[page.data.length - 1]?.id : undefined;
+    } while (starting_after);
+
+    return customers;
+  } catch (error) {
+    console.warn(
+      `[stripe] ${displayName}: could not list customers`,
+      errorMessage(error),
+    );
+    return [];
   }
+}
+
+async function listAccountPaymentIntents(
+  accountId: string,
+  displayName: string,
+): Promise<Stripe.PaymentIntent[]> {
+  if (!stripe) return [];
+
+  const paymentIntents: Stripe.PaymentIntent[] = [];
+  let starting_after: string | undefined;
+
+  try {
+    do {
+      const page: Stripe.ApiList<Stripe.PaymentIntent> = await stripe.paymentIntents.list(
+        {
+          limit: 100,
+          starting_after,
+        },
+        { stripeContext: accountId },
+      );
+
+      paymentIntents.push(...page.data);
+
+      starting_after = page.has_more ? page.data[page.data.length - 1]?.id : undefined;
+    } while (starting_after);
+  } catch (error) {
+    console.warn(
+      `[stripe] ${displayName}: could not list payment intents`,
+      errorMessage(error),
+    );
+  }
+
+  return paymentIntents;
 }
 
 async function fetchAccountStats(
@@ -57,114 +129,65 @@ async function fetchAccountStats(
     url,
     mrr: 0,
     currency: 'usd',
+    totalCustomers: 0,
     activeSubscriptions: 0,
     payingSubscriptions: 0,
+    payingCustomers: [],
   });
-  let starting_after: string | undefined;
 
-  const couponCache = new Map<string, Stripe.Coupon | null>();
-  const fetchCoupon = async (id: string): Promise<Stripe.Coupon | null> => {
-    if (couponCache.has(id)) return couponCache.get(id)!;
-    try {
-      const coupon = await stripe!.coupons.retrieve(id, undefined, { stripeContext: accountId });
-      couponCache.set(id, coupon);
-      return coupon;
-    } catch {
-      couponCache.set(id, null);
-      return null;
-    }
-  };
+  const bucket = buckets.get(displayName)!;
+  const customers = await listAccountCustomers(accountId, displayName);
+  const paymentIntents = await listAccountPaymentIntents(accountId, displayName);
+  const paidByCustomer = new Map<string, PaidTotal>();
 
-  do {
-    const page: Stripe.ApiList<Stripe.Subscription> = await stripe.subscriptions.list(
-      {
-        status: 'active',
-        limit: 100,
-        starting_after,
-        expand: ['data.discounts.source.coupon', 'data.customer'],
-      },
-      { stripeContext: accountId },
-    );
+  for (const paymentIntent of paymentIntents) {
+    const customerId =
+      typeof paymentIntent.customer === 'string'
+        ? paymentIntent.customer
+        : paymentIntent.customer?.id;
+    const amountReceived =
+      paymentIntent.status === 'succeeded' ? paymentIntent.amount_received : 0;
 
-    for (const sub of page.data) {
-      // "Forward-committed MRR" — exclude subs scheduled to cancel or paused.
-      // These are still active right now but won't recur, so we don't count them.
-      // Doesn't match Stripe's "Active Subscription MRR" exactly; matches "Net New MRR".
-      const countsTowardMrr =
-        !sub.cancel_at_period_end && !sub.cancel_at && !sub.pause_collection;
+    if (!customerId || amountReceived <= 0) continue;
 
-      // Compute the per-period subtotal first, apply coupons there, then normalize.
-      // Critical for amount_off coupons on yearly plans: $120/yr - $10 must become
-      // $110/yr → $9.17/mo, not $10/mo - $10 = $0.
-      let subPerPeriodCents = 0;
-      let factor = 0;
-      let currency = 'usd';
+    const existing = paidByCustomer.get(customerId) ?? {
+      amount: 0,
+      currency: paymentIntent.currency,
+      paymentCount: 0,
+    };
 
-      for (const item of sub.items.data) {
-        const price = item.price;
-        if (!price.recurring || !price.unit_amount) continue;
-        // Metered: actual usage requires invoice access we don't have.
-        // Treat as $0; the sub still counts as a customer.
-        if (price.recurring.usage_type === 'metered') continue;
+    existing.amount += amountReceived;
+    existing.currency = paymentIntent.currency;
+    existing.paymentCount += 1;
+    paidByCustomer.set(customerId, existing);
+  }
 
-        factor = intervalToMonthlyFactor(price.recurring.interval, price.recurring.interval_count || 1);
-        subPerPeriodCents += price.unit_amount * (item.quantity ?? 1);
-        currency = price.currency;
-      }
+  bucket.totalCustomers = customers.length;
+  // Kept for the existing UI copy: this now means total Stripe customers/users.
+  bucket.activeSubscriptions = customers.length;
 
-      if (countsTowardMrr && subPerPeriodCents > 0) {
-        const coupons: Stripe.Coupon[] = [];
+  for (const customer of customers) {
+    const paid = paidByCustomer.get(customer.id) ?? {
+      amount: 0,
+      currency: 'usd',
+      paymentCount: 0,
+    };
 
-        for (const d of sub.discounts) {
-          if (typeof d === 'string') continue;
-          const c = d.source?.coupon;
-          if (c && typeof c !== 'string') coupons.push(c);
-          else if (typeof c === 'string') {
-            const fetched = await fetchCoupon(c);
-            if (fetched) coupons.push(fetched);
-          }
-        }
-
-        if (typeof sub.customer === 'object' && !sub.customer.deleted) {
-          const c = sub.customer.discount?.source?.coupon;
-          if (c && typeof c !== 'string') coupons.push(c);
-          else if (typeof c === 'string') {
-            const fetched = await fetchCoupon(c);
-            if (fetched) coupons.push(fetched);
-          }
-        }
-
-        for (const coupon of coupons) {
-          if (coupon.percent_off) {
-            subPerPeriodCents *= 1 - coupon.percent_off / 100;
-          } else if (coupon.amount_off) {
-            subPerPeriodCents = Math.max(0, subPerPeriodCents - coupon.amount_off);
-          }
-        }
-      }
-
-      const subMrrCents = countsTowardMrr ? subPerPeriodCents * factor : 0;
-
-
-      const bucket = buckets.get(displayName) ?? {
-        project: displayName,
-        accountId,
-        url,
-        mrr: 0,
-        currency,
-        activeSubscriptions: 0,
-        payingSubscriptions: 0,
-      };
-
-      bucket.mrr += subMrrCents;
-      bucket.activeSubscriptions += 1;
-      if (subMrrCents > 0) bucket.payingSubscriptions += 1;
-
-      buckets.set(displayName, bucket);
+    if (paid.amount > 0) {
+      bucket.mrr += paid.amount;
+      bucket.currency = paid.currency;
+      bucket.payingCustomers.push({
+        id: customer.id,
+        name: customer.name ?? undefined,
+        email: customer.email ?? undefined,
+        amount: paid.amount,
+        currency: paid.currency,
+      });
     }
 
-    starting_after = page.has_more ? page.data[page.data.length - 1]?.id : undefined;
-  } while (starting_after);
+  }
+
+  bucket.payingSubscriptions = bucket.payingCustomers.length;
 
   return Array.from(buckets.values()).map(b => ({ ...b, mrr: Math.round(b.mrr) }));
 }
@@ -189,10 +212,13 @@ async function fetchProjectStats(): Promise<ProjectStats[]> {
   );
 }
 
-export const getProjectStats = unstable_cache(fetchProjectStats, ['stripe-project-stats'], {
-  revalidate: 900,
-  tags: ['stripe-mrr'],
-});
+export const getProjectStats =
+  process.env.NODE_ENV === 'development'
+    ? fetchProjectStats
+    : unstable_cache(fetchProjectStats, ['stripe-project-stats'], {
+        revalidate: 900,
+        tags: ['stripe-mrr'],
+      });
 
 export function formatMoney(cents: number, currency: string): string {
   return new Intl.NumberFormat('en-US', {

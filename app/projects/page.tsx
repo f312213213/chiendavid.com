@@ -17,9 +17,9 @@ export default async function ProjectsPage() {
   const dominantCurrency = stats[0]?.currency ?? 'usd';
   const sameCurrency = stats.filter(s => s.currency === dominantCurrency);
   const totalMrr = sameCurrency.reduce((sum, s) => sum + s.mrr, 0);
-  const totalActive = stats.reduce((sum, s) => sum + s.activeSubscriptions, 0);
+  const totalCustomers = stats.reduce((sum, s) => sum + (s.totalCustomers ?? s.activeSubscriptions), 0);
   const totalPaying = stats.reduce((sum, s) => sum + s.payingSubscriptions, 0);
-  const freeUsers = totalActive - totalPaying;
+  const freeUsers = totalCustomers - totalPaying;
 
   return (
     <main className="mx-auto max-w-3xl px-6 pt-24 pb-32">
@@ -31,12 +31,12 @@ export default async function ProjectsPage() {
 
       <section className="mb-28">
         <p className="animate-in delay-1 text-xs uppercase tracking-[0.25em] text-muted mb-8">
-          Monthly recurring revenue
+          Paid revenue
         </p>
         <h1 className="animate-in delay-2 text-[clamp(4.5rem,18vw,11rem)] font-bold tracking-tight tabular-nums leading-[0.85] text-accent">
           {formatMoney(totalMrr, dominantCurrency)}
         </h1>
-        {totalActive > 0 && (
+        {totalCustomers > 0 && (
           <p className="animate-in delay-3 text-lg text-foreground/70 mt-10 max-w-prose">
             From{' '}
             <span className="text-foreground font-medium">{totalPaying}</span>{' '}
@@ -92,7 +92,7 @@ export default async function ProjectsPage() {
                     )}
                     <div className="text-sm text-muted mt-1">
                       {(() => {
-                        const free = s.activeSubscriptions - s.payingSubscriptions;
+                        const free = (s.totalCustomers ?? s.activeSubscriptions) - s.payingSubscriptions;
                         const parts: string[] = [];
                         if (s.payingSubscriptions > 0) {
                           parts.push(`${s.payingSubscriptions} paying`);
@@ -100,7 +100,7 @@ export default async function ProjectsPage() {
                         if (free > 0) {
                           parts.push(`${free} free`);
                         }
-                        return parts.length === 0 ? 'No customers yet' : parts.join(' · ');
+                        return parts.length === 0 ? 'No users yet' : parts.join(' · ');
                       })()}
                     </div>
                   </div>
@@ -110,7 +110,7 @@ export default async function ProjectsPage() {
                     {formatMoney(s.mrr, s.currency)}
                   </div>
                   <div className="text-xs uppercase tracking-wider text-muted mt-1">
-                    per month
+                    collected
                   </div>
                 </div>
               </li>
