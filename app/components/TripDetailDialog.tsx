@@ -14,12 +14,14 @@ interface TripDetailDialogProps {
   trips: Trip[];
   trip: Trip;
   closeBehavior: 'back' | 'home';
+  onNavigateTrip?: (slug: string) => void;
+  onClose?: () => void;
 }
 
 const FADE_MS = 120;
 const EXIT_MS = 250;
 
-export default function TripDetailDialog({ trips, trip, closeBehavior }: TripDetailDialogProps) {
+export default function TripDetailDialog({ trips, trip, closeBehavior, onNavigateTrip, onClose }: TripDetailDialogProps) {
   const router = useRouter();
   const [open, setOpen] = useState(true);
   const [current, setCurrent] = useState(0);
@@ -73,16 +75,18 @@ export default function TripDetailDialog({ trips, trip, closeBehavior }: TripDet
       if (e.key === 'ArrowLeft' && idx > 0) {
         e.preventDefault();
         e.stopImmediatePropagation();
-        router.push(`/trip/${all[idx - 1].slug}`);
+        if (onNavigateTrip) onNavigateTrip(all[idx - 1].slug);
+        else router.push(`/trip/${all[idx - 1].slug}`);
       } else if (e.key === 'ArrowRight' && idx < all.length - 1) {
         e.preventDefault();
         e.stopImmediatePropagation();
-        router.push(`/trip/${all[idx + 1].slug}`);
+        if (onNavigateTrip) onNavigateTrip(all[idx + 1].slug);
+        else router.push(`/trip/${all[idx + 1].slug}`);
       }
     };
     document.addEventListener('keydown', handler, true);
     return () => document.removeEventListener('keydown', handler, true);
-  }, [open, router]);
+  }, [onNavigateTrip, open, router]);
 
   // Prefetch adjacent trip routes so arrow nav feels instant
   const tripIndex = trips.findIndex(t => t.slug === trip.slug);
@@ -105,7 +109,8 @@ export default function TripDetailDialog({ trips, trip, closeBehavior }: TripDet
     if (next) return;
     setOpen(false);
     setTimeout(() => {
-      if (closeBehavior === 'back') router.back();
+      if (onClose) onClose();
+      else if (closeBehavior === 'back') router.back();
       else router.push('/');
     }, EXIT_MS);
   };

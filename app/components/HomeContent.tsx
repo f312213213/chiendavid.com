@@ -16,9 +16,10 @@ const links = [
 interface HomeContentProps {
   trips: Trip[];
   heroPins: HeroPin[];
+  enableClientDialog?: boolean;
 }
 
-export default function HomeContent({ trips, heroPins }: HomeContentProps) {
+export default function HomeContent({ trips, heroPins, enableClientDialog = true }: HomeContentProps) {
   return (
     <div className="min-h-[100dvh] bg-background">
       <ScrollReveal />
@@ -64,7 +65,7 @@ export default function HomeContent({ trips, heroPins }: HomeContentProps) {
 
       <main className="px-6 pt-4 pb-24 md:px-12 md:pb-32 lg:px-20 lg:pb-40">
         <div className="max-w-7xl mx-auto">
-          <TravelGrid trips={trips} />
+          <TravelGrid trips={trips} enableClientDialog={enableClientDialog} />
         </div>
       </main>
 

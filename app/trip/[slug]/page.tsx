@@ -28,7 +28,7 @@ export default async function TripPage({
 
   return (
     <>
-      <HomeContent trips={trips} heroPins={heroPins} />
+      <HomeContent trips={trips} heroPins={heroPins} enableClientDialog={false} />
       <TripDetailDialog trips={trips} trip={trip} closeBehavior="home" />
     </>
   );

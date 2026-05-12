@@ -1,5 +1,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
+import { unstable_cache } from 'next/cache';
+import 'server-only';
 import sharp from 'sharp';
 
 export interface TripImage {
@@ -69,7 +71,7 @@ function hashSlug(slug: string): number {
  * Each trip is a folder containing meta.json + image files.
  * To add a new trip, just create a folder in public/travel/ with a meta.json and images.
  */
-export async function getAllTrips(): Promise<Trip[]> {
+export const getAllTrips = unstable_cache(async (): Promise<Trip[]> => {
   const travelDir = path.join(process.cwd(), 'public/travel');
   const entries = await readdir(travelDir, { withFileTypes: true });
 
@@ -140,4 +142,4 @@ export async function getAllTrips(): Promise<Trip[]> {
   });
 
   return sorted;
-}
+}, ['travel-trips'], { revalidate: false });

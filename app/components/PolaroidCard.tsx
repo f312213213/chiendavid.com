@@ -1,3 +1,6 @@
+'use client';
+
+import type { MouseEventHandler } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import type { Trip } from '@/lib/travel';
@@ -8,6 +11,7 @@ interface PolaroidCardProps {
   href: string;
   disableRotation?: boolean;
   featured?: boolean;
+  onNavigate?: MouseEventHandler<HTMLAnchorElement>;
 }
 
 /* Deterministic "random" from slug for tape position variety */
@@ -17,7 +21,7 @@ function slugHash(s: string) {
   return Math.abs(h);
 }
 
-export default function PolaroidCard({ trip, href, disableRotation, featured }: PolaroidCardProps) {
+export default function PolaroidCard({ trip, href, disableRotation, featured, onNavigate }: PolaroidCardProps) {
   const rotation = disableRotation ? 0 : trip.rotation;
   const h1 = slugHash(trip.slug + 'pos');
   const h2 = slugHash(trip.slug + 'rot');
@@ -31,6 +35,7 @@ export default function PolaroidCard({ trip, href, disableRotation, featured }: 
     <Link
       href={href}
       scroll={false}
+      onClick={onNavigate}
       className="scroll-reveal polaroid-card block w-full text-left cursor-pointer outline-none focus-visible:border-accent group relative"
       style={{ transform: `rotate(${rotation}deg)` }}
     >
