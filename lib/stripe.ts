@@ -15,6 +15,7 @@ const ACCOUNTS: Array<{ id: string; name: string; url?: string }> = [
   { id: 'acct_1T9O0SEzPqGqEGFX', name: 'Demo Done', url: 'https://demodone.app' },
   { id: 'acct_1TIHpTGZjIzQLRBu', name: 'Ryven', url: 'https://ryven.dev' },
   { id: 'acct_1TUpN7Gvh0moignF', name: 'Replier', url: 'https://usereplier.com' },
+  { id: 'acct_1TYOq6KI2y3VrCZ5', name: 'TinyInbox', url: 'https://tinyinbox.co' },
 ];
 
 export type ProjectStats = {
@@ -216,9 +217,9 @@ export const getProjectStats =
   process.env.NODE_ENV === 'development'
     ? fetchProjectStats
     : unstable_cache(fetchProjectStats, ['stripe-project-stats'], {
-        revalidate: 900,
-        tags: ['stripe-mrr'],
-      });
+      revalidate: 900,
+      tags: ['stripe-mrr'],
+    });
 
 export function formatMoney(cents: number, currency: string): string {
   return new Intl.NumberFormat('en-US', {
