@@ -46,6 +46,14 @@ type PaidTotal = {
   paymentCount: number;
 };
 
+function currentMonthRange() {
+  const now = new Date();
+  const start = Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), 1) / 1000;
+  const end = Date.UTC(now.getUTCFullYear(), now.getUTCMonth() + 1, 1) / 1000;
+
+  return { gte: start, lt: end };
+}
+
 async function listAccountCustomers(
   accountId: string,
   displayName: string,
@@ -90,11 +98,13 @@ async function listAccountPaymentIntents(
 
   const paymentIntents: Stripe.PaymentIntent[] = [];
   let starting_after: string | undefined;
+  const created = currentMonthRange();
 
   try {
     do {
       const page: Stripe.ApiList<Stripe.PaymentIntent> = await stripe.paymentIntents.list(
         {
+          created,
           limit: 100,
           starting_after,
         },
@@ -142,12 +152,13 @@ async function fetchAccountStats(
   const paidByCustomer = new Map<string, PaidTotal>();
 
   for (const paymentIntent of paymentIntents) {
+    if (paymentIntent.status !== 'succeeded') continue;
+
     const customerId =
       typeof paymentIntent.customer === 'string'
         ? paymentIntent.customer
         : paymentIntent.customer?.id;
-    const amountReceived =
-      paymentIntent.status === 'succeeded' ? paymentIntent.amount_received : 0;
+    const amountReceived = paymentIntent.amount_received;
 
     if (!customerId || amountReceived <= 0) continue;
 

@@ -4,7 +4,7 @@ import { getProjectStats, formatMoney } from '@/lib/stripe';
 
 export const metadata: Metadata = {
   title: 'Projects — David Chien',
-  description: 'Live revenue from the things I build.',
+  description: 'Live MRR from the things I build.',
 };
 
 export const revalidate = 900;
@@ -31,7 +31,7 @@ export default async function ProjectsPage() {
 
       <section className="mb-28">
         <p className="animate-in delay-1 text-xs uppercase tracking-[0.25em] text-muted mb-8">
-          Paid revenue
+          MRR
         </p>
         <h1 className="animate-in delay-2 text-[clamp(4.5rem,18vw,11rem)] font-bold tracking-tight tabular-nums leading-[0.85] text-accent">
           {formatMoney(totalMrr, dominantCurrency)}
@@ -110,7 +110,7 @@ export default async function ProjectsPage() {
                     {formatMoney(s.mrr, s.currency)}
                   </div>
                   <div className="text-xs uppercase tracking-wider text-muted mt-1">
-                    collected
+                    MRR
                   </div>
                 </div>
               </li>
