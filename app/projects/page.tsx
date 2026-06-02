@@ -4,7 +4,7 @@ import { getProjectStats, formatMoney } from '@/lib/stripe';
 
 export const metadata: Metadata = {
   title: 'Projects — David Chien',
-  description: 'Live MRR from the things I build.',
+  description: 'Payments from the things I build.',
 };
 
 export const revalidate = 900;
@@ -16,10 +16,10 @@ export default async function ProjectsPage() {
   // e.g. cents of USD and EUR into a meaningless total.
   const dominantCurrency = stats[0]?.currency ?? 'usd';
   const sameCurrency = stats.filter(s => s.currency === dominantCurrency);
-  const totalMrr = sameCurrency.reduce((sum, s) => sum + s.mrr, 0);
+  const totalPaid = sameCurrency.reduce((sum, s) => sum + s.mrr, 0);
   const totalCustomers = stats.reduce((sum, s) => sum + (s.totalCustomers ?? s.activeSubscriptions), 0);
   const totalPaying = stats.reduce((sum, s) => sum + s.payingSubscriptions, 0);
-  const freeUsers = totalCustomers - totalPaying;
+  const unpaidUsers = totalCustomers - totalPaying;
 
   return (
     <main className="mx-auto max-w-3xl px-6 pt-24 pb-32">
@@ -31,22 +31,22 @@ export default async function ProjectsPage() {
 
       <section className="mb-28">
         <p className="animate-in delay-1 text-xs uppercase tracking-[0.25em] text-muted mb-8">
-          MRR
+          Paid last 30 days
         </p>
         <h1 className="animate-in delay-2 text-[clamp(4.5rem,18vw,11rem)] font-bold tracking-tight tabular-nums leading-[0.85] text-accent">
-          {formatMoney(totalMrr, dominantCurrency)}
+          {formatMoney(totalPaid, dominantCurrency)}
         </h1>
         {totalCustomers > 0 && (
           <p className="animate-in delay-3 text-lg text-foreground/70 mt-10 max-w-prose">
             From{' '}
             <span className="text-foreground font-medium">{totalPaying}</span>{' '}
-            paying {totalPaying === 1 ? 'customer' : 'customers'}
-            {freeUsers > 0 && (
+            {totalPaying === 1 ? 'customer' : 'customers'} with payments
+            {unpaidUsers > 0 && (
               <>
                 {' '}
                 (plus{' '}
-                <span className="text-foreground font-medium">{freeUsers}</span>{' '}
-                on free plans)
+                <span className="text-foreground font-medium">{unpaidUsers}</span>{' '}
+                without payments in the window)
               </>
             )}{' '}
             across{' '}
@@ -57,7 +57,7 @@ export default async function ProjectsPage() {
       </section>
 
       {stats.length === 0 ? (
-        <p className="text-muted">No paying customers yet — still building.</p>
+        <p className="text-muted">No payments yet — still building.</p>
       ) : (
         <section>
           <h2 className="animate-in delay-4 text-xs uppercase tracking-[0.25em] text-muted mb-8">
@@ -92,13 +92,13 @@ export default async function ProjectsPage() {
                     )}
                     <div className="text-sm text-muted mt-1">
                       {(() => {
-                        const free = (s.totalCustomers ?? s.activeSubscriptions) - s.payingSubscriptions;
+                        const unpaid = (s.totalCustomers ?? s.activeSubscriptions) - s.payingSubscriptions;
                         const parts: string[] = [];
                         if (s.payingSubscriptions > 0) {
-                          parts.push(`${s.payingSubscriptions} paying`);
+                          parts.push(`${s.payingSubscriptions} paid`);
                         }
-                        if (free > 0) {
-                          parts.push(`${free} free`);
+                        if (unpaid > 0) {
+                          parts.push(`${unpaid} no payment`);
                         }
                         return parts.length === 0 ? 'No users yet' : parts.join(' · ');
                       })()}
@@ -110,7 +110,7 @@ export default async function ProjectsPage() {
                     {formatMoney(s.mrr, s.currency)}
                   </div>
                   <div className="text-xs uppercase tracking-wider text-muted mt-1">
-                    MRR
+                    30D paid
                   </div>
                 </div>
               </li>

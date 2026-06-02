@@ -40,15 +40,22 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : String(error);
 }
 
-type SubscriptionTotal = {
+type PaidTotal = {
   amount: number;
   currency: string;
+  paymentCount: number;
 };
 
-const MRR_SUBSCRIPTION_STATUSES: Stripe.SubscriptionListParams.Status[] = [
-  'active',
-  'past_due',
-];
+const PAYMENT_WINDOW_DAYS = 30;
+
+function recentPaymentRange() {
+  const now = Math.floor(Date.now() / 1000);
+
+  return {
+    gte: now - PAYMENT_WINDOW_DAYS * 24 * 60 * 60,
+    lt: now,
+  };
+}
 
 async function listAccountCustomers(
   accountId: string,
@@ -86,143 +93,39 @@ async function listAccountCustomers(
   }
 }
 
-async function listAccountSubscriptions(
+async function listAccountPaymentIntents(
   accountId: string,
   displayName: string,
-): Promise<Stripe.Subscription[]> {
+): Promise<Stripe.PaymentIntent[]> {
   if (!stripe) return [];
 
-  const subscriptions: Stripe.Subscription[] = [];
+  const paymentIntents: Stripe.PaymentIntent[] = [];
+  const created = recentPaymentRange();
+  let starting_after: string | undefined;
 
-  for (const status of MRR_SUBSCRIPTION_STATUSES) {
-    let starting_after: string | undefined;
-
-    try {
-      do {
-        const page: Stripe.ApiList<Stripe.Subscription> = await stripe.subscriptions.list(
-          {
-            expand: [
-              'data.discounts.source.coupon',
-              'data.items.data.discounts.source.coupon',
-            ],
-            status,
-            limit: 100,
-            starting_after,
-          },
-          { stripeContext: accountId },
-        );
-
-        subscriptions.push(...page.data);
-
-        starting_after = page.has_more ? page.data[page.data.length - 1]?.id : undefined;
-      } while (starting_after);
-    } catch (error) {
-      console.warn(
-        `[stripe] ${displayName}: could not list ${status} subscriptions`,
-        errorMessage(error),
+  try {
+    do {
+      const page: Stripe.ApiList<Stripe.PaymentIntent> = await stripe.paymentIntents.list(
+        {
+          created,
+          limit: 100,
+          starting_after,
+        },
+        { stripeContext: accountId },
       );
-    }
+
+      paymentIntents.push(...page.data);
+
+      starting_after = page.has_more ? page.data[page.data.length - 1]?.id : undefined;
+    } while (starting_after);
+  } catch (error) {
+    console.warn(
+      `[stripe] ${displayName}: could not list payment intents`,
+      errorMessage(error),
+    );
   }
 
-  return subscriptions;
-}
-
-function decimalCentsToNumber(value: unknown): number | null {
-  if (value == null) return null;
-
-  const amount = Number(value);
-  return Number.isFinite(amount) ? amount : null;
-}
-
-function normalizeToMonthlyCents(
-  amount: number,
-  recurring: Stripe.Price.Recurring,
-): number {
-  const intervalCount = Math.max(recurring.interval_count, 1);
-
-  switch (recurring.interval) {
-    case 'day':
-      return amount * (365 / 12) / intervalCount;
-    case 'week':
-      return amount * (52 / 12) / intervalCount;
-    case 'month':
-      return amount / intervalCount;
-    case 'year':
-      return amount / (12 * intervalCount);
-  }
-}
-
-function couponFromDiscount(discount: string | Stripe.Discount): Stripe.Coupon | null {
-  if (typeof discount === 'string') {
-    return null;
-  }
-
-  const coupon = discount.source.coupon;
-  return coupon && typeof coupon !== 'string' ? coupon : null;
-}
-
-function couponAmountOffCents(coupon: Stripe.Coupon, currency: string): number {
-  if (coupon.amount_off != null && coupon.currency === currency) {
-    return coupon.amount_off;
-  }
-
-  return coupon.currency_options?.[currency]?.amount_off ?? 0;
-}
-
-function applyDiscountsCents(
-  amount: number,
-  currency: string,
-  discounts: Array<string | Stripe.Discount>,
-): number {
-  return discounts.reduce((remaining, discount) => {
-    const coupon = couponFromDiscount(discount);
-
-    if (!coupon) {
-      return remaining;
-    }
-
-    const afterPercent = coupon.percent_off == null
-      ? remaining
-      : remaining * Math.max(0, 1 - coupon.percent_off / 100);
-    const afterAmount = afterPercent - couponAmountOffCents(coupon, currency);
-
-    return Math.max(0, afterAmount);
-  }, amount);
-}
-
-function itemMrrCents(item: Stripe.SubscriptionItem): number {
-  const { price } = item;
-  const { recurring } = price;
-
-  if (!recurring || recurring.usage_type === 'metered') {
-    return 0;
-  }
-
-  if (price.billing_scheme !== 'per_unit') {
-    return 0;
-  }
-
-  const unitAmount = price.unit_amount ?? decimalCentsToNumber(price.unit_amount_decimal);
-
-  if (unitAmount == null) {
-    return 0;
-  }
-
-  const grossMrr = normalizeToMonthlyCents(unitAmount * (item.quantity ?? 1), recurring);
-
-  return applyDiscountsCents(grossMrr, price.currency, item.discounts);
-}
-
-function subscriptionMrrCents(subscription: Stripe.Subscription): number {
-  const grossMrr = subscription.items.data.reduce((sum, item) => sum + itemMrrCents(item), 0);
-
-  return applyDiscountsCents(grossMrr, subscription.currency, subscription.discounts);
-}
-
-function subscriptionCustomerId(subscription: Stripe.Subscription): string {
-  return typeof subscription.customer === 'string'
-    ? subscription.customer
-    : subscription.customer.id;
+  return paymentIntents;
 }
 
 async function fetchAccountStats(
@@ -233,7 +136,7 @@ async function fetchAccountStats(
   if (!stripe) return [];
 
   const buckets = new Map<string, ProjectStats>();
-  // Seed an empty bucket so every configured account appears even with no subs.
+  // Seed an empty bucket so every configured account appears even with no payments.
   buckets.set(displayName, {
     project: displayName,
     accountId,
@@ -248,41 +151,48 @@ async function fetchAccountStats(
 
   const bucket = buckets.get(displayName)!;
   const customers = await listAccountCustomers(accountId, displayName);
-  const subscriptions = await listAccountSubscriptions(accountId, displayName);
+  const paymentIntents = await listAccountPaymentIntents(accountId, displayName);
   const customerById = new Map(customers.map(customer => [customer.id, customer]));
-  const mrrByCustomer = new Map<string, SubscriptionTotal>();
+  const paidByCustomer = new Map<string, PaidTotal>();
 
-  for (const subscription of subscriptions) {
-    const amount = subscriptionMrrCents(subscription);
+  for (const paymentIntent of paymentIntents) {
+    if (paymentIntent.status !== 'succeeded') continue;
 
-    if (amount <= 0) continue;
+    const customerId =
+      typeof paymentIntent.customer === 'string'
+        ? paymentIntent.customer
+        : paymentIntent.customer?.id;
+    const amountReceived = paymentIntent.amount_received;
 
-    const customerId = subscriptionCustomerId(subscription);
-    const existing = mrrByCustomer.get(customerId) ?? {
+    if (!customerId || amountReceived <= 0) continue;
+
+    const existing = paidByCustomer.get(customerId) ?? {
       amount: 0,
-      currency: subscription.currency,
+      currency: paymentIntent.currency,
+      paymentCount: 0,
     };
 
-    existing.amount += amount;
-    existing.currency = subscription.currency;
-    mrrByCustomer.set(customerId, existing);
+    existing.amount += amountReceived;
+    existing.currency = paymentIntent.currency;
+    existing.paymentCount += 1;
+    paidByCustomer.set(customerId, existing);
   }
 
   bucket.totalCustomers = customers.length;
   // Kept for the existing UI copy: this now means total Stripe customers/users.
   bucket.activeSubscriptions = customers.length;
 
-  for (const [customerId, subscriptionTotal] of mrrByCustomer) {
+  for (const [customerId, paid] of paidByCustomer) {
     const customer = customerById.get(customerId);
 
-    bucket.mrr += subscriptionTotal.amount;
-    bucket.currency = subscriptionTotal.currency;
+    bucket.mrr += paid.amount;
+    bucket.currency = paid.currency;
     bucket.payingCustomers.push({
       id: customerId,
       name: customer?.name ?? undefined,
       email: customer?.email ?? undefined,
-      amount: subscriptionTotal.amount,
-      currency: subscriptionTotal.currency,
+      amount: paid.amount,
+      currency: paid.currency,
     });
   }
 
@@ -314,9 +224,9 @@ async function fetchProjectStats(): Promise<ProjectStats[]> {
 export const getProjectStats =
   process.env.NODE_ENV === 'development'
     ? fetchProjectStats
-    : unstable_cache(fetchProjectStats, ['stripe-project-stats'], {
+    : unstable_cache(fetchProjectStats, ['stripe-project-paid-last-30-days'], {
       revalidate: 900,
-      tags: ['stripe-mrr'],
+      tags: ['stripe-paid-last-30-days'],
     });
 
 export function formatMoney(cents: number, currency: string): string {
