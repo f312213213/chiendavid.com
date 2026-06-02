@@ -101,6 +101,10 @@ async function listAccountSubscriptions(
       do {
         const page: Stripe.ApiList<Stripe.Subscription> = await stripe.subscriptions.list(
           {
+            expand: [
+              'data.discounts.source.coupon',
+              'data.items.data.discounts.source.coupon',
+            ],
             status,
             limit: 100,
             starting_after,
@@ -148,6 +152,44 @@ function normalizeToMonthlyCents(
   }
 }
 
+function couponFromDiscount(discount: string | Stripe.Discount): Stripe.Coupon | null {
+  if (typeof discount === 'string') {
+    return null;
+  }
+
+  const coupon = discount.source.coupon;
+  return coupon && typeof coupon !== 'string' ? coupon : null;
+}
+
+function couponAmountOffCents(coupon: Stripe.Coupon, currency: string): number {
+  if (coupon.amount_off != null && coupon.currency === currency) {
+    return coupon.amount_off;
+  }
+
+  return coupon.currency_options?.[currency]?.amount_off ?? 0;
+}
+
+function applyDiscountsCents(
+  amount: number,
+  currency: string,
+  discounts: Array<string | Stripe.Discount>,
+): number {
+  return discounts.reduce((remaining, discount) => {
+    const coupon = couponFromDiscount(discount);
+
+    if (!coupon) {
+      return remaining;
+    }
+
+    const afterPercent = coupon.percent_off == null
+      ? remaining
+      : remaining * Math.max(0, 1 - coupon.percent_off / 100);
+    const afterAmount = afterPercent - couponAmountOffCents(coupon, currency);
+
+    return Math.max(0, afterAmount);
+  }, amount);
+}
+
 function itemMrrCents(item: Stripe.SubscriptionItem): number {
   const { price } = item;
   const { recurring } = price;
@@ -166,11 +208,15 @@ function itemMrrCents(item: Stripe.SubscriptionItem): number {
     return 0;
   }
 
-  return normalizeToMonthlyCents(unitAmount * (item.quantity ?? 1), recurring);
+  const grossMrr = normalizeToMonthlyCents(unitAmount * (item.quantity ?? 1), recurring);
+
+  return applyDiscountsCents(grossMrr, price.currency, item.discounts);
 }
 
 function subscriptionMrrCents(subscription: Stripe.Subscription): number {
-  return subscription.items.data.reduce((sum, item) => sum + itemMrrCents(item), 0);
+  const grossMrr = subscription.items.data.reduce((sum, item) => sum + itemMrrCents(item), 0);
+
+  return applyDiscountsCents(grossMrr, subscription.currency, subscription.discounts);
 }
 
 function subscriptionCustomerId(subscription: Stripe.Subscription): string {
