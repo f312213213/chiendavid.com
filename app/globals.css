@@ -181,6 +181,68 @@ body::before {
   @apply bg-[rgba(200,185,155,0.45)] backdrop-blur-[1px] shadow-[0_1px_2px_rgba(0,0,0,0.08)];
 }
 
+.contribution-cell {
+  background: color-mix(in srgb, var(--foreground) 8%, transparent);
+}
+
+.contribution-cell[data-level="1"] {
+  background: #9be9a8;
+}
+
+.contribution-cell[data-level="2"] {
+  background: #40c463;
+}
+
+.contribution-cell[data-level="3"] {
+  background: #30a14e;
+}
+
+.contribution-cell[data-level="4"] {
+  background: #216e39;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) .contribution-cell {
+    background: color-mix(in srgb, var(--foreground) 5%, transparent);
+  }
+
+  :root:not(.light) .contribution-cell[data-level="1"] {
+    background: #0e4429;
+  }
+
+  :root:not(.light) .contribution-cell[data-level="2"] {
+    background: #006d32;
+  }
+
+  :root:not(.light) .contribution-cell[data-level="3"] {
+    background: #26a641;
+  }
+
+  :root:not(.light) .contribution-cell[data-level="4"] {
+    background: #39d353;
+  }
+}
+
+:root.dark .contribution-cell {
+  background: color-mix(in srgb, var(--foreground) 5%, transparent);
+}
+
+:root.dark .contribution-cell[data-level="1"] {
+  background: #0e4429;
+}
+
+:root.dark .contribution-cell[data-level="2"] {
+  background: #006d32;
+}
+
+:root.dark .contribution-cell[data-level="3"] {
+  background: #26a641;
+}
+
+:root.dark .contribution-cell[data-level="4"] {
+  background: #39d353;
+}
+
 /* === Rules requiring parent/state selectors — can't be @utility === */
 .scroll-reveal-ready .scroll-reveal {
   @apply opacity-0 translate-y-8 transition-[opacity,transform] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)];
