@@ -200,23 +200,103 @@ body::before {
 }
 
 .contribution-graph-card {
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--accent) 9%, transparent), transparent 42%),
+    linear-gradient(180deg, color-mix(in srgb, var(--foreground) 4%, var(--background)), var(--background));
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--foreground) 4%, transparent),
-    0 18px 64px color-mix(in srgb, var(--foreground) 4%, transparent);
+    inset 0 1px 0 color-mix(in srgb, white 8%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, var(--foreground) 8%, transparent),
+    0 22px 80px color-mix(in srgb, var(--foreground) 8%, transparent);
   transition:
+    background 240ms cubic-bezier(0.16, 1, 0.3, 1),
     border-color 240ms cubic-bezier(0.16, 1, 0.3, 1),
     box-shadow 240ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
+.contribution-graph-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    repeating-linear-gradient(
+      90deg,
+      color-mix(in srgb, var(--foreground) 7%, transparent) 0 1px,
+      transparent 1px 32px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      color-mix(in srgb, var(--foreground) 5%, transparent) 0 1px,
+      transparent 1px 32px
+    );
+  mask-image: linear-gradient(110deg, black 0 54%, transparent 86%);
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.contribution-graph-card::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 24px;
+  left: 24px;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, #39d353 54%, transparent),
+    color-mix(in srgb, var(--accent) 42%, transparent),
+    transparent
+  );
+  opacity: 0.78;
+  pointer-events: none;
+}
+
 .contribution-graph-card:hover {
-  border-color: color-mix(in srgb, var(--foreground) 15%, var(--border));
+  border-color: color-mix(in srgb, #39d353 24%, var(--border));
   box-shadow:
-    inset 0 1px 0 color-mix(in srgb, var(--foreground) 7%, transparent),
-    0 22px 72px color-mix(in srgb, var(--foreground) 6%, transparent);
+    inset 0 1px 0 color-mix(in srgb, white 11%, transparent),
+    inset 0 -1px 0 color-mix(in srgb, #39d353 18%, transparent),
+    0 28px 96px color-mix(in srgb, var(--foreground) 10%, transparent),
+    0 0 56px color-mix(in srgb, #39d353 9%, transparent);
+}
+
+.contribution-graph-heading {
+  text-wrap: balance;
+}
+
+.contribution-graph-count {
+  color: color-mix(in srgb, #30a14e 72%, var(--foreground));
+  text-shadow: 0 0 28px color-mix(in srgb, #39d353 18%, transparent);
+}
+
+.contribution-github-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.contribution-github-link span {
+  display: inline-block;
+  transition: transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.contribution-github-link:hover span {
+  transform: translate(2px, -2px);
+}
+
+.contribution-month-label,
+.contribution-weekday-label {
+  color: color-mix(in srgb, var(--foreground) 82%, #39d353);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--foreground) 7%, transparent);
+}
+
+.contribution-legend {
+  font-weight: 600;
 }
 
 .contribution-cell {
   --contribution-color: color-mix(in srgb, var(--foreground) 8%, transparent);
+  --contribution-glow: color-mix(in srgb, var(--foreground) 16%, transparent);
   background: var(--contribution-color);
 }
 
@@ -234,11 +314,63 @@ body::before {
   will-change: transform;
 }
 
+.contribution-cell--day::before,
+.contribution-cell--day::after {
+  left: 50%;
+  opacity: 0;
+  pointer-events: none;
+  position: absolute;
+  transition:
+    opacity 140ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 140ms cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 4;
+}
+
+.contribution-cell--day::before {
+  background: color-mix(in srgb, var(--foreground) 92%, var(--background));
+  content: "";
+  height: 6px;
+  top: calc(100% + 6px);
+  transform: translateX(-50%) translateY(-2px) rotate(45deg) scale(0.72);
+  width: 6px;
+}
+
+.contribution-cell--day::after {
+  background: color-mix(in srgb, var(--foreground) 92%, var(--background));
+  border: 1px solid color-mix(in srgb, var(--contribution-color) 34%, transparent);
+  border-radius: 6px;
+  box-shadow:
+    0 10px 28px color-mix(in srgb, var(--foreground) 18%, transparent),
+    0 0 18px color-mix(in srgb, var(--contribution-glow) 18%, transparent);
+  color: var(--background);
+  content: attr(data-tooltip);
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  padding: 8px 9px;
+  top: calc(100% + 9px);
+  transform: translateX(-50%) translateY(-2px) scale(0.68);
+  white-space: nowrap;
+}
+
 .contribution-cell--active {
   opacity: 1;
   box-shadow:
     inset 0 1px 0 color-mix(in srgb, white 22%, transparent),
-    0 0 0 1px color-mix(in srgb, var(--contribution-color) 16%, transparent);
+    0 0 0 1px color-mix(in srgb, var(--contribution-color) 24%, transparent),
+    0 0 12px color-mix(in srgb, var(--contribution-glow) 18%, transparent);
+}
+
+.contribution-cell--day[data-level="0"] {
+  opacity: 0.46;
+}
+
+.contribution-cell--active[data-level="3"],
+.contribution-cell--active[data-level="4"] {
+  box-shadow:
+    inset 0 1px 0 color-mix(in srgb, white 28%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--contribution-color) 34%, transparent),
+    0 0 18px color-mix(in srgb, var(--contribution-glow) 28%, transparent);
 }
 
 .contribution-cell--legend {
@@ -247,18 +379,22 @@ body::before {
 
 .contribution-cell[data-level="1"] {
   --contribution-color: #9be9a8;
+  --contribution-glow: #40c463;
 }
 
 .contribution-cell[data-level="2"] {
   --contribution-color: #40c463;
+  --contribution-glow: #39d353;
 }
 
 .contribution-cell[data-level="3"] {
   --contribution-color: #30a14e;
+  --contribution-glow: #39d353;
 }
 
 .contribution-cell[data-level="4"] {
   --contribution-color: #216e39;
+  --contribution-glow: #39d353;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -269,19 +405,38 @@ body::before {
 
 @media (hover: hover) and (pointer: fine) {
   .contribution-cell--day:hover {
-    filter: saturate(1.18) brightness(1.08);
+    filter: saturate(1.34) brightness(1.12);
     opacity: 1;
-    transform: translateY(-2px) scale(1.28);
-    z-index: 1;
+    transform: translateY(-3px) scale(1.42);
+    z-index: 3;
     box-shadow:
-      0 0 0 1px color-mix(in srgb, var(--contribution-color) 60%, var(--background)),
-      0 8px 20px color-mix(in srgb, var(--contribution-color) 34%, transparent);
+      0 0 0 1px color-mix(in srgb, var(--contribution-color) 72%, var(--background)),
+      0 10px 28px color-mix(in srgb, var(--contribution-glow) 42%, transparent),
+      0 0 18px color-mix(in srgb, var(--contribution-glow) 34%, transparent);
+  }
+
+  .contribution-cell--day:hover::before,
+  .contribution-cell--day:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(0.72);
+  }
+
+  .contribution-cell--day:hover::before {
+    transform: translateX(-50%) translateY(0) rotate(45deg) scale(0.72);
   }
 
   .contribution-cell--day[data-level="0"]:hover {
     box-shadow:
       0 0 0 1px color-mix(in srgb, var(--foreground) 14%, transparent),
       0 8px 18px color-mix(in srgb, var(--foreground) 10%, transparent);
+  }
+
+  .contribution-graph-card:hover .contribution-cell--active {
+    filter: saturate(1.14) contrast(1.04);
+  }
+
+  .contribution-graph-card:hover .contribution-cell--day[data-level="0"] {
+    opacity: 0.32;
   }
 }
 
@@ -292,18 +447,22 @@ body::before {
 
   :root:not(.light) .contribution-cell[data-level="1"] {
     --contribution-color: #0e4429;
+    --contribution-glow: #26a641;
   }
 
   :root:not(.light) .contribution-cell[data-level="2"] {
     --contribution-color: #006d32;
+    --contribution-glow: #39d353;
   }
 
   :root:not(.light) .contribution-cell[data-level="3"] {
     --contribution-color: #26a641;
+    --contribution-glow: #7ee787;
   }
 
   :root:not(.light) .contribution-cell[data-level="4"] {
     --contribution-color: #39d353;
+    --contribution-glow: #7ee787;
   }
 }
 
@@ -313,18 +472,22 @@ body::before {
 
 :root.dark .contribution-cell[data-level="1"] {
   --contribution-color: #0e4429;
+  --contribution-glow: #26a641;
 }
 
 :root.dark .contribution-cell[data-level="2"] {
   --contribution-color: #006d32;
+  --contribution-glow: #39d353;
 }
 
 :root.dark .contribution-cell[data-level="3"] {
   --contribution-color: #26a641;
+  --contribution-glow: #7ee787;
 }
 
 :root.dark .contribution-cell[data-level="4"] {
   --contribution-color: #39d353;
+  --contribution-glow: #7ee787;
 }
 
 /* === Rules requiring parent/state selectors — can't be @utility === */

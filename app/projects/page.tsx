@@ -48,6 +48,14 @@ function formatContributionDate(date: string): string {
   }).format(new Date(`${date}T00:00:00.000Z`));
 }
 
+function formatContributionTooltipDate(date: string): string {
+  return new Intl.DateTimeFormat('en-US', {
+    month: 'short',
+    day: 'numeric',
+    timeZone: 'UTC',
+  }).format(new Date(`${date}T00:00:00.000Z`));
+}
+
 function getMonthPositions(calendar: ContributionCalendar) {
   return calendar.weeks.flatMap((week, weekIndex) => {
     const firstOfMonth = week.days.find(day => day.inYear && day.date.endsWith('-01'));
@@ -75,23 +83,28 @@ function ContributionGraph({ calendar }: { calendar: ContributionCalendar }) {
   return (
     <section className="animate-in delay-4 mb-28 w-full">
       <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <h2 className="text-2xl md:text-3xl font-semibold tracking-tight tabular-nums">
-          {hasActivityData
-            ? `${formatNumber(calendar.totalContributions)} ${activityNoun} in ${calendar.year}`
-            : `Contributions in ${calendar.year}`}
+        <h2 className="contribution-graph-heading text-2xl md:text-3xl font-semibold tracking-tight">
+          {hasActivityData ? (
+            <>
+              <span className="contribution-graph-count tabular-nums">
+                {formatNumber(calendar.totalContributions)}
+              </span>{' '}
+              <span>{activityNoun} in {calendar.year}</span>
+            </>
+          ) : `Contributions in ${calendar.year}`}
         </h2>
         <a
           href="https://github.com/f312213213"
           target="_blank"
           rel="noopener noreferrer"
-          className="text-sm font-semibold uppercase tracking-wider text-muted hover:text-accent transition-colors"
+          className="contribution-github-link text-sm font-semibold uppercase tracking-wider text-muted hover:text-accent transition-colors"
         >
-          GitHub ↗
+          GitHub <span aria-hidden>↗</span>
         </a>
       </div>
 
-      <div className="contribution-graph-card box-border w-full rounded-lg border border-border bg-[color-mix(in_srgb,var(--foreground)_2%,var(--background))] px-4 py-5 sm:px-6 sm:py-7">
-        <div className="overflow-x-auto pb-2">
+      <div className="contribution-graph-card relative isolate box-border w-full overflow-hidden rounded-lg border border-border bg-[color-mix(in_srgb,var(--foreground)_2%,var(--background))] px-4 py-5 sm:px-6 sm:py-7">
+        <div className="relative z-10 overflow-x-auto pb-2">
           <div className="mx-auto" style={{ width: minGraphWidth }}>
             <div className="grid grid-cols-[38px_1fr] gap-x-3">
               <div aria-hidden />
@@ -105,7 +118,7 @@ function ContributionGraph({ calendar }: { calendar: ContributionCalendar }) {
                 {monthPositions.map(({ month, weekIndex }) => (
                   <span
                     key={month}
-                    className="leading-none"
+                    className="contribution-month-label leading-none"
                     style={{ gridColumn: `${weekIndex + 1} / span 4` }}
                   >
                     {MONTH_LABELS[month]}
@@ -124,7 +137,7 @@ function ContributionGraph({ calendar }: { calendar: ContributionCalendar }) {
                 {WEEKDAY_LABELS.map(day => (
                   <span
                     key={day.label}
-                    className="leading-3"
+                    className="contribution-weekday-label leading-3"
                     style={{ gridRow: String(day.row) }}
                   >
                     {day.label}
@@ -148,32 +161,38 @@ function ContributionGraph({ calendar }: { calendar: ContributionCalendar }) {
                     const label = day.count === 1
                       ? `1 ${activityNoun.slice(0, -1)}`
                       : `${formatNumber(day.count)} ${activityNoun}`;
+                    const fullLabel = `${label} on ${formatContributionDate(day.date)}`;
+                    const tooltipLabel = `${formatContributionTooltipDate(day.date)} · ${label}`;
                     const revealDelay = weekIndex * 8 + dayIndex * 14;
                     const cellClassName = day.inYear
                       ? `contribution-cell contribution-cell--day block rounded-[3px] ${day.count > 0 ? 'contribution-cell--active' : ''}`
                       : 'contribution-cell block rounded-[3px] opacity-0';
 
                     return (
-                      <span
+                      <time
                         key={day.date}
                         className={cellClassName}
+                        dateTime={day.date}
+                        data-count={day.inYear ? day.count : undefined}
                         data-level={day.inYear ? day.level : 0}
+                        data-tooltip={day.inYear ? tooltipLabel : undefined}
                         style={{
                           animationDelay: day.inYear ? `${revealDelay}ms` : undefined,
                           height: CONTRIBUTION_CELL_SIZE,
                           width: CONTRIBUTION_CELL_SIZE,
                         }}
-                        title={`${label} on ${formatContributionDate(day.date)}`}
-                        aria-label={`${label} on ${formatContributionDate(day.date)}`}
+                        aria-label={fullLabel}
                         aria-hidden={day.inYear ? undefined : true}
-                      />
+                      >
+                        {day.inYear && <span className="sr-only">{fullLabel}</span>}
+                      </time>
                     );
                   })
                 ))}
               </div>
             </div>
 
-            <div className="mt-5 flex justify-end pl-[50px] text-sm text-muted">
+            <div className="contribution-legend mt-5 flex justify-end pl-[50px] text-sm text-muted">
               <div className="flex items-center gap-2">
                 <span>Less</span>
                 {[0, 1, 2, 3, 4].map(level => (
