@@ -90,7 +90,7 @@ function ContributionGraph({ calendar }: { calendar: ContributionCalendar }) {
         </a>
       </div>
 
-      <div className="box-border w-full rounded-lg border border-border bg-[color-mix(in_srgb,var(--foreground)_2%,var(--background))] px-4 py-5 sm:px-6 sm:py-7">
+      <div className="contribution-graph-card box-border w-full rounded-lg border border-border bg-[color-mix(in_srgb,var(--foreground)_2%,var(--background))] px-4 py-5 sm:px-6 sm:py-7">
         <div className="overflow-x-auto pb-2">
           <div className="mx-auto" style={{ width: minGraphWidth }}>
             <div className="grid grid-cols-[38px_1fr] gap-x-3">
@@ -143,18 +143,23 @@ function ContributionGraph({ calendar }: { calendar: ContributionCalendar }) {
                   ? `${formatNumber(calendar.totalContributions)} ${activityNoun} in ${calendar.year}`
                   : `Contribution graph for ${calendar.year}`}
               >
-                {calendar.weeks.flatMap(week => (
-                  week.days.map(day => {
+                {calendar.weeks.flatMap((week, weekIndex) => (
+                  week.days.map((day, dayIndex) => {
                     const label = day.count === 1
                       ? `1 ${activityNoun.slice(0, -1)}`
                       : `${formatNumber(day.count)} ${activityNoun}`;
+                    const revealDelay = weekIndex * 8 + dayIndex * 14;
+                    const cellClassName = day.inYear
+                      ? `contribution-cell contribution-cell--day block rounded-[3px] ${day.count > 0 ? 'contribution-cell--active' : ''}`
+                      : 'contribution-cell block rounded-[3px] opacity-0';
 
                     return (
                       <span
                         key={day.date}
-                        className={`contribution-cell block rounded-[3px] ${day.inYear ? '' : 'opacity-0'}`}
+                        className={cellClassName}
                         data-level={day.inYear ? day.level : 0}
                         style={{
+                          animationDelay: day.inYear ? `${revealDelay}ms` : undefined,
                           height: CONTRIBUTION_CELL_SIZE,
                           width: CONTRIBUTION_CELL_SIZE,
                         }}
@@ -174,7 +179,7 @@ function ContributionGraph({ calendar }: { calendar: ContributionCalendar }) {
                 {[0, 1, 2, 3, 4].map(level => (
                   <span
                     key={level}
-                    className="contribution-cell block rounded-[3px]"
+                    className="contribution-cell contribution-cell--legend block rounded-[3px]"
                     data-level={level}
                     style={{
                       height: CONTRIBUTION_CELL_SIZE,
