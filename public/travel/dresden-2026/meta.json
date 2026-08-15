@@ -1,0 +1,22 @@
+{
+  "title": "Trams and Comfort Food in Dresden",
+  "date": "2026-08",
+  "location": "Dresden, Germany",
+  "lat": 51.05,
+  "lng": 13.74,
+  "order" : 21,
+  "description": "Had a very German lunch in Dresden and, for all the engineers out there, spotted a tram with an ESMC ad.",
+  "coverAlt": "German meal of crispy pork knuckle, sauerkraut, dumplings, schnitzel, potato salad, and beer on an outdoor table",
+  "images": [
+    {
+      "file": "8FBC7BC0-372F-4FA5-A278-A49E114005A7_1_102_o.jpeg",
+      "alt": "Crispy pork knuckle with sauerkraut and herb dumplings, with schnitzel, potato salad, and a glass of beer across the table",
+      "caption": "A very German lunch: pork knuckle, dumplings, schnitzel, and beer."
+    },
+    {
+      "file": "2693D6FD-65B3-4008-89C6-F01A13B4461F_1_102_o.jpeg",
+      "alt": "Yellow tram travelling along a Dresden street beneath overhead wires, with historic stone buildings rising behind it on a grey day",
+      "caption": "ESMC tram threading its way through central Dresden."
+    }
+  ]
+}

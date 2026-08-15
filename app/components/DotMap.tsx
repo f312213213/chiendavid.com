@@ -4,55 +4,16 @@
  */
 
 import { MAP, ROWS, COLS } from '@/lib/dotmap';
+import { clusterSamePlacePins, projectLatLng } from '@/lib/mapPins';
 
 interface DotMapProps {
   lat?: number;
   lng?: number;
   pins?: { lat: number; lng: number }[];
-  pulse?: boolean;
   className?: string;
 }
 
-interface Cluster {
-  x: number;
-  y: number;
-  count: number;
-}
-
-/** Group projected pins that are within `threshold` SVG units. */
-function clusterPins(
-  projected: { x: number; y: number }[],
-  threshold: number,
-): Cluster[] {
-  const used = new Set<number>();
-  const clusters: Cluster[] = [];
-
-  for (let i = 0; i < projected.length; i++) {
-    if (used.has(i)) continue;
-    let sx = projected[i].x;
-    let sy = projected[i].y;
-    let count = 1;
-    used.add(i);
-
-    for (let j = i + 1; j < projected.length; j++) {
-      if (used.has(j)) continue;
-      const dx = projected[j].x - sx / count;
-      const dy = projected[j].y - sy / count;
-      if (Math.sqrt(dx * dx + dy * dy) < threshold) {
-        sx += projected[j].x;
-        sy += projected[j].y;
-        count++;
-        used.add(j);
-      }
-    }
-
-    clusters.push({ x: sx / count, y: sy / count, count });
-  }
-
-  return clusters;
-}
-
-export default function DotMap({ lat, lng, pins, pulse, className = '' }: DotMapProps) {
+export default function DotMap({ lat, lng, pins, className = '' }: DotMapProps) {
   const gap = 2;
   const r = 0.6;
   const w = COLS * gap;
@@ -66,15 +27,16 @@ export default function DotMap({ lat, lng, pins, pulse, className = '' }: DotMap
       : [];
 
   // Project to SVG coordinates
-  const projected = allPins.map((pin) => ({
-    x: ((pin.lng + 180) / 360) * COLS * gap + gap / 2,
-    y: ((90 - pin.lat) / 180) * ROWS * gap + gap / 2,
-  }));
+  const projected = allPins.map((pin) =>
+    projectLatLng(pin.lat, pin.lng, COLS, ROWS, gap)
+  );
 
-  // Cluster pins that are too close (threshold ~8 SVG units ≈ 4 grid cells)
-  const clusters = allPins.length > 1
-    ? clusterPins(projected, 8)
-    : projected.map((p) => ({ ...p, count: 1 }));
+  const samePlaceClusters = clusterSamePlacePins(projected).map((cluster) => ({
+    x: cluster.x,
+    y: cluster.y,
+    count: cluster.indices.length,
+  }));
+  const clusters = samePlaceClusters;
 
   return (
     <svg
@@ -105,7 +67,7 @@ export default function DotMap({ lat, lng, pins, pulse, className = '' }: DotMap
             <circle
               cx={c.x} cy={c.y}
               r={outerR}
-              className={`fill-accent ${pulse ? 'pin-pulse' : ''}`}
+              className="fill-accent"
               opacity={0.22}
             />
             <circle

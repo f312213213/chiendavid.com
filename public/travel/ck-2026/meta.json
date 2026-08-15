@@ -1,0 +1,17 @@
+{
+  "title": "Sleeping in the Castle at Český Krumlov",
+  "date": "2026-05",
+  "location": "Český Krumlov, Czechia",
+  "lat": 48.81,
+  "lng": 14.32,
+  "order" : 18,
+  "description": "Stayed here for one night. Once the noisy crowds disappeared, everything became incredibly quiet. The whole town lit up like a scene from a fairy tale.",
+  "coverAlt": "Night view over the illuminated rooftops of Český Krumlov, with St. Vitus Church and the Vltava river beneath a starry sky",
+  "images": [
+    {
+      "file": "44F9E41A-F09A-4672-8C17-6E1485343F82_1_105_c.jpeg",
+      "alt": "Český Krumlov's old town glowing at night, with St. Vitus Church, clustered red roofs, and the Vltava river beneath a deep blue sky",
+      "caption": "Český Krumlov after dark — the best view from a night in the castle."
+    }
+  ]
+}

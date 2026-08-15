@@ -1,0 +1,22 @@
+{
+  "title": "Beer Gardens and a Taste of Home in Munich",
+  "date": "2026-08",
+  "location": "Munich, Germany",
+  "lat": 48.14,
+  "lng": 11.57,
+  "order" : 23,
+  "description": "Munich delivered the kind of summer day best measured in beer-garden tables and good food. I was surprised by how many Chinese restaurants there were and finally got a taste of the food I had been missing.",
+  "coverAlt": "Partly finished Hofbräu beer in a large glass mug on a sunlit Munich beer-garden table",
+  "images": [
+    {
+      "file": "C0C06A97-2A22-41D3-8EDB-E95B8E05A596_1_102_o.jpeg",
+      "alt": "Partly finished Hofbräu beer in a large glass mug on a patterned tablecloth, with a busy Munich beer garden in the background",
+      "caption": "A Hofbräu beer in the Munich sunshine."
+    },
+    {
+      "file": "2C0AE5F4-4F9E-4366-92B5-43BA305A2676_1_102_o.jpeg",
+      "alt": "Sliced century eggs arranged in a ceramic bowl with chilli oil, peanuts, spring onions, and a dark savoury sauce",
+      "caption": "Century eggs with chilli oil and peanuts — an unexpectedly memorable Munich meal."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "title": "Accidentally Climbed a Mountain in Marseille",
+  "date": "2026-08",
+  "location": "Marseille, France",
+  "lat": 43.30,
+  "lng": 5.37,
+  "order" : 22,
+  "description": "The sea in Marseille was absolutely beautiful, but the hike nearly killed me.",
+  "coverAlt": "White limestone cliffs and pine trees surrounding a calm blue inlet in the Calanques near Marseille",
+  "images": [
+    {
+      "file": "2D6EFFEC-4A75-4039-9A15-F2E3D1EB5B0C_1_102_o.jpeg",
+      "alt": "White limestone cliffs and sculpted rock pinnacles covered with pine trees above a sheltered Mediterranean inlet in the Calanques",
+      "caption": "Calanque de Sugiton is beautiful! Just don't get adventurous and wander off-trail like I did. I nearly died :( "
+    },
+    {
+      "file": "A1B6DF9C-2AE8-4680-A6EF-91DAAF47F357_1_102_o.jpeg",
+      "alt": "Orange sun setting over the Mediterranean as swimmers and beachgoers gather along a busy Marseille beach",
+      "caption": "One last swim while the sun dropped into the Mediterranean."
+    }
+  ]
+}

@@ -1,9 +1,10 @@
 'use client';
 
-import { useState, useCallback, useRef } from 'react';
+import { useState, useCallback, useMemo, useRef } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { MAP, ROWS, COLS } from '@/lib/dotmap';
+import { clusterSamePlacePins, projectLatLng } from '@/lib/mapPins';
 
 /**
  * Interactive dot-matrix world map for the hero section.
@@ -50,47 +51,6 @@ function pinToTrip(pin: HeroPin): ClusterTrip {
   return { label: pin.label, slug: pin.slug, title: pin.title, coverSrc: pin.coverSrc, coverBlur: pin.coverBlur, displayDate: pin.displayDate };
 }
 
-/** Group projected pins within `threshold` SVG units. */
-function clusterPins(
-  pins: HeroPin[],
-  projected: { x: number; y: number }[],
-  threshold: number,
-): Cluster[] {
-  const used = new Set<number>();
-  const clusters: Cluster[] = [];
-
-  for (let i = 0; i < projected.length; i++) {
-    if (used.has(i)) continue;
-    let sx = projected[i].x;
-    let sy = projected[i].y;
-    const trips: ClusterTrip[] = [pinToTrip(pins[i])];
-    used.add(i);
-
-    for (let j = i + 1; j < projected.length; j++) {
-      if (used.has(j)) continue;
-      const cx = sx / trips.length;
-      const cy = sy / trips.length;
-      const dx = projected[j].x - cx;
-      const dy = projected[j].y - cy;
-      if (Math.sqrt(dx * dx + dy * dy) < threshold) {
-        sx += projected[j].x;
-        sy += projected[j].y;
-        trips.push(pinToTrip(pins[j]));
-        used.add(j);
-      }
-    }
-
-    clusters.push({
-      x: sx / trips.length,
-      y: sy / trips.length,
-      count: trips.length,
-      trips,
-    });
-  }
-
-  return clusters;
-}
-
 export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
   const router = useRouter();
   const [hoveredIdx, setHoveredIdx] = useState<number | null>(null);
@@ -98,19 +58,19 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
   const leaveTimerRef = useRef<ReturnType<typeof setTimeout>>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const projected = pins.map((pin) => ({
-    x: ((pin.lng + 180) / 360) * COLS * GAP + GAP / 2,
-    y: ((90 - pin.lat) / 180) * ROWS * GAP + GAP / 2,
-  }));
+  const clusters = useMemo(() => {
+    const projected = pins.map((pin) =>
+      projectLatLng(pin.lat, pin.lng, COLS, ROWS, GAP)
+    );
+    const samePlaceClusters = clusterSamePlacePins(projected).map((cluster) => ({
+      x: cluster.x,
+      y: cluster.y,
+      count: cluster.indices.length,
+      trips: cluster.indices.map((index) => pinToTrip(pins[index])),
+    }));
 
-  const clusters = pins.length > 1
-    ? clusterPins(pins, projected, 8)
-    : pins.map((p, i) => ({
-        x: projected[i].x,
-        y: projected[i].y,
-        count: 1,
-        trips: [pinToTrip(p)],
-      }));
+    return samePlaceClusters;
+  }, [pins]);
 
   /** Enter a pin or tooltip — cancels any pending hide. */
   const handleEnter = useCallback((idx: number) => {
@@ -187,8 +147,8 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
       >
         {clusters.map((c, i) => {
           const isHovered = hoveredIdx === i;
-          const outerR = 3.5 + Math.min(c.count - 1, 4) * 1.2;
-          const innerR = 1.5 + Math.min(c.count - 1, 4) * 0.4;
+          const outerR = 1.35 + Math.min(c.count - 1, 4) * 0.45;
+          const innerR = 0.6 + Math.min(c.count - 1, 4) * 0.18;
 
           return (
             <g
@@ -202,15 +162,15 @@ export default function HeroDotMap({ pins, className = '' }: HeroDotMapProps) {
               {/* Invisible hit area */}
               <circle
                 cx={c.x} cy={c.y}
-                r={Math.max(outerR + 4, 7)}
+                r={Math.max(outerR + 0.8, 2.2)}
                 fill="transparent"
               />
 
               {/* Outer glow */}
               <circle
                 cx={c.x} cy={c.y}
-                r={isHovered ? outerR + 2.5 : outerR}
-                className="fill-accent pin-pulse"
+                r={isHovered ? outerR + 1.2 : outerR}
+                className="fill-accent"
                 opacity={isHovered ? 0.4 : 0.22}
                 style={{ transition: 'opacity 0.25s ease-out' }}
               />

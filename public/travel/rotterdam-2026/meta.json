@@ -1,0 +1,22 @@
+{
+  "title": "A Wild Day in Rotterdam",
+  "date": "2026-07",
+  "location": "Rotterdam, Netherlands",
+  "lat": 51.92,
+  "lng": 4.48,
+  "order" : 20,
+  "description": "Spent a sunny day at Rotterdam Zoo, moving from the shade of the elephant enclosure to the sandy home of the prairie dogs. A different side of the city, and an easy favourite.",
+  "coverAlt": "A herd of Asian elephants gathered in a leafy enclosure at Rotterdam Zoo on a sunny day",
+  "images": [
+    {
+      "file": "271A86A7-0B49-4D61-A0E0-2A0BA585D2ED_1_102_o.jpeg",
+      "alt": "Several Asian elephants, including a young elephant, gathered beside rocks and a shallow pool in a leafy enclosure at Rotterdam Zoo",
+      "caption": "The elephant herd keeping cool together at Rotterdam Zoo."
+    },
+    {
+      "file": "18521542-3086-4FA9-B50A-851E90DA7AE6_1_102_o.jpeg",
+      "alt": "A prairie dog standing upright on sandy ground in bright sunlight at Rotterdam Zoo",
+      "caption": "This little prairie dog had the best lookout spot in the zoo."
+    }
+  ]
+}

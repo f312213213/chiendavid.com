@@ -1,0 +1,22 @@
+{
+  "title": "Waterfronts and Work in Stockholm",
+  "date": "2026-07",
+  "location": "Stockholm, Sweden",
+  "lat": 59.33,
+  "lng": 18.06,
+  "order" : 19,
+  "description": "A Stockholm trip split between waterfront walks and the city's modern business district. Grey skies made the harbour feel especially Nordic, while flashes of blue appeared between the glass buildings.",
+  "coverAlt": "Historic buildings and a bridge lining Stockholm's waterfront beneath dramatic grey clouds",
+  "images": [
+    {
+      "file": "671E542E-101E-4B2B-B75F-E161A7B27BD8_1_102_o.jpeg",
+      "alt": "Historic buildings and a busy bridge along Stockholm's waterfront, reflected in calm water beneath heavy grey clouds",
+      "caption": "Stockholm's waterfront under a properly dramatic Nordic sky."
+    },
+    {
+      "file": "6894DF18-DA91-46D7-9441-6BF5D858D726_1_102_o.jpeg",
+      "alt": "Modern glass office building in central Stockholm with signs for Microsoft, Lovable and the Stockholm Chamber of Commerce beneath patches of blue sky",
+      "caption": "Some familiar logos on Stockholm's modern business-district skyline."
+    }
+  ]
+}
