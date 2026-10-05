@@ -1,10 +1,9 @@
 import 'server-only';
-import { unstable_cache } from 'next/cache';
 
 const GITHUB_LOGIN = process.env.GITHUB_LOGIN ?? 'f312213213';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN;
-const GITHUB_API_VERSION = '2026-03-10';
-let warnedCommitPermission = false;
+
+export const GITHUB_PROFILE_URL = `https://github.com/${GITHUB_LOGIN}`;
 
 export type ContributionLevel = 0 | 1 | 2 | 3 | 4;
 
@@ -12,7 +11,6 @@ export type ContributionDay = {
   date: string;
   count: number;
   level: ContributionLevel;
-  weekday: number;
   inYear: boolean;
 };
 
@@ -22,66 +20,37 @@ export type ContributionWeek = {
 };
 
 export type ContributionCalendar = {
-  source: 'github' | 'commits' | 'unavailable';
   year: number;
   totalContributions: number;
   activeDays: number;
-  from: string;
-  to: string;
   weeks: ContributionWeek[];
 };
 
-type GitHubRepository = {
-  full_name: string;
-  fork: boolean;
-  archived: boolean;
-  disabled?: boolean;
-  default_branch?: string | null;
+export type ContributionHistory = {
+  login: string;
+  /** Newest year first. Empty when GitHub could not be reached. */
+  calendars: ContributionCalendar[];
+  longestStreak: number;
+  currentStreak: number;
 };
 
-type GitHubCommit = {
-  sha: string;
-  commit: {
-    author?: {
-      date?: string;
-    } | null;
-  };
-};
-
-type CalendarDayInput = {
+type DayActivity = {
   count: number;
-  level?: ContributionLevel;
-};
-
-type GitHubContributionCalendarDay = {
-  contributionCount: number;
-  contributionLevel: string;
-  date: string;
-  weekday: number;
-};
-
-type GitHubContributionCalendarWeek = {
-  firstDay: string;
-  contributionDays: GitHubContributionCalendarDay[];
-};
-
-type GitHubContributionResponse = {
-  data?: {
-    viewer?: {
-      contributionsCollection?: {
-        contributionCalendar?: {
-          totalContributions: number;
-          weeks: GitHubContributionCalendarWeek[];
-        };
-      };
-    };
-  };
-  errors?: Array<{ message: string }>;
-};
-
-type ParsedContributionCell = {
-  date: string;
   level: ContributionLevel;
+};
+
+type ActivityByYear = Map<number, Map<string, DayActivity>>;
+
+type GraphQLContributionCollection = {
+  contributionCalendar: {
+    weeks: Array<{
+      contributionDays: Array<{
+        date: string;
+        contributionCount: number;
+        contributionLevel: string;
+      }>;
+    }>;
+  };
 };
 
 const CONTRIBUTION_LEVELS: Record<string, ContributionLevel> = {
@@ -106,80 +75,8 @@ function addUtcDays(date: Date, days: number): Date {
   return next;
 }
 
-function toDateInput(date: Date): string {
+function toDateKey(date: Date): string {
   return date.toISOString().slice(0, 10);
-}
-
-function contributionRange() {
-  const today = startOfUtcDay(new Date());
-  const year = today.getUTCFullYear();
-  const from = new Date(Date.UTC(year, 0, 1));
-  const to = new Date(Date.UTC(year, 11, 31));
-  const graphFrom = addUtcDays(from, -from.getUTCDay());
-  const graphTo = addUtcDays(to, 6 - to.getUTCDay());
-
-  return { year, today, from, to, graphFrom, graphTo };
-}
-
-function levelForCount(count: number): ContributionLevel {
-  if (count >= 12) return 4;
-  if (count >= 7) return 3;
-  if (count >= 3) return 2;
-  if (count >= 1) return 1;
-  return 0;
-}
-
-function normalizeCalendar(
-  source: ContributionCalendar['source'],
-  activityByDate: Map<string, CalendarDayInput>,
-  fetchedTotal?: number,
-): ContributionCalendar {
-  const { year, today, from, to, graphFrom, graphTo } = contributionRange();
-  const days: ContributionDay[] = [];
-  const totalGraphDays = Math.round((graphTo.getTime() - graphFrom.getTime()) / 86_400_000) + 1;
-
-  for (let index = 0; index < totalGraphDays; index++) {
-    const date = addUtcDays(graphFrom, index);
-    const key = toDateInput(date);
-    const inYear = date >= from && date <= to;
-    const activity = activityByDate.get(key);
-    const count = date <= today ? (activity?.count ?? 0) : 0;
-
-    days.push({
-      date: key,
-      count,
-      level: activity?.level ?? levelForCount(count),
-      weekday: date.getUTCDay(),
-      inYear,
-    });
-  }
-
-  const weeks: ContributionWeek[] = [];
-  for (let index = 0; index < days.length; index += 7) {
-    const weekDays = days.slice(index, index + 7);
-    weeks.push({
-      firstDay: weekDays[0]?.date ?? toDateInput(addUtcDays(from, index)),
-      days: weekDays,
-    });
-  }
-
-  const yearDays = days.filter(day => day.inYear);
-  const totalContributions = fetchedTotal ?? yearDays.reduce((sum, day) => sum + day.count, 0);
-  const activeDays = yearDays.filter(day => day.count > 0).length;
-
-  return {
-    source,
-    year,
-    totalContributions,
-    activeDays,
-    from: toDateInput(from),
-    to: toDateInput(to),
-    weeks,
-  };
-}
-
-function fallbackCalendar(): ContributionCalendar {
-  return normalizeCalendar('unavailable', new Map());
 }
 
 function toContributionLevel(level: string | undefined): ContributionLevel {
@@ -191,9 +88,130 @@ function toContributionLevel(level: string | undefined): ContributionLevel {
   return 0;
 }
 
-function parsePublicContributionHtml(html: string): Map<string, CalendarDayInput> {
-  const cellsById = new Map<string, ParsedContributionCell>();
-  const activityByDate = new Map<string, CalendarDayInput>();
+/** Lays a year out as Sunday-first weeks, padded with out-of-year days like GitHub's graph. */
+function buildCalendar(
+  year: number,
+  activityByDate: Map<string, DayActivity>,
+  today: Date,
+): ContributionCalendar {
+  const from = new Date(Date.UTC(year, 0, 1));
+  const to = new Date(Date.UTC(year, 11, 31));
+  const graphFrom = addUtcDays(from, -from.getUTCDay());
+  const graphTo = addUtcDays(to, 6 - to.getUTCDay());
+  const weeks: ContributionWeek[] = [];
+  let totalContributions = 0;
+  let activeDays = 0;
+
+  for (let weekStart = graphFrom; weekStart <= graphTo; weekStart = addUtcDays(weekStart, 7)) {
+    const days = Array.from({ length: 7 }, (_, weekday): ContributionDay => {
+      const date = addUtcDays(weekStart, weekday);
+      const key = toDateKey(date);
+      const inYear = date >= from && date <= to;
+      const activity = inYear && date <= today ? activityByDate.get(key) : undefined;
+      const count = activity?.count ?? 0;
+
+      if (count > 0) {
+        totalContributions += count;
+        activeDays += 1;
+      }
+
+      return { date: key, count, level: activity?.level ?? 0, inYear };
+    });
+
+    weeks.push({ firstDay: days[0].date, days });
+  }
+
+  return { year, totalContributions, activeDays, weeks };
+}
+
+function computeStreaks(calendars: ContributionCalendar[], today: Date) {
+  if (calendars.length === 0) return { longestStreak: 0, currentStreak: 0 };
+
+  const countByDate = new Map(
+    calendars
+      .flatMap(calendar => calendar.weeks.flatMap(week => week.days))
+      .filter(day => day.inYear)
+      .map(day => [day.date, day.count]),
+  );
+  const firstYear = Math.min(...calendars.map(calendar => calendar.year));
+  let longestStreak = 0;
+  let streak = 0;
+  let streakBeforeToday = 0;
+
+  // Walk every calendar day so gaps between fetched years still break a streak.
+  for (let date = new Date(Date.UTC(firstYear, 0, 1)); date <= today; date = addUtcDays(date, 1)) {
+    streakBeforeToday = streak;
+    streak = (countByDate.get(toDateKey(date)) ?? 0) > 0 ? streak + 1 : 0;
+    longestStreak = Math.max(longestStreak, streak);
+  }
+
+  // Like GitHub, a streak stays alive until today is over.
+  return { longestStreak, currentStreak: streak || streakBeforeToday };
+}
+
+async function githubGraphQL<T>(query: string): Promise<T> {
+  const response = await fetch('https://api.github.com/graphql', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${GITHUB_TOKEN}`,
+      'Content-Type': 'application/json',
+      'User-Agent': 'chiendavid.com',
+    },
+    body: JSON.stringify({ query }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`GitHub GraphQL request failed (${response.status})`);
+  }
+
+  const payload = await response.json() as { data?: T; errors?: Array<{ message: string }> };
+  if (payload.errors?.length) {
+    throw new Error(payload.errors.map(error => error.message).join('; '));
+  }
+  if (!payload.data) {
+    throw new Error('GitHub GraphQL returned no data');
+  }
+
+  return payload.data;
+}
+
+/** Every year of the token owner's contributions — private ones included — in two requests. */
+async function fetchTokenActivity(currentYear: number): Promise<ActivityByYear> {
+  const { viewer } = await githubGraphQL<{
+    viewer: { contributionsCollection: { contributionYears: number[] } };
+  }>('query { viewer { contributionsCollection { contributionYears } } }');
+
+  const years = [...new Set([currentYear, ...viewer.contributionsCollection.contributionYears])];
+  const fields = years.map(year => `
+    y${year}: contributionsCollection(from: "${year}-01-01T00:00:00Z", to: "${year}-12-31T23:59:59Z") {
+      contributionCalendar {
+        weeks { contributionDays { date contributionCount contributionLevel } }
+      }
+    }
+  `).join('');
+  const data = await githubGraphQL<{
+    viewer: Record<string, GraphQLContributionCollection>;
+  }>(`query { viewer { ${fields} } }`);
+
+  return new Map(years.map(year => {
+    const activityByDate = new Map<string, DayActivity>();
+
+    for (const week of data.viewer[`y${year}`].contributionCalendar.weeks) {
+      for (const day of week.contributionDays) {
+        activityByDate.set(day.date, {
+          count: day.contributionCount,
+          level: CONTRIBUTION_LEVELS[day.contributionLevel] ?? 0,
+        });
+      }
+    }
+
+    return [year, activityByDate];
+  }));
+}
+
+function parsePublicContributionHtml(html: string): Map<string, DayActivity> {
+  const cellsById = new Map<string, { date: string; level: ContributionLevel }>();
+  const activityByDate = new Map<string, DayActivity>();
 
   for (const match of html.matchAll(/<td\b[^>]*class="ContributionCalendar-day"[^>]*>/g)) {
     const tag = match[0];
@@ -211,288 +229,89 @@ function parsePublicContributionHtml(html: string): Map<string, CalendarDayInput
     const cell = cellsById.get(match[1]);
     if (!cell) continue;
 
-    const tooltip = match[2];
-    const countMatch = tooltip.match(/^([\d,]+) contributions? on /);
+    const countMatch = match[2].match(/^([\d,]+) contributions? on /);
     const count = countMatch ? Number(countMatch[1].replace(/,/g, '')) : 0;
 
-    activityByDate.set(cell.date, {
-      count,
-      level: cell.level,
-    });
+    activityByDate.set(cell.date, { count, level: cell.level });
   }
 
   return activityByDate;
 }
 
-async function fetchPublicContributionCalendar(): Promise<ContributionCalendar | null> {
-  const { from, to } = contributionRange();
-  const params = new URLSearchParams({
-    from: toDateInput(from),
-    to: toDateInput(to),
-  });
+/** Scrapes one year of the public profile graph, which includes private contribution counts. */
+async function fetchPublicActivity(year: number): Promise<Map<string, DayActivity>> {
+  const params = new URLSearchParams({ from: `${year}-01-01`, to: `${year}-12-31` });
   const response = await fetch(
     `https://github.com/users/${GITHUB_LOGIN}/contributions?${params}`,
-    {
-      headers: {
-        'User-Agent': 'chiendavid.com',
-      },
-    },
+    { headers: { 'User-Agent': 'chiendavid.com' } },
   );
 
   if (!response.ok) {
-    console.warn(`[github] public contribution endpoint failed: ${response.status}`);
-    return null;
+    throw new Error(`GitHub public contribution request failed (${response.status})`);
   }
 
   const activityByDate = parsePublicContributionHtml(await response.text());
-  if (activityByDate.size === 0) return null;
+  if (activityByDate.size === 0) {
+    throw new Error('GitHub public contribution graph could not be parsed');
+  }
 
-  return normalizeCalendar('github', activityByDate);
+  return activityByDate;
 }
 
-async function fetchOfficialContributionCalendar(): Promise<ContributionCalendar | null> {
-  if (!GITHUB_TOKEN) return null;
+function sumActivity(activityByDate: Map<string, DayActivity> | undefined): number {
+  let total = 0;
+  for (const { count } of activityByDate?.values() ?? []) total += count;
+  return total;
+}
 
-  const { from, to } = contributionRange();
-  const response = await fetch('https://api.github.com/graphql', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      'Content-Type': 'application/json',
-      'User-Agent': 'chiendavid.com',
-    },
-    body: JSON.stringify({
-      query: `
-        query ContributionCalendar($from: DateTime!, $to: DateTime!) {
-          viewer {
-            contributionsCollection(from: $from, to: $to) {
-              contributionCalendar {
-                totalContributions
-                weeks {
-                  firstDay
-                  contributionDays {
-                    contributionCount
-                    contributionLevel
-                    date
-                    weekday
-                  }
-                }
-              }
-            }
-          }
-        }
-      `,
-      variables: {
-        from: from.toISOString(),
-        to: addUtcDays(to, 1).toISOString(),
-      },
-    }),
+/**
+ * The token is the only way to discover every contribution year, but the GraphQL calendar
+ * has been observed to drop hundreds of private contributions that the profile graph still
+ * counts (and vice versa). Both only ever undercount, so each year keeps the richer source.
+ */
+async function fetchActivity(currentYear: number): Promise<ActivityByYear> {
+  let tokenActivity: ActivityByYear = new Map();
+
+  if (GITHUB_TOKEN) {
+    try {
+      tokenActivity = await fetchTokenActivity(currentYear);
+    } catch (error) {
+      console.warn('[github] token request failed, using the public profile only:', error);
+    }
+  } else {
+    console.warn('[github] GITHUB_TOKEN is not set, using the public profile only');
+  }
+
+  const years = tokenActivity.size > 0 ? [...tokenActivity.keys()] : [currentYear];
+  const publicActivity = await Promise.all(years.map(year => (
+    fetchPublicActivity(year).catch(error => {
+      console.warn(`[github] public contribution graph for ${year} failed:`, error);
+      return undefined;
+    })
+  )));
+  const activityByYear: ActivityByYear = new Map();
+
+  years.forEach((year, index) => {
+    const fromToken = tokenActivity.get(year);
+    const fromProfile = publicActivity[index];
+    const richer = sumActivity(fromProfile) > sumActivity(fromToken) ? fromProfile : fromToken;
+
+    if (richer) activityByYear.set(year, richer);
   });
 
-  if (!response.ok) {
-    console.warn(`[github] official contribution calendar request failed: ${response.status}`);
-    return null;
-  }
-
-  const payload = await response.json() as GitHubContributionResponse;
-  if (payload.errors?.length) {
-    console.warn('[github] official contribution calendar errors:', payload.errors.map(error => error.message).join('; '));
-    return null;
-  }
-
-  const calendar = payload.data?.viewer?.contributionsCollection?.contributionCalendar;
-  if (!calendar) return null;
-
-  const activityByDate = new Map<string, CalendarDayInput>();
-  for (const week of calendar.weeks) {
-    for (const day of week.contributionDays) {
-      activityByDate.set(day.date, {
-        count: day.contributionCount,
-        level: CONTRIBUTION_LEVELS[day.contributionLevel] ?? 0,
-      });
-    }
-  }
-
-  return normalizeCalendar('github', activityByDate, calendar.totalContributions);
+  return activityByYear;
 }
 
-function hasNextPage(linkHeader: string | null): boolean {
-  return linkHeader?.split(',').some(link => link.includes('rel="next"')) ?? false;
-}
-
-async function mapWithConcurrency<T, U>(
-  items: T[],
-  limit: number,
-  mapper: (item: T) => Promise<U>,
-): Promise<U[]> {
-  const results: U[] = [];
-  let index = 0;
-
-  async function worker() {
-    while (index < items.length) {
-      const currentIndex = index;
-      index += 1;
-      results[currentIndex] = await mapper(items[currentIndex]);
-    }
-  }
-
-  await Promise.all(
-    Array.from(
-      { length: Math.min(limit, items.length) },
-      () => worker(),
-    ),
-  );
-
-  return results;
-}
-
-async function githubRequest<T>(path: string): Promise<{ data: T; next: boolean }> {
-  if (!GITHUB_TOKEN) {
-    throw new Error('GITHUB_TOKEN is not set');
-  }
-
-  const response = await fetch(`https://api.github.com${path}`, {
-    headers: {
-      Authorization: `Bearer ${GITHUB_TOKEN}`,
-      Accept: 'application/vnd.github+json',
-      'X-GitHub-Api-Version': GITHUB_API_VERSION,
-      'User-Agent': 'chiendavid.com',
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error(`GitHub API request failed (${response.status}) for ${path}`);
-  }
+export async function getContributionHistory(): Promise<ContributionHistory> {
+  const today = startOfUtcDay(new Date());
+  const activityByYear = await fetchActivity(today.getUTCFullYear());
+  const calendars = [...activityByYear]
+    .sort(([a], [b]) => b - a)
+    .map(([year, activityByDate]) => buildCalendar(year, activityByDate, today));
 
   return {
-    data: await response.json() as T,
-    next: hasNextPage(response.headers.get('link')),
+    login: GITHUB_LOGIN,
+    calendars,
+    ...computeStreaks(calendars, today),
   };
 }
-
-async function listAccessibleRepositories(): Promise<GitHubRepository[]> {
-  const repositories: GitHubRepository[] = [];
-  let page = 1;
-  let hasMore = true;
-
-  while (hasMore) {
-    const params = new URLSearchParams({
-      affiliation: 'owner,collaborator,organization_member',
-      direction: 'desc',
-      per_page: '100',
-      page: String(page),
-      sort: 'pushed',
-      visibility: 'all',
-    });
-    const { data, next } = await githubRequest<GitHubRepository[]>(`/user/repos?${params}`);
-
-    repositories.push(...data);
-    hasMore = next;
-    page += 1;
-  }
-
-  return repositories.filter(repo => (
-    !repo.fork &&
-    !repo.disabled &&
-    Boolean(repo.default_branch)
-  ));
-}
-
-async function listRepositoryCommits(
-  repository: GitHubRepository,
-  since: string,
-  until: string,
-): Promise<GitHubCommit[]> {
-  const commits: GitHubCommit[] = [];
-  let page = 1;
-  let hasMore = true;
-
-  while (hasMore) {
-    const params = new URLSearchParams({
-      author: GITHUB_LOGIN,
-      per_page: '100',
-      page: String(page),
-      sha: repository.default_branch!,
-      since,
-      until,
-    });
-
-    try {
-      const { data, next } = await githubRequest<GitHubCommit[]>(
-        `/repos/${repository.full_name}/commits?${params}`,
-      );
-
-      commits.push(...data);
-      hasMore = next;
-      page += 1;
-    } catch (error) {
-      const message = error instanceof Error ? error.message : String(error);
-
-      if (message.includes('(403)')) {
-        if (!warnedCommitPermission) {
-          console.warn('[github] commit history access denied; set Contents repository permissions (read) on GITHUB_TOKEN');
-          warnedCommitPermission = true;
-        }
-        return commits;
-      }
-
-      if (message.includes('(404)') || message.includes('(409)')) {
-        return commits;
-      }
-
-      console.warn(`[github] ${repository.full_name}: could not list commits`, error);
-      return commits;
-    }
-  }
-
-  return commits;
-}
-
-async function fetchContributionCalendar(): Promise<ContributionCalendar> {
-  const publicCalendar = await fetchPublicContributionCalendar();
-  if (publicCalendar) return publicCalendar;
-
-  if (!GITHUB_TOKEN) return fallbackCalendar();
-
-  const officialCalendar = await fetchOfficialContributionCalendar();
-  if (officialCalendar) return officialCalendar;
-
-  const { from, to } = contributionRange();
-  const until = addUtcDays(to, 1).toISOString();
-  const countByDate = new Map<string, CalendarDayInput>();
-
-  try {
-    const repositories = await listAccessibleRepositories();
-    const commitGroups = await mapWithConcurrency(
-      repositories,
-      4,
-      repository => listRepositoryCommits(
-        repository,
-        from.toISOString(),
-        until,
-      ),
-    );
-
-    for (const commit of commitGroups.flat()) {
-      const committedDate = commit.commit.author?.date;
-      if (!committedDate) continue;
-
-      const key = committedDate.slice(0, 10);
-      const existing = countByDate.get(key)?.count ?? 0;
-      countByDate.set(key, { count: existing + 1 });
-    }
-
-    return normalizeCalendar('commits', countByDate);
-  } catch (error) {
-    console.warn('[github] could not build private commit calendar', error);
-    return fallbackCalendar();
-  }
-}
-
-export const getContributionCalendar =
-  process.env.NODE_ENV === 'development'
-    ? fetchContributionCalendar
-    : unstable_cache(fetchContributionCalendar, ['github-contribution-calendar'], {
-      revalidate: 3600,
-      tags: ['github-contribution-calendar'],
-    });

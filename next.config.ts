@@ -26,17 +26,7 @@ const nextConfig = {
       },
       {
         source: "/linkedin",
-        destination: "https://linkedin.com/in/davidchien419",
-        permanent: true,
-      },
-      {
-        source: "/github",
-        destination: "https://github.com/f312213213",
-        permanent: true,
-      },
-      {
-        source: "/eth",
-        destination: "https://app.ens.domains/davidchien.eth",
+        destination: "https://linkedin.com/in/davidchien886",
         permanent: true,
       },
     ];
